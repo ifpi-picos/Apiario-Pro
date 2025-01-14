@@ -31,6 +31,7 @@ function Cadastro() {
   const [formData, setFormData] = useState({
     email: "",
     senha: "",
+    confirmarSenha: "",
   });
   const handleChange = (e) => {
     setFormData({
@@ -38,6 +39,8 @@ function Cadastro() {
       [e.target.name]: e.target.value,
     });
   };
+
+
 
 
 

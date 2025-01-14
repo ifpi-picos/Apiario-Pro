@@ -9,8 +9,15 @@ export const AuthProvider = ({ children }) => {
   const [sideBarIsActive, setSideBarIsActive] = useState(false);
   const [isActive, setIsActive] = useState(false);
 
-  //Tarefas
+  // Tarefas
   const [tarefas, setTarefas] = useState([]);
+  
+  // Colmeias
+  const [colmeias, setColmeias] = useState({
+    MELGUEIRA: { vazia: 0, em_campo: 0 },
+    NINHO: { vazia: 0, em_campo: 0 },
+    NUCLEO: { vazia: 0, em_campo: 0 },
+  });
 
   // Carregar token e nome do usuário do localStorage no carregamento inicial
   useEffect(() => {
@@ -35,7 +42,7 @@ export const AuthProvider = ({ children }) => {
   // Buscar tarefas do servidor
   const fetchTarefas = async () => {
     try {
-      const token = localStorage.getItem("token"); // Recupera o token do localStorage
+      const token = localStorage.getItem("token");
 
       const response = await axios.get(
         "https://lifetidy.onrender.com/tarefas/buscarTarefas",
@@ -45,15 +52,15 @@ export const AuthProvider = ({ children }) => {
           },
         }
       );
-      setTarefas(response.data); // Atualiza o estado com as tarefas recebidas do backend
+      setTarefas(response.data);
     } catch (error) {
       console.error("Erro ao buscar tarefas:", error);
     }
   };
 
   useEffect(() => {
-    fetchTarefas(); // Chama a função para buscar as tarefas quando o componente é montado
-  }, []);  // O array vazio como segundo argumento faz com que o useEffect execute apenas uma vez, quando o componente é montado
+    fetchTarefas();
+  }, []);
 
   // Função para realizar o logout
   const logout = () => {
@@ -61,8 +68,18 @@ export const AuthProvider = ({ children }) => {
     setToken("");
   };
 
-  const [searchTerm, setSearchTerm] = useState("");
+  // Função para adicionar colmeia
+  const handleAddColmeia = ({ tipo_colmeia, quantidade, estado }) => {
+    setColmeias((prevColmeias) => ({
+      ...prevColmeias,
+      [tipo_colmeia]: {
+        ...prevColmeias[tipo_colmeia],
+        [estado.toLowerCase()]: prevColmeias[tipo_colmeia][estado.toLowerCase()] + parseInt(quantidade, 10),
+      },
+    }));
+  };
 
+  const [searchTerm, setSearchTerm] = useState("");
   const [selectedDate, setSelectedDate] = useState(new Date());
 
   return (
@@ -84,6 +101,8 @@ export const AuthProvider = ({ children }) => {
         setSearchTerm,
         selectedDate,
         setSelectedDate,
+        colmeias,
+        handleAddColmeia, // Expondo a função de adicionar colmeia
       }}
     >
       {children}

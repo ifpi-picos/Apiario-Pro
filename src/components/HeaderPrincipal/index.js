@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import Perfil from "../../assets/perfil.png";
 import {
   ContainerHeader,
   ContainerLogo,
@@ -16,35 +17,41 @@ import {
   LinkPerfil,
   ImagePerfil,
   ContainerSubMenu,
+  MenuButton,
+  StyledIcon,
 } from "./styles";
+import {
+  faBars,
+ 
+} from "@fortawesome/free-solid-svg-icons";
+import SideBar from "../MenuLateral/index";
+import { useAuth } from "../../contexts/AuthContext"; 
 
 function Header(){
   const navigate = useNavigate();
+  const { isActive, setIsActive } = useAuth(); // Acesse isActive e setIsActive
+
+  const toggleSidebar = () => {
+    setIsActive(!isActive);
+  };
   return (
     <ContainerHeader>
-      <ContainerLogo>
-        <Link onClick={() => navigate("/")}>
-
-        </Link>
-      </ContainerLogo>
+       <MenuButton onClick={toggleSidebar}>
+            <StyledIcon icon={faBars} />
+          </MenuButton>
+     <SideBar/>
       <ContainerButtons>
-        <InputPesquisa
-          maxLength={40}
-          type="text"
-          placeholder="PESQUISAR"
-           
-        />
+       
         <ContainerButtonsModal>
-        
+          <ButtonDesempenho onClick={() => navigate("/Gestao")}></ButtonDesempenho>
           <ButtonAviso></ButtonAviso>
-         
         </ContainerButtonsModal>
       </ContainerButtons>
       <ContainerPerfil>
-      
+      <Pnome>Daniel Reis</Pnome>
         <ContainerImgPerfil>
           <LinkPerfil >
-            <ImagePerfil />
+            <ImagePerfil src={Perfil} alt={"perfil"} />
           </LinkPerfil>
           <ContainerSubMenu >
             <LinkMenu >EDITAR PERFIL</LinkMenu>
@@ -55,7 +62,7 @@ function Header(){
           </ContainerSubMenu>
         </ContainerImgPerfil>
       </ContainerPerfil>
-
+      
     </ContainerHeader>
   );
 };

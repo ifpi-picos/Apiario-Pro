@@ -9,11 +9,11 @@ export const DivLateral = styled.div`
 height: 100%;
 `;
 export const SideBar = styled.div`
-  width: 193px;
-  height: 100%;
-  position: relative;
+   width: 193px;
+  height: 100vh; /* Mudar para 100vh para preencher a altura da tela */
+  position: fixed; /* Mude para fixed se você quer que ela fique fixa na tela */
   top: 0;
-  left: -106%;
+  left: -106%; /* Esta propriedade controla a visibilidade */
   overflow-y: auto;
   transition: 0.6s ease;
   transition-property: left;
@@ -38,13 +38,13 @@ export const SideBar = styled.div`
 
 export const Menu = styled.div`
   width: 100%;
-  margin-top: 50px;
+  margin-top: 20px;
 `;
 
 export const P = styled.p`
     font-size: 10px;
     margin: 0;
-    color: #FFF;
+
     text-align: center;
     position: relative;
     bottom: 20px;
@@ -55,7 +55,7 @@ export const MenuItem = styled.div`
   position: relative;
 
   a {
-    color: #fff;
+    
     font-size: 16px;
     text-decoration: none;
     display: block;
@@ -87,12 +87,10 @@ export const Border = styled.div`
 `;
 
 export const CloseButton = styled.div`
-  position: absolute;
-  color: #fff;
+ color: #fff;
   font-size: 20px;
-  right: 0;
-  margin: 25px;
   cursor: pointer;
+  
 `;
 
 export const MenuButton = styled.div`
@@ -125,4 +123,22 @@ export const NavLateral = styled.nav`
     }
 
     
+`;
+export const HeaderSidebar = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  height:0;
+  margin-top:10px;
+
+  
+`;
+
+export const Imagem = styled.img`
+  width: 120px;
+  margin-left:-40px;
+  
+
+  
 `;

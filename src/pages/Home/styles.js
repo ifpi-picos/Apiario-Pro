@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 export const AppBody = styled.div`
   margin: 0;
   padding: 0;
@@ -19,10 +21,24 @@ align-items:center;
 export const Main = styled.div`
 
 `;
-export const ContainerPrincipal = styled.div`
+export const Container = styled.div`
 display: flex;
-    width: 100%;
-    flex-direction: column;
+  flex-direction: column; /* Coloca os botões em coluna */
+   /* Centraliza verticalmente */
+  align-items: center; /* Centraliza horizontalmente */
+  height: 100%; 
+`;
+export const ContainerPrincipal = styled.div`
+ 
+`;
+
+export const Text = styled.p`
+display: flex;
+font-weight: bold;
+  justify-content: center;
+
+
+
 `;
 export const ContainerClima = styled.div`
 width: 100%;
@@ -83,4 +99,43 @@ export const WeatherInfo = styled.div`
 `;
 export const Icon = styled.img`
  
+`;
+export const StyledIcon = styled(FontAwesomeIcon)`
+  margin-right: 8px;
+ color: black;
+`;
+export const BotaoContainer = styled.div`
+
+  display: flex;
+  /* Centraliza os botões dentro do contêiner */
+  /* Margem superior e inferior */
+    
+
+
+`;
+export const Botao = styled.button`
+   width: 150px;
+  height: 100px;
+  background-color: #fff;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 20px; /* Margem entre os botões */
+  cursor: pointer;
+  transition: background-color 0.3s;
+  
+
+  &:hover {
+    background-color: #f0f0f0;
+  }
+`;
+
+export const BotaoTexto = styled.span`
+  margin-top: 10px;
+  font-size: 16px;
+  color: #000;
 `;

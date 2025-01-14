@@ -51,13 +51,13 @@ display: flex;
 
 export const H1 = styled.h1`
 margin: 1em 0.2em 1px; 
-color:white;  
+color:black;  
 `;
 export const H2 = styled.h2`
 font-size: 26px;
 height:0;
 font-weight: 600;
-color:white; 
+color:black; 
 
 @media (max-width: 330px)
  {
@@ -69,7 +69,7 @@ export const P1 = styled.p`
 font-weight: 600;
 font-size: 18px;
 max-width: 39em;
-color:white;
+color:black;
 `;
 
 export const Button = styled.button`
