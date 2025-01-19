@@ -56,6 +56,16 @@ font-weight: 600;
   font-size: 18px;
 }
 `;
+export const P = styled.p`
+    font-size: 10px;
+    margin: 0;
+
+    text-align: center;
+    position: relative;
+    bottom: 20px;
+    right: 12px;
+`
+;
 export const Footer = styled.footer`
   background-color: #ffffff;
   padding: 10px 0;
@@ -132,6 +142,8 @@ export const Botao = styled.button`
   &:hover {
     background-color: #f0f0f0;
   }
+    cursor: ${(props) => (props.$desenvolvimento ? "not-allowed" : "pointer")};
+
 `;
 
 export const BotaoTexto = styled.span`

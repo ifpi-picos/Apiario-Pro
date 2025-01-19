@@ -110,16 +110,17 @@ function Cadastro() {
                 />
               </Container>
           </ContainerInputs>
+          <ContainerButton>
+            <Button>CADASTRAR</Button>
+            
+          </ContainerButton>
            <ContainerText>
                 <PLogin>JÁ POSSUI CADASTRO?</PLogin>
                 <LinkLogin onClick={() => navigate("/login")}>Login!</LinkLogin>
               </ContainerText>
             </Form>
         
-          <ContainerButton>
-            <Button>Cadastrar</Button>
-            
-          </ContainerButton>
+          
           </Main>
           </ContainerCadastro>
         </ContainerPrincipal>

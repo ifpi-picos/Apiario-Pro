@@ -79,6 +79,10 @@ function Login() {
               />
             </Container>
           </ContainerInputs>
+          <ContainerButton>
+            <Button>ENTRAR</Button>
+            
+          </ContainerButton>
           <ContainerTextBorda>
             <PCadastreSe>NÃO TEM CADASTRO?</PCadastreSe>
             <LinkCadastreSe onClick={() => navigate("/cadastro")}>
@@ -87,10 +91,7 @@ function Login() {
           </ContainerTextBorda>
             </Form>
         
-          <ContainerButton>
-            <Button>ENTRAR</Button>
-            
-          </ContainerButton>
+         
         </ContainerPrincipal>
       </Main>
       

@@ -62,7 +62,7 @@ export const ContainerImg = styled.div`
 export const ContainerButtons = styled.div`
   display: flex;
   align-items: center;
-  width: 100%;
+ margin-left:auto;
   justify-content: space-around;
   
 `;

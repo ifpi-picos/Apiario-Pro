@@ -61,7 +61,7 @@ const Gestao = () => {
     datasets: [
       {
         label: 'Produção de Mel (kg)',
-        data: [50, 60, 0, 80, 0, 100, 95, 85, 70, 60, 0, 0],
+        data: [50, 60, 20, 80, 20, 100, 95, 85, 70, 60, 20, 20],
         backgroundColor: 'rgba(75, 192, 192, 0.6)',
         borderColor: 'rgba(75, 192, 192, 1)',
         borderWidth: 1,

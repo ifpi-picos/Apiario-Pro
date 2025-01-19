@@ -175,6 +175,7 @@ export const ContainerInform = styled.div`
   align-items: center;
   margin: 15px;
   padding: 10px;
+  
 `; 
 
 export const StyledIcon = styled(FontAwesomeIcon)`

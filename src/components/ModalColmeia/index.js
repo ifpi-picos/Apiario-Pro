@@ -20,7 +20,7 @@ import {
   ContainerButton,
 } from "./styles";
 
-const Modal = ({ isOpen, closeModal, onAddColmeia }) => {
+const ModalColmeia = ({ isOpen, closeModalColmeia, onAddColmeia }) => {
   const [formState, setFormState] = useState({
     tipo_colmeia: "",
     quantidade: "",
@@ -39,7 +39,7 @@ const Modal = ({ isOpen, closeModal, onAddColmeia }) => {
 
     if (formState.tipo_colmeia && formState.quantidade && formState.estado) {
       onAddColmeia(formState);
-      closeModal();
+      closeModalColmeia();
     } else {
       alert("Preencha todos os campos corretamente.");
     }
@@ -54,7 +54,7 @@ const Modal = ({ isOpen, closeModal, onAddColmeia }) => {
           <ContainerH2Tarefa>
             <H2AdicionarTarefa>ADICIONAR COLMEIA</H2AdicionarTarefa>
             <ContainerButtonExit>
-              <StyledIcon icon={faClose} onClick={closeModal} />
+              <StyledIcon icon={faClose} onClick={closeModalColmeia} />
             </ContainerButtonExit>
           </ContainerH2Tarefa>
           <FormDetalhesTarefas onSubmit={handleSubmit}>
@@ -98,7 +98,7 @@ const Modal = ({ isOpen, closeModal, onAddColmeia }) => {
                 <ButtonCriarTarefa type="submit">ADICIONAR</ButtonCriarTarefa>
               </DivButtonNovaTarefa>
               <DivButtonNovaTarefa>
-                <ButtonCriarTarefa type="button" onClick={closeModal}>CANCELAR</ButtonCriarTarefa>
+                <ButtonCriarTarefa type="button" onClick={closeModalColmeia}>CANCELAR</ButtonCriarTarefa>
               </DivButtonNovaTarefa>
             </ContainerButton>
           </FormDetalhesTarefas>
@@ -108,4 +108,4 @@ const Modal = ({ isOpen, closeModal, onAddColmeia }) => {
   );
 };
 
-export default Modal;
+export default ModalColmeia;

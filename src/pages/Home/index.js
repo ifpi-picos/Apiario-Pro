@@ -64,25 +64,25 @@ const Home = () => {
         <ContainerPrincipal>
           <Text>Acesso rápido</Text>
           <Container>
-            <BotaoContainer>
-              <Botao onClick={toggleModal}>
-                <StyledIcon icon={faPlus} />
-                <BotaoTexto>Adicionar Colmeia</BotaoTexto>
+            <BotaoContainer >
+              <Botao style={{backgroundColor:"#212181"}} onClick={toggleModal}>
+                <StyledIcon style={{color:"white", fontSize:18}}icon={faPlus} />
+                <BotaoTexto style={{color:"white"}} >Adicionar Colmeia</BotaoTexto>
               </Botao>
 
-              <Botao onClick={() => navigate("/colmeias", { state: { colmeias } })}>
-                <StyledIcon icon={faBoxArchive} />
-                <BotaoTexto>Colmeias</BotaoTexto>
+              <Botao style={{backgroundColor:"green"}} onClick={() => navigate("/colmeias", { state: { colmeias } })}>
+                <StyledIcon style={{color:"white" , fontSize:18}} icon={faBoxArchive} />
+                <BotaoTexto style={{color:"white"}}>Colmeias</BotaoTexto>
               </Botao>
             </BotaoContainer>
 
-            <BotaoContainer>
-              <Botao>
-                <StyledIcon icon={faLocationDot} />
+            <BotaoContainer >
+              <Botao $desenvolvimento style={{backgroundColor:"#ffc400"}}>
+                <StyledIcon style={{color:"red", fontSize:20} } icon={faLocationDot} />
                 <BotaoTexto>Geolocalização</BotaoTexto>
               </Botao>
 
-              <Botao onClick={() => navigate("/apiarios")}>
+              <Botao style={{backgroundColor:"#9d701d"}} onClick={() => navigate("/apiarios")}>
                 <GiBee size={20} style={{ marginRight: '5px' }} />
                 <BotaoTexto>Apiários</BotaoTexto>
               </Botao>
@@ -90,7 +90,7 @@ const Home = () => {
 
             <Modal
               isOpen={showModal}
-              closeModal={toggleModal}
+              closeModalColmeia={toggleModal}
               onAddColmeia={handleAddColmeia}
             />
           </Container>

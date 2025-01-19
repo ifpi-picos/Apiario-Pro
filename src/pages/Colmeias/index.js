@@ -124,7 +124,7 @@ const Colmeias = () => {
           {/* Modal para adicionar novas colmeias */}
           <Modal
             isOpen={showModal}
-            closeModal={toggleModal}
+            closeModalColmeia={toggleModal}
             onAddColmeia={handleAddColmeia}
           />
         </ContainerPrincipal>

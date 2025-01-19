@@ -144,7 +144,7 @@ border:none;
 height:38px;
 width:100%;
 font-weight: 700;
-background-color: rgba(0, 0, 0, 0.3); /* Cor de fundo escura com 50% de opacidade */
+background-color:#3c3b3b; /* Cor de fundo escura com 50% de opacidade */
   color: #ffffff; 
   cursor:pointer;
 `;

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 import Header from "../../components/HeaderPrincipal/index.js";
+import Modal from "../../components/ModalFlorada/index.js";
 import Apiario from "../../assets/foto5.jpg";
 import Apiario2 from "../../assets/foto6.jpg";
 
@@ -30,8 +31,11 @@ import { faEdit, faTrash, faChevronRight } from "@fortawesome/free-solid-svg-ico
 
 
 function Home() {
+  const [showModal, setShowModal] = useState(false);
+  const toggleModal = () => {
+    setShowModal(!showModal);
+  };
   
- 
 
   
   return (
@@ -102,10 +106,14 @@ function Home() {
         </AcoesContainer>
     </Botao>
       <ContainerAdicionar>
-              <ButtonAdicionar></ButtonAdicionar>
+              <ButtonAdicionar onClick={toggleModal}></ButtonAdicionar>
             </ContainerAdicionar>
   </BotaoContainer>
-    
+  <Modal
+              isOpen={showModal}
+              closeModalFlorada={toggleModal}
+              
+            />
       </Container>
         </ContainerPrincipal>
       </Main>
