@@ -98,7 +98,7 @@ const Sidebar = () => {
                   <StyledIcon icon={faLocationDot} />
                  Geolocalização
                   </LinkSideBar>
-                 
+                  <P>(Desenvolvimento)</P>
 
               </MenuItem>
             </Menu>
