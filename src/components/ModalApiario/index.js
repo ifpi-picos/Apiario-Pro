@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { faClose } from "@fortawesome/free-solid-svg-icons";
+
 import {
   Dialog,
   ContainerAdicionarTarefa,
@@ -20,11 +21,11 @@ import {
   ContainerButton,
 } from "./styles";
 
-const ModalColmeia = ({ isOpen, closeModalColmeia, onAddColmeia }) => {
+const ModalApiario = ({ isOpen, closeModalApiario, onAddApiario }) => {
   const [formState, setFormState] = useState({
-    tipo_colmeia: "",
-    quantidade: "",
-    estado: "",
+    regiao: "",
+    florada: "",
+    colmeias: "",
   });
 
   const handleChange = (event) => {
@@ -37,9 +38,9 @@ const ModalColmeia = ({ isOpen, closeModalColmeia, onAddColmeia }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    if (formState.tipo_colmeia && formState.quantidade && formState.estado) {
-      onAddColmeia(formState);
-      closeModalColmeia();
+    if (formState.regiao&& formState.florada&& formState.colmeias) {
+      onAddApiario(formState);
+      closeModalApiario();
     } else {
       alert("Preencha todos os campos corretamente.");
     }
@@ -52,27 +53,35 @@ const ModalColmeia = ({ isOpen, closeModalColmeia, onAddColmeia }) => {
       <Dialog open={isOpen}>
         <ContainerAdicionarTarefa>
           <ContainerH2Tarefa>
-            <H2AdicionarTarefa>ADICIONAR COLMEIA</H2AdicionarTarefa>
+            <H2AdicionarTarefa>ADICIONAR APIÁRIO</H2AdicionarTarefa>
             <ContainerButtonExit>
-              <StyledIcon icon={faClose} onClick={closeModalColmeia} />
+              <StyledIcon icon={faClose} onClick={closeModalApiario} />
             </ContainerButtonExit>
           </ContainerH2Tarefa>
           <FormDetalhesTarefas onSubmit={handleSubmit}>
-            <ContainerCategoria>
-              <H4InfomacoesInputs>TIPO</H4InfomacoesInputs>
-              <SelectInputsWidth
-                name="tipo_colmeia"
-                value={formState.tipo_colmeia}
-                onChange={handleChange}
-              >
-                <option value="">Selecione</option>
-                <option value="MELGUEIRA">Melgueira</option>
-                <option value="NINHO">Ninho</option>
-                <option value="NUCLEO">Núcleo</option>
-              </SelectInputsWidth>
-            </ContainerCategoria>
-            <ContainerDescricaoTarefa>
-              <H4InfomacoesInputs>QUANTIDADE</H4InfomacoesInputs>
+            
+          <ContainerDescricaoTarefa>
+  <H4InfomacoesInputs>REGIAO</H4InfomacoesInputs>
+  <InputSelect
+    type="text"
+    name="nome"
+    value={formState.nome}  // Corrigido: de 'quantidade' para 'nome'
+    onChange={handleChange}
+  />
+</ContainerDescricaoTarefa>
+
+<ContainerDescricaoTarefa>
+  <H4InfomacoesInputs>FLORADA</H4InfomacoesInputs>
+  <InputSelect
+    type="text"
+    name="nome"
+    value={formState.nome}  // Corrigido: de 'quantidade' para 'nome'
+    onChange={handleChange}
+  />
+</ContainerDescricaoTarefa>
+
+<ContainerDescricaoTarefa>
+              <H4InfomacoesInputs>COLMEIAS</H4InfomacoesInputs>
               <InputSelect
                 type="number"
                 name="quantidade"
@@ -81,24 +90,12 @@ const ModalColmeia = ({ isOpen, closeModalColmeia, onAddColmeia }) => {
                 min="1"
               />
             </ContainerDescricaoTarefa>
-            <ContainerDescricaoTarefa>
-              <H4InfomacoesInputs>ESTADO</H4InfomacoesInputs>
-              <SelectInputsWidth
-                name="estado"
-                value={formState.estado}
-                onChange={handleChange}
-              >
-                <option value="">Selecione</option>
-                <option value="EM_CAMPO">Em Campo</option>
-                <option value="VAZIA">Vazia</option>
-              </SelectInputsWidth>
-            </ContainerDescricaoTarefa>
             <ContainerButton>
               <DivButtonNovaTarefa>
                 <ButtonCriarTarefa type="submit">ADICIONAR</ButtonCriarTarefa>
               </DivButtonNovaTarefa>
               <DivButtonNovaTarefa>
-                <ButtonCriarTarefa type="button" onClick={closeModalColmeia}>CANCELAR</ButtonCriarTarefa>
+                <ButtonCriarTarefa type="button" onClick={closeModalApiario}>CANCELAR</ButtonCriarTarefa>
               </DivButtonNovaTarefa>
             </ContainerButton>
           </FormDetalhesTarefas>
@@ -108,4 +105,4 @@ const ModalColmeia = ({ isOpen, closeModalColmeia, onAddColmeia }) => {
   );
 };
 
-export default ModalColmeia;
+export default ModalApiario;

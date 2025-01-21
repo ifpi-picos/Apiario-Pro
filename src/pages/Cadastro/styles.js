@@ -162,6 +162,9 @@ font-weight: 700;
 background-color:#3c3b3b; 
   color: #ffffff; 
   cursor:pointer;
+   &:hover {
+    opacity: 0.8;
+  }
 `;
 export const ContainerButton = styled.div`
 display: flex;

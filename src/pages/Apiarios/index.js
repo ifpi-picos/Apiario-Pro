@@ -5,10 +5,12 @@ import Apiario from "../../assets/foto5.jpg";
 import Apiario2 from "../../assets/foto6.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import Modal from "../../components/ModalApiario/index.js";
+
 import {
   AppBody,
  Text,
-  Botao,
+
   BotaoTexto,
   BotaoContainer,
   Main,
@@ -24,14 +26,20 @@ import {
   Button,
   ContainerAdicionar,
   ButtonAdicionar,
+  ContainerFlorada,
 
 
  
 } from './styles'; // Supondo que você tenha seus estilos em um arquivo separado
 
 
+
 function Apiarios() {
-  
+    const [showModal, setShowModal] = useState(false);
+    
+  const toggleModal = () => {
+    setShowModal(!showModal);
+  };
  
 
   
@@ -48,13 +56,13 @@ function Apiarios() {
         <Container>
           
         <BotaoContainer>
-    <Botao>
+    <ContainerFlorada>
     <Imagem src={Apiario2} alt={"apiario"} />
       <Informacoes>
-      <InfoItem>Região: Fazenda Planalto</InfoItem>
-        <InfoItem>Florada: Angico</InfoItem>
-        <InfoItem>Colmeias: 250</InfoItem>
-        <InfoItem>Coordenada: xxxxxxxxxx</InfoItem>
+      <InfoItem> <span style={{ fontWeight: 'bold', fontSize: '14px' }}>Região: </span>Serrolandia</InfoItem>
+        <InfoItem> <span style={{ fontWeight: 'bold', fontSize: '14px' }}>Florada: </span> Vassourinha</InfoItem>
+        <InfoItem> <span style={{ fontWeight: 'bold', fontSize: '14px' }}>Colmeias: </span> 150</InfoItem>
+        <InfoItem> <span style={{ fontWeight: 'bold', fontSize: '14px' }}>Coordenada: </span> xxxxxxxxxx</InfoItem>
       </Informacoes>
       <AcoesContainer>
     <AcaoBotao>
@@ -64,14 +72,14 @@ function Apiarios() {
       <FontAwesomeIcon icon={faTrash} />
     </AcaoBotao>
   </AcoesContainer>
-    </Botao>
-    <Botao>
+    </ContainerFlorada>
+    <ContainerFlorada>
     <Imagem src={Apiario} alt={"apiario"} />
       <Informacoes>
-        <InfoItem>Região: Serrolandia</InfoItem>
-        <InfoItem>Florada: Vassourinha</InfoItem>
-        <InfoItem>Colmeias: 150</InfoItem>
-        <InfoItem>Coordenada: xxxxxxxxxx</InfoItem>
+        <InfoItem> <span style={{ fontWeight: 'bold', fontSize: '14px' }}>Região: </span>Serrolandia</InfoItem>
+        <InfoItem> <span style={{ fontWeight: 'bold', fontSize: '14px' }}>Florada: </span> Vassourinha</InfoItem>
+        <InfoItem> <span style={{ fontWeight: 'bold', fontSize: '14px' }}>Colmeias: </span> 150</InfoItem>
+        <InfoItem> <span style={{ fontWeight: 'bold', fontSize: '14px' }}>Coordenada: </span> xxxxxxxxxx</InfoItem>
       </Informacoes>
       <AcoesContainer>
     <AcaoBotao>
@@ -81,14 +89,14 @@ function Apiarios() {
       <FontAwesomeIcon icon={faTrash} />
     </AcaoBotao>
   </AcoesContainer>
-    </Botao>
-    <Botao>
+    </ContainerFlorada>
+    <ContainerFlorada>
     <Imagem src={Apiario2} alt={"apiario"} />
       <Informacoes>
-      <InfoItem>Região: Fazenda Planalto</InfoItem>
-        <InfoItem>Florada: Angico</InfoItem>
-        <InfoItem>Colmeias: 250</InfoItem>
-        <InfoItem>Coordenada: xxxxxxxxxx</InfoItem>
+      <InfoItem> <span style={{ fontWeight: 'bold', fontSize: '14px' }}>Região: </span>Serrolandia</InfoItem>
+        <InfoItem> <span style={{ fontWeight: 'bold', fontSize: '14px' }}>Florada: </span> Vassourinha</InfoItem>
+        <InfoItem> <span style={{ fontWeight: 'bold', fontSize: '14px' }}>Colmeias: </span> 150</InfoItem>
+        <InfoItem> <span style={{ fontWeight: 'bold', fontSize: '14px' }}>Coordenada: </span> xxxxxxxxxx</InfoItem>
       </Informacoes>
       <AcoesContainer>
     <AcaoBotao>
@@ -98,39 +106,44 @@ function Apiarios() {
       <FontAwesomeIcon icon={faTrash} />
     </AcaoBotao>
   </AcoesContainer>
-    </Botao>
-    <Botao>
+    </ContainerFlorada>
+    <ContainerFlorada>
     <Imagem src={Apiario} alt={"apiario"} />
       <Informacoes>
-        <InfoItem>Região: Serrolandia</InfoItem>
-        <InfoItem>Florada: Vassourinha</InfoItem>
-        <InfoItem>Colmeias: 150</InfoItem>
-        <InfoItem>Coordenada: xxxxxxxxxx</InfoItem>
+      <InfoItem> <span style={{ fontWeight: 'bold', fontSize: '14px' }}>Região: </span>Serrolandia</InfoItem>
+        <InfoItem> <span style={{ fontWeight: 'bold', fontSize: '14px' }}>Florada: </span> Vassourinha</InfoItem>
+        <InfoItem> <span style={{ fontWeight: 'bold', fontSize: '14px' }}>Colmeias: </span> 150</InfoItem>
+        <InfoItem> <span style={{ fontWeight: 'bold', fontSize: '14px' }}>Coordenada: </span> xxxxxxxxxx</InfoItem>
       </Informacoes>
-    </Botao>
-    <Botao>
+    </ContainerFlorada>
+    <ContainerFlorada>
     <Imagem src={Apiario2} alt={"apiario"} />
       <Informacoes>
-      <InfoItem>Região: Fazenda Planalto</InfoItem>
-        <InfoItem>Florada: Angico</InfoItem>
-        <InfoItem>Colmeias: 250</InfoItem>
-        <InfoItem>Coordenada: xxxxxxxxxx</InfoItem>
+      <InfoItem> <span style={{ fontWeight: 'bold', fontSize: '14px' }}>Região: </span>Serrolandia</InfoItem>
+        <InfoItem> <span style={{ fontWeight: 'bold', fontSize: '14px' }}>Florada: </span> Vassourinha</InfoItem>
+        <InfoItem> <span style={{ fontWeight: 'bold', fontSize: '14px' }}>Colmeias: </span> 150</InfoItem>
+        <InfoItem> <span style={{ fontWeight: 'bold', fontSize: '14px' }}>Coordenada: </span> xxxxxxxxxx</InfoItem>
       </Informacoes>
-    </Botao>
-    <Botao>
+    </ContainerFlorada>
+    <ContainerFlorada>
     <Imagem src={Apiario2} alt={"apiario"} />
       <Informacoes>
-      <InfoItem>Região: Fazenda Planalto</InfoItem>
-        <InfoItem>Florada: Angico</InfoItem>
-        <InfoItem>Colmeias: 250</InfoItem>
-        <InfoItem>Coordenada: xxxxxxxxxx</InfoItem>
+      <InfoItem> <span style={{ fontWeight: 'bold', fontSize: '14px' }}>Região: </span>Serrolandia</InfoItem>
+        <InfoItem> <span style={{ fontWeight: 'bold', fontSize: '14px' }}>Florada: </span> Vassourinha</InfoItem>
+        <InfoItem> <span style={{ fontWeight: 'bold', fontSize: '14px' }}>Colmeias: </span> 150</InfoItem>
+        <InfoItem> <span style={{ fontWeight: 'bold', fontSize: '14px' }}>Coordenada: </span> xxxxxxxxxx</InfoItem>
       </Informacoes>
-    </Botao>
+    </ContainerFlorada>
   </BotaoContainer>
       </Container>
       <ContainerAdicionar>
-        <ButtonAdicionar></ButtonAdicionar>
+        <ButtonAdicionar  onClick={toggleModal}></ButtonAdicionar>
       </ContainerAdicionar>
+      <Modal
+            isOpen={showModal}
+            closeModalApiario={toggleModal}
+           
+          />
         </ContainerPrincipal>
       </Main>
       <Footer></Footer>

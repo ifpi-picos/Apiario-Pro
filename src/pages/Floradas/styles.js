@@ -115,7 +115,7 @@ export const BotaoContainer = styled.div`
 
 
 `;
-export const Botao = styled.button`
+export const ContainerFlorada = styled.button`
   width: 300px;
   height: auto;
   background-color: #ffeed8;
@@ -138,8 +138,8 @@ export const Botao = styled.button`
 export const Florada = styled.p`
 display: flex;
 font-weight: bold;
- 
   margin-bottom: 10px; /* Espaço entre a imagem e os itens */
+  font-size:15px;
 `;
 
 export const Informacoes = styled.div`
@@ -154,7 +154,7 @@ export const Informacoes = styled.div`
 
 export const InfoItem = styled.span`
   font-size: 14px;
-  color: #333;
+  
   font-weight: 500;
 `;
 export const AcoesContainer = styled.div`

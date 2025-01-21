@@ -2,13 +2,11 @@ import React, { useState } from 'react';
 
 import Header from "../../components/HeaderPrincipal/index.js";
 import Modal from "../../components/ModalFlorada/index.js";
-import Apiario from "../../assets/foto5.jpg";
-import Apiario2 from "../../assets/foto6.jpg";
 
 import {
   AppBody,
- Text,
-  Botao,
+  Text,
+  ContainerFlorada,
   BotaoContainer,
   Main,
   Container,
@@ -21,100 +19,71 @@ import {
   AcaoBotao,
   ContainerAdicionar,
   ButtonAdicionar,
-  ContainerEditar,
   ContainerInform,
-  StyledIcon
-
+  StyledIcon,
+  ContainerEditar
 } from './styles'; 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faTrash, faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import { faTrash, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 
-
-function Home() {
+function Floradas() {
   const [showModal, setShowModal] = useState(false);
+  const [floradas, setFloradas] = useState([]); // Estado para armazenar as floradas
+
   const toggleModal = () => {
     setShowModal(!showModal);
   };
-  
 
-  
+  const handleAddFlorada = (novaFlorada) => {
+    setFloradas((prevFloradas) => [...prevFloradas, novaFlorada]); // Adiciona a nova florada ao estado
+  };
+
   return (
     <AppBody>
-      
       <Header/>
-      
       <Main>
-      <ContainerPrincipal>
-      <Text>
-           Floradas
-          </Text>
-        <Container>
-          
-        <BotaoContainer>
-    <Botao>
-    <ContainerInform>
-    <Informacoes>
-    <Florada>Marmeleiro</Florada>
-        <InfoItem>Inicio: Janeiro</InfoItem>
-        <InfoItem>Fim: Fevereiro</InfoItem>
-      </Informacoes>
-      <ContainerEditar>
+        <ContainerPrincipal>
+          <Text>Floradas</Text>
+          <Container>
+            <BotaoContainer>
+              {floradas.map((florada, index) => ( // Renderiza as floradas adicionadas
+                <ContainerFlorada key={index}>
+                  <ContainerInform>
+                    
+                    <Informacoes>
+                    <Florada>{florada.nome}</Florada>
+                    <InfoItem>
+                      <span style={{ fontWeight: 'bold', fontSize: '15px' }}>Inicio:</span> {florada.data_inicio}
+                    </InfoItem>
+                    <InfoItem>
+                      <span style={{ fontWeight: 'bold', fontSize: '15px' }}>Fim:</span> {florada.data_fim}
+                    </InfoItem>
+                      
+                    </Informacoes>
+                    <ContainerEditar>
       <StyledIcon icon={faChevronRight}/>
       </ContainerEditar>
-      </ContainerInform>
-      <AcoesContainer>
-          
-          <AcaoBotao>
-            <FontAwesomeIcon icon={faTrash} />
-          </AcaoBotao>
-        </AcoesContainer>
-    </Botao>
-    <Botao>
-    <ContainerInform>
-    <Informacoes>
-    <Florada>Angico</Florada>
-        <InfoItem>Inicio: Janeiro</InfoItem>
-        <InfoItem>Fim: Fevereiro</InfoItem>
-      </Informacoes>
-      <ContainerEditar>
-      <StyledIcon icon={faChevronRight}/>
-      </ContainerEditar>
-      </ContainerInform>
-      <AcoesContainer>
-     
-          <AcaoBotao>
-            <FontAwesomeIcon icon={faTrash} />
-          </AcaoBotao>
-        </AcoesContainer>
-    </Botao>
-    <Botao>
-    <ContainerInform>
-    <Informacoes>
-    <Florada>Vassourinha</Florada>
-        <InfoItem>Inicio: Janeiro</InfoItem>
-        <InfoItem>Fim: Fevereiro</InfoItem>
-      </Informacoes>
-      <ContainerEditar>
-      <StyledIcon icon={faChevronRight}/>
-      </ContainerEditar>
-      </ContainerInform>
-      <AcoesContainer>
-          
-          <AcaoBotao>
-            <FontAwesomeIcon icon={faTrash} />
-          </AcaoBotao>
-        </AcoesContainer>
-    </Botao>
-      <ContainerAdicionar>
-              <ButtonAdicionar onClick={toggleModal}></ButtonAdicionar>
-            </ContainerAdicionar>
-  </BotaoContainer>
-  <Modal
+                  </ContainerInform>
+                  
+                  <AcoesContainer>
+                 
+                    <AcaoBotao>
+                      <FontAwesomeIcon icon={faTrash} />
+                    </AcaoBotao>
+                   
+                  </AcoesContainer>
+                </ContainerFlorada>
+              ))}
+              <ContainerAdicionar>
+                <ButtonAdicionar onClick={toggleModal}></ButtonAdicionar>
+              </ContainerAdicionar>
+            </BotaoContainer>
+            <Modal
               isOpen={showModal}
               closeModalFlorada={toggleModal}
-              
+              onAddFlorada={handleAddFlorada} // Passa a função para adicionar florada
             />
-      </Container>
+          </Container>
         </ContainerPrincipal>
       </Main>
       <Footer></Footer>
@@ -122,4 +91,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default Floradas;

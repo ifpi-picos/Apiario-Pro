@@ -63,7 +63,7 @@ const Colmeias = () => {
                 <ContainerRow>
                   <ContainerInform>
                     <Informacoes>
-                      <SectionColmeias>Ninho</SectionColmeias>
+                      <SectionColmeias>Ninhos</SectionColmeias>
                       <InfoItem>{colmeias.NINHO.em_campo}</InfoItem>
                     </Informacoes>
                   </ContainerInform>
@@ -94,7 +94,7 @@ const Colmeias = () => {
               <ContainerRow>
                 <ContainerInform>
                   <Informacoes>
-                    <SectionColmeias>Ninho</SectionColmeias>
+                    <SectionColmeias>Ninhos</SectionColmeias>
                     <InfoItem>{colmeias.NINHO.vazia}</InfoItem>
                   </Informacoes>
                 </ContainerInform>

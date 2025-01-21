@@ -13,6 +13,7 @@ import Floradas from "./pages/Floradas";
 import Colmeias from "./pages/Colmeias";
 import Gestao from "./pages/Gestao";
 import Producao from "./pages/Producao";
+import Geolocalizacao from "./pages/Geolocalizacao";
 function App() {
   return (
     <AuthProvider> 
@@ -29,10 +30,7 @@ function App() {
           <Route path="/colmeias" element={<Colmeias />} />
           <Route path="/gestao" element={<Gestao />} />
           <Route path="/producao" element={<Producao />} />
-          
-         
-         
-          
+          <Route path="/geolocalizacao" element={<Geolocalizacao />} />
         </Routes>
       </Router>
       </AuthProvider>

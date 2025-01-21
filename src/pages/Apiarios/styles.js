@@ -115,7 +115,7 @@ export const BotaoContainer = styled.div`
 
 
 `;
-export const Botao = styled.button`
+export const ContainerFlorada = styled.button`
   width: 300px;
   height: auto;
   background-color: #ffeed8;

@@ -70,7 +70,7 @@ const Home = () => {
                 <BotaoTexto style={{color:"white"}} >Adicionar Colmeia</BotaoTexto>
               </Botao>
 
-              <Botao style={{backgroundColor:"green"}} onClick={() => navigate("/colmeias", { state: { colmeias } })}>
+              <Botao style={{backgroundColor:"#0d570d"}} onClick={() => navigate("/colmeias", { state: { colmeias } })}>
                 <StyledIcon style={{color:"white" , fontSize:18}} icon={faBoxArchive} />
                 <BotaoTexto style={{color:"white"}}>Colmeias</BotaoTexto>
               </Botao>
