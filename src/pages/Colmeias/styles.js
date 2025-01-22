@@ -63,6 +63,9 @@ export const BotaoContainer = styled.div`
   max-width: 1250px; /* Define uma largura máxima, se necessário */
   flex-direction: column;
   align-items: center;
+    @media (max-width: 568px) {
+   padding: 10px;
+  }
 `;
 
 export const Botao = styled.div`
