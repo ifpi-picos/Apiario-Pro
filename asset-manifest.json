@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/Apiario-Pro/static/css/main.f855e6bc.css",
-    "main.js": "/Apiario-Pro/static/js/main.c693565d.js",
+    "main.js": "/Apiario-Pro/static/js/main.232131b7.js",
     "static/js/453.effc5387.chunk.js": "/Apiario-Pro/static/js/453.effc5387.chunk.js",
     "static/media/foto6.jpg": "/Apiario-Pro/static/media/foto6.11c0afd22741b79a593b.jpg",
     "static/media/apicultor.png": "/Apiario-Pro/static/media/apicultor.42f2932ca7a9eae78b4e.png",
@@ -11,11 +11,11 @@
     "static/media/foto5.jpg": "/Apiario-Pro/static/media/foto5.729b40ddfa66676b03ce.jpg",
     "index.html": "/Apiario-Pro/index.html",
     "main.f855e6bc.css.map": "/Apiario-Pro/static/css/main.f855e6bc.css.map",
-    "main.c693565d.js.map": "/Apiario-Pro/static/js/main.c693565d.js.map",
+    "main.232131b7.js.map": "/Apiario-Pro/static/js/main.232131b7.js.map",
     "453.effc5387.chunk.js.map": "/Apiario-Pro/static/js/453.effc5387.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.f855e6bc.css",
-    "static/js/main.c693565d.js"
+    "static/js/main.232131b7.js"
   ]
 }
