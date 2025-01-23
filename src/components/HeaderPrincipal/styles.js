@@ -18,7 +18,7 @@ export const MenuButton = styled.div`
   margin: 25px;
   cursor: pointer;
   @media (max-width:555px){
-    margin: 5px;
+   
     z-index: 100;
   }
 `;

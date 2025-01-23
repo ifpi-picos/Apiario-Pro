@@ -2,10 +2,6 @@ import styled from "styled-components";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 export const AppBody = styled.div`
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-
   height: 100vh;
 `;
 export const Header = styled.div`
@@ -29,7 +25,7 @@ display: flex;
   height: 100%; 
 `;
 export const ContainerPrincipal = styled.div`
- 
+
 `;
 
 export const Text = styled.p`

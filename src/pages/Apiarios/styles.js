@@ -183,7 +183,7 @@ export const AcaoBotao = styled.button`
   }
 `;
 export const ContainerAdicionar = styled.div`
- position: fixed; /* Fixa o elemento na tela */
+  position: fixed; /* Fixa o elemento na tela */
   bottom: 35px; /* Distância do canto inferior */
   right: 35px; /* Distância do canto direito */
   display: flex;
@@ -191,10 +191,15 @@ export const ContainerAdicionar = styled.div`
   justify-content: center;
 
   @media (max-width: 842px) {
-    bottom: 10px; /* Ajuste para telas menores */
-    right: 10px;
+    bottom: 70px; /* Ajuste para telas menores */
+    right: 45px;
+  }
+      @media (max-width: 582px) {
+    bottom: 70px; /* Ajuste para telas menores */
+    right: 45px;
   }
 `;
+
 export const ButtonAdicionar = styled.button`
   width: 40px;
   height: 40px;
@@ -202,10 +207,6 @@ export const ButtonAdicionar = styled.button`
   background-size: cover;
   background-color: #ffffff00;
   cursor: pointer;
-  
-  
- 
-
   
 background-image: url(${Adicionar});
   width: 35px;
@@ -216,12 +217,10 @@ background-image: url(${Adicionar});
   @media (max-width: 842px) {
     margin-left: 4px;
     margin-right: 4px;
-    height: 30px;
-    width: 30px;
+   
   }
   @media (max-width: 568px) {
-    height: 25px;
-    width: 25px;
+    
   }
 `;
 

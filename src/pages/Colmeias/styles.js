@@ -128,8 +128,12 @@ export const ContainerAdicionar = styled.div`
   justify-content: center;
 
   @media (max-width: 842px) {
-    bottom: 10px; /* Ajuste para telas menores */
-    right: 10px;
+    bottom: 70px; /* Ajuste para telas menores */
+    right: 45px;
+  }
+      @media (max-width: 582px) {
+    bottom: 70px; /* Ajuste para telas menores */
+    right: 45px;
   }
 `;
 
@@ -150,12 +154,10 @@ background-image: url(${Adicionar});
   @media (max-width: 842px) {
     margin-left: 4px;
     margin-right: 4px;
-    height: 30px;
-    width: 30px;
+   
   }
   @media (max-width: 568px) {
-    height: 25px;
-    width: 25px;
+    
   }
 `;
 
@@ -164,6 +166,7 @@ export const ContainerRow = styled.div`
   justify-content: center;
   gap: 30px;
 `;
+
 
 export const ContainerInform = styled.div`
 

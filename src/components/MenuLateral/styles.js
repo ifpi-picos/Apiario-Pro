@@ -30,7 +30,7 @@ export const SideBar = styled.div`
 
   @media (max-width:555px){
     position: absolute;
-    top: 64px;
+    top: 0px;
     z-index:1000;
   }
   

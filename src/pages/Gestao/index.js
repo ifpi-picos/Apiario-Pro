@@ -16,6 +16,9 @@ import {
   AppBody,
   Main,
   DivGraf,
+  DivPrincipal,
+  DivStyle1,
+  DivStyle2
   
 } from './styles';
 ChartJS.register(
@@ -86,20 +89,20 @@ const Gestao = () => {
     <AppBody>
       <Header/>
       <Main>
-    <div style={{ padding: '20px' }}>
+    <DivPrincipal>
       <h2> Gestão de Produção de Mel - Análise de Gráficos</h2>
     <DivGraf>
-      <div style={{ width: '25%', marginLeft: '60px',marginTop:'30px'  }}>
+      <DivStyle1>
         <h3>Produção por Tipo de Florada</h3>
         <Pie data={pieData} />
-      </div>
+      </DivStyle1>
 
-      <div style={{ width: '50%', marginLeft: '60px', marginTop:'30px'}}>
+      <DivStyle2 >
         <h3>Produção Mensal de Mel</h3>
         <Bar data={barData} options={barOptions} />
-      </div>
+      </DivStyle2>
       </DivGraf>
-    </div>
+    </DivPrincipal>
     
     </Main>
     </AppBody>

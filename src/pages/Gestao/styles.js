@@ -24,3 +24,21 @@ display: flex;
 justify-content: space-between;
 align-items:center;
 `;
+export const DivPrincipal = styled.div`
+padding: 20px;
+display: flex;
+ flex-direction: column;
+
+`;
+export const DivStyle1 = styled.div`
+width: 25%;
+ marginLeft: 60px;
+ marginTop:30px;  
+
+`;
+export const DivStyle2 = styled.div`
+width: 50%;
+ marginLeft: 60px;
+  marginTop:30px;
+
+`;

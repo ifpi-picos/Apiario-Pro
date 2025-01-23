@@ -71,7 +71,7 @@ export const ContainerCategoria = styled.div`
   padding: 1em 0 0.7em 1em;
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
+  
 `;
 
 export const H4InfomacoesInputs = styled.h4`
@@ -153,18 +153,19 @@ export const ContainerDescricaoTarefa = styled.div`
   padding: 1em 0 0.7em 1em;
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
+ 
 `;
 
 export const DivButtonNovaTarefa = styled.div`
   justify-content: center;
   display: flex;
   margin-top: 2em;
+  width:100%
 `;
 
 export const ButtonCriarTarefa = styled.button`
   height: 2.5em;
-  width: 10em;
+  width: 100%;
   border: none;
   border-radius: 25px;
   background-color:#ffc400;
@@ -183,6 +184,7 @@ export const ButtonCriarTarefa = styled.button`
 export const ContainerButton = styled.div`
 display:flex;
 align-items: center;
+justify-content: center;
 
 
 `;
