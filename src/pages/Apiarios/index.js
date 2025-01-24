@@ -137,7 +137,8 @@ function Apiarios() {
   </BotaoContainer>
       </Container>
       <ContainerAdicionar>
-        <ButtonAdicionar  onClick={toggleModal}></ButtonAdicionar>
+         <StyledIcon  onClick={toggleModal} /> 
+         
       </ContainerAdicionar>
       <Modal
             isOpen={showModal}

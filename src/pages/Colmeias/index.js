@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Header from "../../components/HeaderPrincipal/index.js";
 import Modal from "../../components/ModalColmeia/index.js";
+
 import {
   AppBody,
   Text,
@@ -20,6 +21,7 @@ import {
   ContainerDiv1,
   ContainerDiv2,
   ContainerText,
+  StyledIcon 
 } from "./styles";
 
 const Colmeias = () => {
@@ -116,11 +118,11 @@ const Colmeias = () => {
 
           {/* Botão para adicionar colmeias */}
           <ContainerAdicionar>
-            <ButtonAdicionar onClick={toggleModal}>
+          <StyledIcon  onClick={toggleModal} /> 
               
-            </ButtonAdicionar>
+          
           </ContainerAdicionar>
-
+        
           {/* Modal para adicionar novas colmeias */}
           <Modal
             isOpen={showModal}

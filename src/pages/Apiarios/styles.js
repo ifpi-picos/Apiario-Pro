@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Adicionar from "../../assets/adicionar.png";
-
+import { IoIosAddCircleOutline } from "react-icons/io";
 export const AppBody = styled.div`
   margin: 0;
   padding: 0;
@@ -198,30 +198,45 @@ export const ContainerAdicionar = styled.div`
     bottom: 70px; /* Ajuste para telas menores */
     right: 45px;
   }
+    &:hover {
+    transform: scale(1.1);
+  }
+
+  /* Tooltip */
+  &::after {
+    content: "Adicionar"; /* Texto da tooltip */
+    position: absolute;
+    bottom: 40px; /* Ajuste para exibir abaixo do ícone */
+    left: 50%;
+    transform: translateX(-50%);
+    
+    color: black;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    white-space: nowrap;
+    opacity: 0; /* Invisível inicialmente */
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    
+  }
+
+  &:hover::after {
+    opacity: 1; /* Aparece quando o mouse passa */
+  }
+    
+    
+`;
+export const StyledIcon = styled(IoIosAddCircleOutline)`
+  color: black;
+  font-size: 44px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  
+
+  
 `;
 
 export const ButtonAdicionar = styled.button`
-  width: 40px;
-  height: 40px;
-  border: none;
-  background-size: cover;
-  background-color: #ffffff00;
-  cursor: pointer;
   
-background-image: url(${Adicionar});
-  width: 35px;
-  height: 35px;
-  &:hover {
-    opacity: 50%;
-  }
-  @media (max-width: 842px) {
-    margin-left: 4px;
-    margin-right: 4px;
-   
-  }
-  @media (max-width: 568px) {
-    
-  }
 `;
-
-

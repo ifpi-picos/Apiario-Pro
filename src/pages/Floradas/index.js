@@ -75,7 +75,7 @@ function Floradas() {
                 </ContainerFlorada>
               ))}
               <ContainerAdicionar>
-                <ButtonAdicionar onClick={toggleModal}></ButtonAdicionar>
+                 <StyledIcon  onClick={toggleModal} /> 
               </ContainerAdicionar>
             </BotaoContainer>
             <Modal

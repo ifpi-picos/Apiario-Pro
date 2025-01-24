@@ -90,7 +90,7 @@ const Gestao = () => {
       <Header/>
       <Main>
     <DivPrincipal>
-      <h2> Gestão de Produção de Mel - Análise de Gráficos</h2>
+      <h2 style={{textAlign:"center"}}> Gestão de Produção de Mel - Análise de Gráficos</h2>
     <DivGraf>
       <DivStyle1>
         <h3>Produção por Tipo de Florada</h3>

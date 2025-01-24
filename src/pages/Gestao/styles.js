@@ -21,8 +21,9 @@ export const Main = styled.div`
 `;
 export const DivGraf = styled.div`
 display: flex;
-justify-content: space-between;
+justify-content: center;
 align-items:center;
+gap:100px;
 `;
 export const DivPrincipal = styled.div`
 padding: 20px;
