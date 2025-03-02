@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Header from "../../components/HeaderPrincipal/index.js";
 import Modal from "../../components/ModalColmeia/index.js";
-
+import Campo from "../../assets/campo.png";
+import Deposito from "../../assets/deposito.png";
 import {
   AppBody,
   Text,
@@ -21,7 +22,8 @@ import {
   ContainerDiv1,
   ContainerDiv2,
   ContainerText,
-  StyledIcon 
+  StyledIcon,
+  Icone
 } from "./styles";
 
 const Colmeias = () => {
@@ -58,7 +60,8 @@ const Colmeias = () => {
           {/* Seção "Em Campo" */}
           <ContainerDiv1>
             <ContainerText>
-              <Text>Em campo</Text>
+              <Text>Em campo</Text> 
+              <Icone src={Campo} alt={"campo"}/>
             </ContainerText>
             <Container>
               <BotaoContainer>
@@ -90,7 +93,8 @@ const Colmeias = () => {
           {/* Seção "Vazia" */}
           <ContainerDiv2>
             <ContainerText>
-              <Text>Vazia</Text>
+              <Text>Galpão</Text>
+              <Icone src={Deposito} alt={"deposito"}/>
             </ContainerText>
             <BotaoContainer>
               <ContainerRow>

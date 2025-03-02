@@ -238,7 +238,7 @@ export const ContainerDiv1 = styled.div`
 width:100%;
    display: flex;
   flex-direction: column;
-  height: 65%; 
+  height: 70%; 
   align-items:center;
 
 `; 
@@ -250,3 +250,22 @@ display: flex;
   align-items:center;
 
 `; 
+export const Icone = styled.img`
+  width: 35px;
+  height: 35px;
+  border: none;
+  margin-left: 10px;
+ 
+   margin-top:10px;
+  
+  @media (max-width: 842px) {
+    margin-left: 4px;
+    margin-right: 4px;
+    height: 30px;
+    width: 30px;
+  }
+  @media (max-width: 568px) {
+    height: 25px;
+    width: 25px;
+  }
+`;

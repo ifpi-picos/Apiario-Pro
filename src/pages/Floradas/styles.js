@@ -252,7 +252,8 @@ background-image: url(${Adicionar});
 `;
 export const ContainerInform = styled.div`
 display: flex;
-
+    justify-content: space-between;
+    width: 100%;
 
 
 `; 
@@ -265,9 +266,13 @@ export const StyledIcon = styled(IoIosAddCircleOutline)`
 
   
 `;
+export const StyledIcon2 = styled(FontAwesomeIcon)`
+  
+ color: black;
+`;
 export const ContainerEditar = styled.div`
 margin-top:30px;
- margin-left:150px;
+
   background-color: #ffffff00;
   cursor:pointer;
   

@@ -74,14 +74,17 @@ color:black;
 
 export const Button = styled.button`
 margin:5px;
-border-radius:30px;
+border-radius:15px;
 border:none;
-height:40px;
+height:38px;
 width:100%;
-font-weight: 750;
-background-color: rgba(0, 0, 0, 0.3); /* Cor de fundo escura com 50% de opacidade */
+font-weight: 700;
+background-color:#3c3b3b; 
   color: #ffffff; 
   cursor:pointer;
+   &:hover {
+    opacity: 0.8;
+  }
 `;
 export const ContainerButton = styled.div`
 display: flex;

@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
 import { faClose } from "@fortawesome/free-solid-svg-icons";
 
 import {
@@ -11,14 +10,12 @@ import {
   InputSelect,
   ContainerButtonExit,
   FormDetalhesTarefas,
-  ContainerCategoria,
-  H4InfomacoesInputs,
-  SelectInputsWidth,
   ContainerDescricaoTarefa,
+  H4InfomacoesInputs,
+  ContainerButton,
   DivButtonNovaTarefa,
   ButtonCriarTarefa,
   ModalBackground,
-  ContainerButton,
 } from "./styles";
 
 const ModalApiario = ({ isOpen, closeModalApiario, onAddApiario }) => {
@@ -26,8 +23,18 @@ const ModalApiario = ({ isOpen, closeModalApiario, onAddApiario }) => {
     regiao: "",
     florada: "",
     colmeias: "",
+    imagem: null,
   });
 
+  const [apiarios, setApiarios] = useState([]);
+
+  // Carregar dados salvos no localStorage ao abrir o site
+  useEffect(() => {
+    const dadosSalvos = JSON.parse(localStorage.getItem("apiarios")) || [];
+    setApiarios(dadosSalvos);
+  }, []);
+
+  // Atualizar os campos do formulário
   const handleChange = (event) => {
     setFormState({
       ...formState,
@@ -35,15 +42,43 @@ const ModalApiario = ({ isOpen, closeModalApiario, onAddApiario }) => {
     });
   };
 
+  // Converter a imagem para Base64 antes de salvar
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormState({ ...formState, imagem: reader.result });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // Salvar apiário no localStorage
+  const salvarApiario = (novoApiario) => {
+    const novosApiarios = [...apiarios, novoApiario];
+    setApiarios(novosApiarios);
+    localStorage.setItem("apiarios", JSON.stringify(novosApiarios));
+  };
+
+  // Manipular o envio do formulário
   const handleSubmit = (event) => {
     event.preventDefault();
+    const { regiao, florada, colmeias, imagem } = formState;
 
-    if (formState.regiao&& formState.florada&& formState.colmeias) {
-      onAddApiario(formState);
+    if (regiao && florada && colmeias && imagem) {
+      salvarApiario(formState);
+      setFormState({ regiao: "", florada: "", colmeias: "", imagem: null });
       closeModalApiario();
     } else {
       alert("Preencha todos os campos corretamente.");
     }
+  };
+
+  // Fechar a modal e limpar os campos
+  const handleClose = () => {
+    setFormState({ regiao: "", florada: "", colmeias: "", imagem: null });
+    closeModalApiario();
   };
 
   if (!isOpen) return null;
@@ -55,47 +90,65 @@ const ModalApiario = ({ isOpen, closeModalApiario, onAddApiario }) => {
           <ContainerH2Tarefa>
             <H2AdicionarTarefa>ADICIONAR APIÁRIO</H2AdicionarTarefa>
             <ContainerButtonExit>
-              <StyledIcon icon={faClose} onClick={closeModalApiario} />
+              <StyledIcon icon={faClose} onClick={handleClose} />
             </ContainerButtonExit>
           </ContainerH2Tarefa>
           <FormDetalhesTarefas onSubmit={handleSubmit}>
-            
-          <ContainerDescricaoTarefa>
-  <H4InfomacoesInputs>REGIAO</H4InfomacoesInputs>
-  <InputSelect
-    type="text"
-    name="nome"
-    value={formState.nome}  // Corrigido: de 'quantidade' para 'nome'
-    onChange={handleChange}
-  />
-</ContainerDescricaoTarefa>
+            <ContainerDescricaoTarefa>
+              <H4InfomacoesInputs>REGIÃO</H4InfomacoesInputs>
+              <InputSelect
+                type="text"
+                name="regiao"
+                value={formState.regiao}
+                onChange={handleChange}
+              />
+            </ContainerDescricaoTarefa>
 
-<ContainerDescricaoTarefa>
-  <H4InfomacoesInputs>FLORADA</H4InfomacoesInputs>
-  <InputSelect
-    type="text"
-    name="nome"
-    value={formState.nome}  // Corrigido: de 'quantidade' para 'nome'
-    onChange={handleChange}
-  />
-</ContainerDescricaoTarefa>
+            <ContainerDescricaoTarefa>
+              <H4InfomacoesInputs>FLORADA</H4InfomacoesInputs>
+              <select
+                name="florada"
+                value={formState.florada}
+                onChange={handleChange}
+                style={{
+                  width: "60%",
+                  padding: "8px",
+                  fontSize: "16px",
+                  borderRadius: "4px",
+                  border: "1px solid #ccc",
+                }}
+              >
+                <option value="">Selecione a florada</option>
+                <option value="Angico">Angico</option>
+                <option value="Mamaleiro">Mamaleiro</option>
+                <option value="Florada Silvestre">Florada Silvestre</option>
+              </select>
+            </ContainerDescricaoTarefa>
 
-<ContainerDescricaoTarefa>
+            <ContainerDescricaoTarefa>
               <H4InfomacoesInputs>COLMEIAS</H4InfomacoesInputs>
               <InputSelect
                 type="number"
-                name="quantidade"
-                value={formState.quantidade}
+                name="colmeias"
+                value={formState.colmeias}
                 onChange={handleChange}
                 min="1"
               />
             </ContainerDescricaoTarefa>
+
+            <ContainerDescricaoTarefa>
+              <H4InfomacoesInputs>Imagem</H4InfomacoesInputs>
+              <input type="file" accept="image/*" onChange={handleImageChange} />
+            </ContainerDescricaoTarefa>
+
             <ContainerButton>
               <DivButtonNovaTarefa>
                 <ButtonCriarTarefa type="submit">ADICIONAR</ButtonCriarTarefa>
               </DivButtonNovaTarefa>
               <DivButtonNovaTarefa>
-                <ButtonCriarTarefa type="button" onClick={closeModalApiario}>CANCELAR</ButtonCriarTarefa>
+                <ButtonCriarTarefa type="button" onClick={handleClose}>
+                  CANCELAR
+                </ButtonCriarTarefa>
               </DivButtonNovaTarefa>
             </ContainerButton>
           </FormDetalhesTarefas>

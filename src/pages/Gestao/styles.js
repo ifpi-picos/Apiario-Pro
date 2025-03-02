@@ -24,6 +24,17 @@ display: flex;
 justify-content: center;
 align-items:center;
 gap:100px;
+@media (max-width: 842px) {
+    flex-direction: column;
+  gap:10px;
+    font-size: 14px;
+  }
+   @media (max-width: 582px) {
+  flex-direction: column;
+  gap:10px;
+    font-size: 14px;
+  }
+
 `;
 export const DivPrincipal = styled.div`
 padding: 20px;
@@ -35,11 +46,28 @@ export const DivStyle1 = styled.div`
 width: 25%;
  marginLeft: 60px;
  marginTop:30px;  
+    @media (max-width: 842px) {
+  width: 50%;
+  
+  }
+ @media (max-width: 582px) {
+  width: 70%;
+  
+  }
 
 `;
 export const DivStyle2 = styled.div`
 width: 50%;
  marginLeft: 60px;
   marginTop:30px;
+   @media (max-width: 842px) {
+  width: 50%;
+  
+  }
+
+   @media (max-width: 582px) {
+  width: 100%;
+  
+  }
 
 `;

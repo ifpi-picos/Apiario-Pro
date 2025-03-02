@@ -55,7 +55,7 @@ function Cadastro() {
             <Form>
             <ContainerTitulo>
                
-          <H1>Apiário Pro</H1>
+          <H1>CADASTRO</H1>
           
           </ContainerTitulo>
         

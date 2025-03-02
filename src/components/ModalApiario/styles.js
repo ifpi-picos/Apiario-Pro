@@ -105,6 +105,12 @@ export const InputSelect = styled.input`
   margin-right: 3px;
   width: 90%;
   max-width: 13.5em;
+  &::placeholder {
+    font-weight: bold;
+     font-size: 14px;
+    @media (max-width: 555px) {
+
+    }
 `;
 export const TextArea = styled.textarea`
     background-color: #D9D9D9;

@@ -38,6 +38,7 @@ const ModalFlorada = ({ isOpen, closeModalFlorada, onAddFlorada }) => {
     event.preventDefault();
 
     if (formState.nome&& formState.data_inicio&& formState.data_fim) {
+      setFormState({ nome: "" });
       onAddFlorada(formState);
       closeModalFlorada();
     } else {

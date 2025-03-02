@@ -21,7 +21,8 @@ import {
   ButtonAdicionar,
   ContainerInform,
   StyledIcon,
-  ContainerEditar
+  ContainerEditar,
+  StyledIcon2
 } from './styles'; 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faChevronRight } from "@fortawesome/free-solid-svg-icons";
@@ -61,7 +62,7 @@ function Floradas() {
                       
                     </Informacoes>
                     <ContainerEditar>
-      <StyledIcon icon={faChevronRight}/>
+      <StyledIcon2 icon={faChevronRight}/>
       </ContainerEditar>
                   </ContainerInform>
                   

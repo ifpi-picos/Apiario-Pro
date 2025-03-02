@@ -56,6 +56,7 @@ display: flex;
 max-width: 341px;
 padding-bottom: 20px;
 border-bottom: 1px solid #3c3b3b4d;
+font-size: 25px;
 @media (max-width: 388px) {
   max-width: 308px;
 }
