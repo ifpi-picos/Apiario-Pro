@@ -69,7 +69,10 @@ const ModalApiario = ({ isOpen, closeModalApiario, onAddApiario }) => {
     if (regiao && florada && colmeias && imagem) {
       salvarApiario(formState);
       setFormState({ regiao: "", florada: "", colmeias: "", imagem: null });
-      closeModalApiario();
+      closeModalApiario(); // Fechar a modal
+
+      // Forçar o recarregamento da página
+      window.location.reload();
     } else {
       alert("Preencha todos os campos corretamente.");
     }

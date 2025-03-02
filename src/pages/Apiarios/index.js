@@ -49,9 +49,33 @@ function Apiarios() {
         if (novoApiario.imagem) {
             novoApiario.imagem = await toBase64(novoApiario.imagem);
         }
+
+        // Atualizar o estado diretamente com o novo apiário
         const novosApiarios = [...apiarios, novoApiario];
         setApiarios(novosApiarios);
+
+        // Salvar no localStorage
         localStorage.setItem("apiarios", JSON.stringify(novosApiarios));
+    };
+
+    // Função para excluir um apiário
+    const handleDeleteApiario = (index) => {
+        // Perguntar ao usuário se tem certeza
+        const confirmacao = window.confirm("Tem certeza que deseja excluir este apiário?");
+        
+        if (confirmacao) {
+            // Cria um novo array sem o apiário excluído
+            const novosApiarios = apiarios.filter((_, i) => i !== index);
+
+            // Atualiza o estado local
+            setApiarios(novosApiarios);
+
+            // Atualiza o localStorage com os novos dados
+            localStorage.setItem("apiarios", JSON.stringify(novosApiarios));
+
+            // Recarrega a página para refletir as mudanças no estado e no localStorage
+            window.location.reload();
+        }
     };
 
     return (
@@ -83,7 +107,7 @@ function Apiarios() {
                                         <AcaoBotao>
                                             <FontAwesomeIcon icon={faEdit} />
                                         </AcaoBotao>
-                                        <AcaoBotao>
+                                        <AcaoBotao onClick={() => handleDeleteApiario(index)}>
                                             <FontAwesomeIcon icon={faTrash} />
                                         </AcaoBotao>
                                     </AcoesContainer>
