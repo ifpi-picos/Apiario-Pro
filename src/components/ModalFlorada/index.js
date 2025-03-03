@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { faClose } from "@fortawesome/free-solid-svg-icons";
 import {
@@ -26,6 +26,11 @@ const ModalFlorada = ({ isOpen, closeModalFlorada, onAddFlorada }) => {
     data_inicio: "",
     data_fim: "",
   });
+const [floradas, setFloradas] = useState([]);
+useEffect(() => {
+    const dadosSalvos = JSON.parse(localStorage.getItem("floradas")) || [];
+    setFloradas(dadosSalvos);
+  }, []);
 
   const handleChange = (event) => {
     setFormState({
@@ -33,19 +38,31 @@ const ModalFlorada = ({ isOpen, closeModalFlorada, onAddFlorada }) => {
       [event.target.name]: event.target.value,
     });
   };
+  const salvarFlorada= (novaFlorada) => {
+    const novasFloradas = [...floradas, novaFlorada];
+    setFloradas(novasFloradas);
+    localStorage.setItem("floradas", JSON.stringify(novasFloradas));
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    const { nome,  data_inicio, data_fim } = formState;
 
-    if (formState.nome&& formState.data_inicio&& formState.data_fim) {
-      setFormState({ nome: "" });
-      onAddFlorada(formState);
-      closeModalFlorada();
+    if (nome && data_inicio && data_fim) {
+      salvarFlorada(formState);
+      setFormState({ nome: "", data_inicio: "", data_fim: ""});
+      closeModalFlorada(); // Fechar a modal
+
+      // Forçar o recarregamento da página
+      window.location.reload();
     } else {
       alert("Preencha todos os campos corretamente.");
     }
   };
-
+  const handleClose = () => {
+    setFormState({nome: "", data_inicio: "", data_fim: ""});
+    closeModalFlorada();
+  };
   if (!isOpen) return null;
 
   return (
@@ -55,7 +72,7 @@ const ModalFlorada = ({ isOpen, closeModalFlorada, onAddFlorada }) => {
           <ContainerH2Tarefa>
             <H2AdicionarTarefa>ADICIONAR FLORADA</H2AdicionarTarefa>
             <ContainerButtonExit>
-              <StyledIcon icon={faClose} onClick={closeModalFlorada} />
+              <StyledIcon icon={faClose}onClick={handleClose}  />
             </ContainerButtonExit>
           </ContainerH2Tarefa>
           <FormDetalhesTarefas onSubmit={handleSubmit}>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
 
 import Header from "../../components/HeaderPrincipal/index.js";
 import Modal from "../../components/ModalFlorada/index.js";
@@ -31,14 +31,44 @@ function Floradas() {
   const [showModal, setShowModal] = useState(false);
   const [floradas, setFloradas] = useState([]); // Estado para armazenar as floradas
 
+ useEffect(() => {
+        const floradasSalvas = localStorage.getItem("floradas");
+        if (floradasSalvas) {
+            setFloradas(JSON.parse(floradasSalvas));
+        }
+    }, []);
+    const handleAddFlorada= async (novaFlorada) => {
+    
+
+      // Atualizar o estado diretamente com o novo apiário
+      const novasFloradas = [...floradas, novaFlorada];
+      setFloradas(novasFloradas);
+
+      // Salvar no localStorage
+      localStorage.setItem("floradas", JSON.stringify(novasFloradas));
+  };
   const toggleModal = () => {
     setShowModal(!showModal);
   };
+  const handleDeleteFlorada = (index) => {
+    // Perguntar ao usuário se tem certeza
+    const confirmacao = window.confirm("Tem certeza que deseja excluir esta florada?");
+    
+    if (confirmacao) {
+        // Cria um novo array sem o apiário excluído
+        const novasFloradas = floradas.filter((_, i) => i !== index);
 
-  const handleAddFlorada = (novaFlorada) => {
-    setFloradas((prevFloradas) => [...prevFloradas, novaFlorada]); // Adiciona a nova florada ao estado
-  };
+        // Atualiza o estado local
+        setFloradas(novasFloradas);
 
+        // Atualiza o localStorage com os novos dados
+        localStorage.setItem("floradas", JSON.stringify(novasFloradas));
+
+        // Recarrega a página para refletir as mudanças no estado e no localStorage
+        window.location.reload();
+    }
+};
+  
   return (
     <AppBody>
       <Header/>
@@ -68,7 +98,7 @@ function Floradas() {
                   
                   <AcoesContainer>
                  
-                    <AcaoBotao>
+                    <AcaoBotao onClick={() => handleDeleteFlorada(index)}>
                       <FontAwesomeIcon icon={faTrash} />
                     </AcaoBotao>
                    
