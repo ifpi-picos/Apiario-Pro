@@ -35,6 +35,7 @@ export const ContainerText = styled.div`
   height:30px;
   width:80%;
   margin-right:0;
+  justify-content: space-between;
   
  
 `;
@@ -269,3 +270,19 @@ export const Icone = styled.img`
     width: 25px;
   }
 `;
+export const Total = styled.div`
+ margin-left: 10px;
+   margin-top:15px;
+   display: flex;
+  font-weight: bold;
+  justify-content: center;
+  
+
+`; 
+export const TextImg = styled.div`
+
+   display: flex;
+ 
+  
+
+`; 

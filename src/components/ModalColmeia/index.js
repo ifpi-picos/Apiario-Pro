@@ -77,8 +77,15 @@ const ModalColmeia = ({ isOpen, closeModalColmeia, onAddColmeia }) => {
                 type="number"
                 name="quantidade"
                 value={formState.quantidade}
-                onChange={handleChange}
-                min="1"
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (value.length <= 6) {
+                    handleChange(e);
+                  }
+                }}
+                min="0"
+                max="999999" 
+                
               />
             </ContainerDescricaoTarefa>
             <ContainerDescricaoTarefa>

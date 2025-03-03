@@ -28,12 +28,16 @@ const Home = () => {
   const [showModal, setShowModal] = useState(false);
 
   // Estado para armazenar as colmeias
-  const [colmeias, setColmeias] = useState({
-    MELGUEIRA: { vazia: 0, em_campo: 0 },
-    NINHO: { vazia: 0, em_campo: 0 },
-    NUCLEO: { vazia: 0, em_campo: 0 },
-  });
-
+  const [colmeias, setColmeias] = useState(() => {
+      const savedData = localStorage.getItem("colmeias");
+      return savedData
+        ? JSON.parse(savedData)
+        : {
+            MELGUEIRA: { vazia: 0, em_campo: 0 },
+            NINHO: { vazia: 0, em_campo: 0 },
+            NUCLEO: { vazia: 0, em_campo: 0 },
+          };
+    });
   // Função para abrir/fechar a Modal
   const toggleModal = () => {
     setShowModal(!showModal);
@@ -48,6 +52,17 @@ const Home = () => {
         [estado.toLowerCase()]: colmeias[tipo_colmeia][estado.toLowerCase()] + parseInt(quantidade, 10),
       },
     };
+    setColmeias((prevColmeias) => {
+      const newColmeias = {
+        ...prevColmeias,
+        [tipo_colmeia]: {
+          ...prevColmeias[tipo_colmeia],
+          [estado.toLowerCase()]: parseInt(quantidade, 10),
+        },
+      };
+      localStorage.setItem("colmeias", JSON.stringify(newColmeias));
+      return newColmeias;
+    });
 
     setShowModal(false);
 
