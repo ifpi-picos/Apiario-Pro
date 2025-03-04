@@ -18,7 +18,6 @@ import {
   AcoesContainer,
   AcaoBotao,
   ContainerAdicionar,
-  ButtonAdicionar,
   ContainerInform,
   StyledIcon,
   ContainerEditar,

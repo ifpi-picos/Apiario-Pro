@@ -121,33 +121,7 @@ export const TextArea = styled.textarea`
     
 `;
 
-export const ContainerImportancia = styled.div`
-  padding: 1em 0 0.7em 1em;
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-`;
 
-export const ContainerInicio = styled.div`
-  padding: 1em 0 0.7em 1em;
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-`;
-
-export const ContainerInicioConclusaoHorario = styled.div`
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  margin-top: 5px;
-`;
-
-export const ContainerConclusao = styled.div`
-  padding: 1em 0 0.7em 1em;
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-`;
 
 export const ContainerDescricaoTarefa = styled.div`
   padding: 1em 0 0.7em 1em;
@@ -160,7 +134,7 @@ export const DivButtonNovaTarefa = styled.div`
   justify-content: center;
   display: flex;
   margin-top: 2em;
-  width:100%
+  width:100%;
 `;
 
 export const ButtonCriarTarefa = styled.button`

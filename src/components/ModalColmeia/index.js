@@ -97,7 +97,7 @@ const ModalColmeia = ({ isOpen, closeModalColmeia, onAddColmeia }) => {
               >
                 <option value="">Selecione</option>
                 <option value="EM_CAMPO">Em Campo</option>
-                <option value="VAZIA">Vazia</option>
+                <option value="VAZIA">Galpão</option>
               </SelectInputsWidth>
             </ContainerDescricaoTarefa>
             <ContainerButton>

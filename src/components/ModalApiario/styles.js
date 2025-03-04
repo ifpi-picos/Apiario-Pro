@@ -60,6 +60,7 @@ export const StyledIcon = styled(FontAwesomeIcon)`
   cursor: pointer;
 `;
 export const FormDetalhesTarefas = styled.form`
+  
   background-color: #fff;
   padding-bottom: 2em;
   border-bottom-left-radius: 15px;
@@ -71,7 +72,7 @@ export const ContainerCategoria = styled.div`
   padding: 1em 0 0.7em 1em;
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
+  
 `;
 
 export const H4InfomacoesInputs = styled.h4`
@@ -100,7 +101,7 @@ export const InputSelect = styled.input`
   font-weight: 600;
   font-size: 16px;
   text-align: center;
-  width: 10em;
+
   height: 1.8em;
   margin-right: 3px;
   width: 90%;
@@ -159,18 +160,19 @@ export const ContainerDescricaoTarefa = styled.div`
   padding: 1em 0 0.7em 1em;
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
+
 `;
 
 export const DivButtonNovaTarefa = styled.div`
   justify-content: center;
   display: flex;
   margin-top: 2em;
+    width:100%
 `;
 
 export const ButtonCriarTarefa = styled.button`
   height: 2.5em;
-  width: 10em;
+  width: 100%;
   border: none;
   border-radius: 25px;
   background-color:#ffc400;
@@ -191,4 +193,22 @@ display:flex;
 align-items: center;
 
 
+`;
+export const FileInputLabel = styled.label`
+  display: inline-block;
+  padding: 10px 15px;
+      background-color: #3c3b3b;
+  color: white;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+  
+  &:hover {
+
+  }
+`;
+
+export const HiddenFileInput = styled.input`
+  display: none;
 `;

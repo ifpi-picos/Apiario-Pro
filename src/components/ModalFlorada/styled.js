@@ -71,7 +71,7 @@ export const ContainerCategoria = styled.div`
   padding: 1em 0 0.7em 1em;
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
+ 
 `;
 
 export const H4InfomacoesInputs = styled.h4`
@@ -79,7 +79,7 @@ export const H4InfomacoesInputs = styled.h4`
   font-weight: 600;
   font-size: 20px;
   margin-right: 10px;
-  min-width: 4em;
+  min-width: 6em;
 `;
 
 export const SelectInputsWidth = styled.select`
@@ -121,50 +121,25 @@ export const TextArea = styled.textarea`
     
 `;
 
-export const ContainerImportancia = styled.div`
-  padding: 1em 0 0.7em 1em;
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-`;
 
-export const ContainerInicio = styled.div`
-  padding: 1em 0 0.7em 1em;
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-`;
-
-export const ContainerInicioConclusaoHorario = styled.div`
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  margin-top: 5px;
-`;
-
-export const ContainerConclusao = styled.div`
-  padding: 1em 0 0.7em 1em;
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-`;
 
 export const ContainerDescricaoTarefa = styled.div`
   padding: 1em 0 0.7em 1em;
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
+  
 `;
 
 export const DivButtonNovaTarefa = styled.div`
   justify-content: center;
   display: flex;
   margin-top: 2em;
+  width:100%;
 `;
 
 export const ButtonCriarTarefa = styled.button`
   height: 2.5em;
-  width: 10em;
+  width: 100%;
   border: none;
   border-radius: 25px;
   background-color:#ffc400;
@@ -183,6 +158,6 @@ export const ButtonCriarTarefa = styled.button`
 export const ContainerButton = styled.div`
 display:flex;
 align-items: center;
-
+justify-content: center;
 
 `;

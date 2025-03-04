@@ -49,7 +49,7 @@ function Apiarios() {
         if (novoApiario.imagem) {
             novoApiario.imagem = await toBase64(novoApiario.imagem);
         }
-
+        
         // Atualizar o estado diretamente com o novo apiário
         const novosApiarios = [...apiarios, novoApiario];
         setApiarios(novosApiarios);

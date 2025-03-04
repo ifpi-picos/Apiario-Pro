@@ -16,6 +16,8 @@ import {
   DivButtonNovaTarefa,
   ButtonCriarTarefa,
   ModalBackground,
+  FileInputLabel,
+  HiddenFileInput,
 } from "./styles";
 
 const ModalApiario = ({ isOpen, closeModalApiario, onAddApiario }) => {
@@ -123,13 +125,13 @@ const ModalApiario = ({ isOpen, closeModalApiario, onAddApiario }) => {
               >
                 <option value="">Selecione a florada</option>
                 <option value="Angico">Angico</option>
-                <option value="Mamaleiro">Mamaleiro</option>
+                <option value="Marmaleiro">Marmaleiro</option>
                 <option value="Florada Silvestre">Florada Silvestre</option>
               </select>
             </ContainerDescricaoTarefa>
 
             <ContainerDescricaoTarefa>
-              <H4InfomacoesInputs>COLMEIAS</H4InfomacoesInputs>
+              <H4InfomacoesInputs>COLMÉIAS</H4InfomacoesInputs>
               <InputSelect
                 type="number"
                 name="colmeias"
@@ -141,7 +143,13 @@ const ModalApiario = ({ isOpen, closeModalApiario, onAddApiario }) => {
 
             <ContainerDescricaoTarefa>
               <H4InfomacoesInputs>Imagem</H4InfomacoesInputs>
-              <input type="file" accept="image/*" onChange={handleImageChange} />
+              <FileInputLabel htmlFor="file-upload">Selecionar Imagem</FileInputLabel>
+              <HiddenFileInput
+                type="file"
+                accept="image/*"
+                id="file-upload"
+                onChange={handleImageChange}
+              />
             </ContainerDescricaoTarefa>
 
             <ContainerButton>

@@ -82,12 +82,12 @@ const Home = () => {
             <BotaoContainer >
               <Botao style={{backgroundColor:"#212181"}} onClick={toggleModal}>
                 <StyledIcon style={{color:"white", fontSize:18}}icon={faPlus} />
-                <BotaoTexto style={{color:"white"}} >Adicionar Colmeia</BotaoTexto>
+                <BotaoTexto style={{color:"white"}} >Adicionar Colméia</BotaoTexto>
               </Botao>
 
               <Botao style={{backgroundColor:"#0d570d"}} onClick={() => navigate("/colmeias", { state: { colmeias } })}>
                 <StyledIcon style={{color:"white" , fontSize:18}} icon={faBoxArchive} />
-                <BotaoTexto style={{color:"white"}}>Colmeias</BotaoTexto>
+                <BotaoTexto style={{color:"white"}}>Colméias</BotaoTexto>
               </Botao>
             </BotaoContainer>
 

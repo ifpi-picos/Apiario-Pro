@@ -40,21 +40,6 @@ export const ContainerText = styled.div`
  
 `;
 
-
-export const H1 = styled.h1`
-  margin: 1em 0.2em 1px;   
-`;
-
-export const H2 = styled.h2`
-  font-size: 26px;
-  font-weight: 600;
-
-  @media (max-width: 330px)
-  {
-    font-size: 18px;
-  }
-`;
-  
 export const BotaoContainer = styled.div`
 
   display: flex;
@@ -69,9 +54,6 @@ export const BotaoContainer = styled.div`
   }
 `;
 
-export const Botao = styled.div`
-
-`;
 
 export const SectionColmeias = styled.p`
   display: flex;
@@ -94,31 +76,6 @@ export const InfoItem = styled.span`
   font-weight: 500;
 `;
 
-export const AcoesContainer = styled.div`
-  margin-left: auto;
-  bottom: 10px; /* Distância do fundo */
-  right: 10px; /* Distância da direita */
-  display: flex;
-  gap: 10px; /* Espaço entre os botões */
-`;
-
-export const AcaoBotao = styled.button`
-  background-color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 5px 8px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-
-  &:hover {
-    background-color: ;
-  }
-
-  svg {
-    font-size: 16px; /* Tamanho dos ícones */
-    color: red;
-  }
-`;
 
 export const ContainerAdicionar = styled.div`
   position: fixed; /* Fixa o elemento na tela */
@@ -166,30 +123,6 @@ export const ContainerAdicionar = styled.div`
     
 `;
 
-export const ButtonAdicionar = styled.button`
-  width: 40px;
-  height: 40px;
-  border: none;
-  background-size: cover;
-  background-color: #ffffff00;
-  cursor: pointer;
-  
-background-image: url(${Adicionar});
-  width: 35px;
-  height: 35px;
-  &:hover {
-    opacity: 50%;
-  }
-  @media (max-width: 842px) {
-    margin-left: 4px;
-    margin-right: 4px;
-   
-  }
-  @media (max-width: 568px) {
-    
-  }
-`;
-
 export const ContainerRow = styled.div`
   display: flex;
   justify-content: center;
@@ -223,12 +156,7 @@ export const StyledIcon = styled(IoIosAddCircleOutline)`
   
 `;
 
-export const ContainerEditar = styled.div`
-  margin-top:30px;
-  margin-left:150px;
-  background-color: #ffffff00;
-  cursor:pointer;
-`; 
+
 export const ContainerDivider = styled.div`
   width:100%;
 height: 2px;

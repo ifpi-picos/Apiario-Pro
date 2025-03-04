@@ -16,7 +16,6 @@ import {
   InfoItem,
   ContainerRow,
   ContainerAdicionar,
-  ButtonAdicionar,
   ContainerInform,
   ContainerDivider,
   ContainerDiv1,
