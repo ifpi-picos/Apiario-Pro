@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Pie, Bar } from "react-chartjs-2";
 import Header from "../../components/HeaderPrincipal/index.js";
 import ModalProducao from "../../components/ModalProducao/index.js";
@@ -37,10 +37,24 @@ ChartJS.register(
 
 const Gestao = () => {
   const [showModal, setShowModal] = useState(false);
-  const [dadosProducao, setDadosProducao] = useState([]);
+  const [dadosProducao, setDadosProducao] = useState(() => {
+    // Tentar carregar os dados do localStorage na inicialização
+    const dadosSalvos = localStorage.getItem("dadosProducao");
+    return dadosSalvos ? JSON.parse(dadosSalvos) : [];
+  });
+
+  // Atualizar o localStorage sempre que os dados mudarem
+  useEffect(() => {
+    if (dadosProducao.length > 0) {
+      localStorage.setItem("dadosProducao", JSON.stringify(dadosProducao));
+    }
+  }, [dadosProducao]);
+
   const resetarGraficos = () => {
     setDadosProducao([]);
+    localStorage.removeItem("dadosProducao"); // Remover do localStorage
   };
+
   const toggleModal = () => {
     setShowModal(!showModal);
   };
@@ -60,10 +74,10 @@ const Gestao = () => {
     labels: Object.keys(dadosFlorada),
     datasets: [
       {
-        label: "Produção por Tipo de Florada",
+        label: "Produção por florada (Kg)",
         data: Object.values(dadosFlorada),
-        backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF"],
-        hoverBackgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF"],
+        backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF", "#32CD32"],
+        hoverBackgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF", "#32CD32"],
       },
     ],
   } : {
@@ -71,7 +85,7 @@ const Gestao = () => {
     datasets: [
       {
         label: "Sem Produção",
-        data: [1], // Valor mínimo para exibir o gráfico
+        data: [1],
         backgroundColor: ["#D3D3D3"],
         hoverBackgroundColor: ["#D3D3D3"],
       },
@@ -151,20 +165,20 @@ const Gestao = () => {
               <Bar data={barData} options={barOptions} />
             </DivStyle2>
             <button
-  onClick={resetarGraficos}
-  style={{
-    padding: "10px 20px",
-    fontSize: "16px",
-    backgroundColor: "#FF5733",
-    color: "#fff",
-    border: "none",
-    borderRadius: "5px",
-    cursor: "pointer",
-    marginTop: "20px",
-  }}
->
-  Resetar Gráficos
-</button>
+              onClick={resetarGraficos}
+              style={{
+                padding: "10px 20px",
+                fontSize: "16px",
+                backgroundColor: "#FF5733",
+                color: "#fff",
+                border: "none",
+                borderRadius: "5px",
+                cursor: "pointer",
+                marginTop: "20px",
+              }}
+            >
+              Resetar Gráficos
+            </button>
           </DivGraf>
           <ContainerAdicionar>
             <StyledIcon onClick={toggleModal} />
