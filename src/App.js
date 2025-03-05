@@ -12,7 +12,7 @@ import Apiarios from "./pages/Apiarios";
 import Floradas from "./pages/Floradas";
 import Colmeias from "./pages/Colmeias";
 import Gestao from "./pages/Gestao";
-import Producao from "./pages/Producao";
+import Relatorio from "./pages/Relatorio";
 import Geolocalizacao from "./pages/Geolocalizacao";
 function App() {
   return (
@@ -29,7 +29,7 @@ function App() {
           <Route path="/floradas" element={<Floradas />} />
           <Route path="/colmeias" element={<Colmeias />} />
           <Route path="/gestao" element={<Gestao />} />
-          <Route path="/producao" element={<Producao />} />
+          <Route path="/relatorio" element={<Relatorio />} />
           <Route path="/geolocalizacao" element={<Geolocalizacao />} />
         </Routes>
       </Router>

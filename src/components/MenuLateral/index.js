@@ -23,7 +23,7 @@ import {
 import { faTimes, faHome, faLocationDot, faBoxArchive } from "@fortawesome/free-solid-svg-icons";
 import FlowerIcon from '@mui/icons-material/LocalFlorist';
 import { GiBee } from 'react-icons/gi';
-
+import { TbReportSearch } from "react-icons/tb";
 const Sidebar = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -82,6 +82,13 @@ const Sidebar = () => {
                   COLMÉIAS
                 </LinkSideBar>
               </MenuItem>
+              <MenuItem $active={location.pathname === "/relatorio"}>
+                <LinkSideBar onClick={() => navigate("/relatorio")}>
+                <TbReportSearch size={20} style={{ marginRight: '5px' }} />
+                  RELATORIO
+                </LinkSideBar>
+              </MenuItem>
+
 
               <Border />
 
