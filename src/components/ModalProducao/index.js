@@ -32,11 +32,18 @@ const ModalProducao = ({ isOpen, closeModalProducao, onAddProducao }) => {
     const [formState, setFormState] = useState(initialFormState);
   
     const handleChange = (event) => {
-      setFormState({
-        ...formState,
-        [event.target.name]: event.target.value,
-      });
-    };
+      let { name, value } = event.target;
+
+  // Substituir vírgula por ponto para garantir compatibilidade
+  if (name === "quantidade_florada" || name === "quantidade_mes") {
+    value = value.replace(",", ".");
+  }
+
+  setFormState({
+    ...formState,
+    [name]: value,
+  });
+};
   
     const resetForm = () => {
       setFormState(initialFormState);
@@ -72,23 +79,7 @@ const ModalProducao = ({ isOpen, closeModalProducao, onAddProducao }) => {
               </ContainerButtonExit>
             </ContainerH2Tarefa>
             <FormDetalhesTarefas onSubmit={handleSubmit}>
-              <ContainerCategoria>
-                <H4InfomacoesInputs>QUANTIDADE</H4InfomacoesInputs>
-                <InputSelect
-                  type="number"
-                  name="quantidade_florada"
-                  value={formState.quantidade_florada}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    if (value.length <= 6) {
-                      handleChange(e);
-                    }
-                  }}
-                  min="0"
-                  max="999999" 
-                />
-                <H4InfomacoesInputs>KG</H4InfomacoesInputs>
-              </ContainerCategoria>
+              
               <ContainerDescricaoTarefa>
                 <H4InfomacoesInputs2>FLORADA</H4InfomacoesInputs2>
                 <SelectInputsWidth
@@ -105,23 +96,24 @@ const ModalProducao = ({ isOpen, closeModalProducao, onAddProducao }) => {
                   <option value="ANGICO_JITIRANA">Angico, Jitirana</option>
                 </SelectInputsWidth>
               </ContainerDescricaoTarefa>
-              <ContainerDescricaoTarefa>
+              <ContainerCategoria>
                 <H4InfomacoesInputs>QUANTIDADE</H4InfomacoesInputs>
                 <InputSelect
                   type="number"
-                  name="quantidade_mes"
-                  value={formState.quantidade_mes}
+                  name="quantidade_florada"
+                  value={formState.quantidade_florada}
                   onChange={(e) => {
                     const value = e.target.value;
                     if (value.length <= 6) {
                       handleChange(e);
                     }
                   }}
+                  step="any"
                   min="0"
                   max="999999" 
                 />
-                  <H4InfomacoesInputs>KG</H4InfomacoesInputs>
-              </ContainerDescricaoTarefa>
+                <H4InfomacoesInputs>KG</H4InfomacoesInputs>
+              </ContainerCategoria>
               <ContainerDescricaoTarefa>
                 <H4InfomacoesInputs2>MÊS</H4InfomacoesInputs2>
                 <SelectInputsWidth
@@ -144,6 +136,25 @@ const ModalProducao = ({ isOpen, closeModalProducao, onAddProducao }) => {
                   <option value="Dezembro">Dezembro</option>
                 </SelectInputsWidth>
               </ContainerDescricaoTarefa>
+              <ContainerDescricaoTarefa>
+                <H4InfomacoesInputs>QUANTIDADE</H4InfomacoesInputs>
+                <InputSelect
+                  type="number"
+                  name="quantidade_mes"
+                  value={formState.quantidade_mes}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (value.length <= 6) {
+                      handleChange(e);
+                    }
+                  }}
+                  step="any"
+                  min="0"
+                  max="999999" 
+                />
+                  <H4InfomacoesInputs>KG</H4InfomacoesInputs>
+              </ContainerDescricaoTarefa>
+            
               <ContainerButton>
                 <DivButtonNovaTarefa>
                   <ButtonCriarTarefa type="submit">ADICIONAR</ButtonCriarTarefa>
