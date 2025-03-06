@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { faClose } from "@fortawesome/free-solid-svg-icons";
-
+import Compressor from "compressorjs";
 import {
   Dialog,
   ContainerAdicionarTarefa,
@@ -47,14 +47,20 @@ const ModalApiario = ({ isOpen, closeModalApiario, onAddApiario }) => {
   // Converter a imagem para Base64 antes de salvar
   const handleImageChange = (event) => {
     const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormState({ ...formState, imagem: reader.result });
-      };
-      reader.readAsDataURL(file);
-    }
+    if (!file) return;
+  
+    new Compressor(file, {
+      quality: 0.6, // Reduz a qualidade para 60%
+      success(result) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setFormState({ ...formState, imagem: reader.result });
+        };
+        reader.readAsDataURL(result);
+      },
+    });
   };
+  
 
   // Salvar apiário no localStorage
   const salvarApiario = (novoApiario) => {
@@ -68,7 +74,7 @@ const ModalApiario = ({ isOpen, closeModalApiario, onAddApiario }) => {
     event.preventDefault();
     const { regiao, florada, colmeias, imagem } = formState;
 
-    if (regiao && florada && colmeias && imagem) {
+    if (regiao && florada && colmeias) {
       salvarApiario(formState);
       setFormState({ regiao: "", florada: "", colmeias: "", imagem: null });
       closeModalApiario(); // Fechar a modal

@@ -203,6 +203,8 @@ export const FileInputLabel = styled.label`
   border-radius: 5px;
   cursor: pointer;
   transition: background 0.3s;
+  width: 100%;
+    text-align: center;
   
   &:hover {
 

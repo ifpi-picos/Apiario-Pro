@@ -10,7 +10,7 @@ export const AppBody = styled.div`
 `;
 
 export const Main = styled.main`
-  width: 100%;
+  width:88%;
   max-width: 800px;
   padding: 20px;
   margin-top: 20px;

@@ -56,7 +56,7 @@ if (savedMel) {
             <ReportValue>{totalColmeias}</ReportValue>
           </ReportItem>
           <ReportItem>
-            <ReportTitle>Total de produção de mel (kg)</ReportTitle>
+            <ReportTitle>Total produção de mel(kg): </ReportTitle>
             <ReportValue>{totalMel.toFixed(2)}</ReportValue>
           </ReportItem>
         </ReportContainer>

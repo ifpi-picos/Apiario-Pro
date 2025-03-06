@@ -133,8 +133,7 @@ export const ButtonAdicionar = styled.button`
   }
 `;
 export const ButtonAviso = styled.button`
-  width: 40px;
-  height: 40px;
+  
   border: none;
   background-size: cover;
   background-color: #ffffff00;
@@ -143,8 +142,8 @@ export const ButtonAviso = styled.button`
   margin-right: 10px;
   margin-left: 20px;
     background-image: url(${Aviso});
-  width: 35px;
-  height: 35px;
+  width: 30px;
+  height: 30px;
   &:hover {
     opacity: 50%;
   }
