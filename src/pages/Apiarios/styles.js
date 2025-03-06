@@ -12,13 +12,7 @@ export const AppBody = styled.div`
 export const Header = styled.div`
 margin:2em;
 `;
-export const Nav= styled.div`
 
-display: flex;
-justify-content: space-between;
-align-items:center;
-  
-`;
 export const Main = styled.div`
 
 `;
