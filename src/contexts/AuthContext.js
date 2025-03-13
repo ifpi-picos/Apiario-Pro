@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
 
   // Tarefas
   const [tarefas, setTarefas] = useState([]);
-  
+
   // Colmeias
   const [colmeias, setColmeias] = useState({
     MELGUEIRA: { vazia: 0, em_campo: 0 },
@@ -21,22 +21,27 @@ export const AuthProvider = ({ children }) => {
 
   // Carregar token e nome do usuário do localStorage no carregamento inicial
   useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    const storedUserName = localStorage.getItem("userName");
-
-    if (storedToken) {
-      setToken(storedToken);
-    }
-
-    if (storedUserName) {
-      setUserName(storedUserName);
+    const storedUsuario = localStorage.getItem("usuario");
+    
+    if (storedUsuario) {
+      const { token, userName } = JSON.parse(storedUsuario);
+      setToken(token);
+      setUserName(userName);
     }
   }, []);
 
-  // Definir token e nome do usuário no localStorage
+  // Função para realizar o logout
+  const logout = () => {
+    localStorage.removeItem("usuario"); // Remove a chave "usuario" que contém o token e o userName
+    setToken("");      // Atualiza o estado do token para vazio
+    setUserName("");   // Atualiza o estado do nome do usuário para vazio
+  };
+
   useEffect(() => {
-    localStorage.setItem("token", token);
-    localStorage.setItem("userName", userName);
+    // Armazena um único item "usuario" com token e userName juntos
+    if (token && userName) {
+      localStorage.setItem("usuario", JSON.stringify({ token, userName }));
+    }
   }, [token, userName]);
 
   // Buscar tarefas do servidor
@@ -61,12 +66,6 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     fetchTarefas();
   }, []);
-
-  // Função para realizar o logout
-  const logout = () => {
-    setUserName("");
-    setToken("");
-  };
 
   // Função para adicionar colmeia
   const handleAddColmeia = ({ tipo_colmeia, quantidade, estado }) => {

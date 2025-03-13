@@ -242,7 +242,7 @@ export const LinkMenu = styled.div`
   width: 100%;
   text-align: center;
   &:hover {
-    background-color: #bdbdbd;
+    background-color:rgb(209, 162, 5);
   }
   cursor: ${(props) => (props.$desenvolvimento ? "not-allowed" : "pointer")};
 
@@ -257,7 +257,7 @@ export const ContainerSubMenu = styled.div`
   top: 64px;
   right: 0px;
   width: 164px;
-  background-color: #d9d9d9;
+  background-color: #ffc400;
   padding: 10px;
   box-shadow: 0 3px 3px #00000087;
   z-index: 1;

@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
 import Perfil from "../../assets/perfil.png";
 import {
   ContainerHeader,
@@ -20,19 +21,29 @@ import {
   MenuButton,
   StyledIcon,
 } from "./styles";
-import {
-  faBars,
- 
-} from "@fortawesome/free-solid-svg-icons";
+import { faBars } from "@fortawesome/free-solid-svg-icons";
 import SideBar from "../MenuLateral/index";
 import { useAuth } from "../../contexts/AuthContext"; 
 
-function Header(){
+function Header() {
   const navigate = useNavigate();
-  const { isActive, setIsActive } = useAuth(); // Acesse isActive e setIsActive
+  const {logout, isActive, setIsActive } = useAuth(); // Pegando os dados do contexto
+  const [showModalDesempenho, setShowModalDesempenho] = useState(false);
+  const [showSubMenu, setShowSubMenu] = useState(false);
 
   const toggleSidebar = () => {
     setIsActive(!isActive);
+  };
+  
+
+  const toggleSubMenu = () => {
+    setShowSubMenu(!showSubMenu);
+  };
+
+  // Função para deslogar o usuário e redirecionar para login
+  const handleLogout = () => {
+    logout();
+    navigate("/login"); // Redireciona para a tela de login
   };
   return (
     <ContainerHeader>
@@ -50,13 +61,13 @@ function Header(){
       <ContainerPerfil>
       <Pnome>Daniel Reis</Pnome>
         <ContainerImgPerfil>
-          <LinkPerfil >
-            <ImagePerfil src={Perfil} alt={"perfil"} />
+        <LinkPerfil onClick={toggleSubMenu}>
+            <ImagePerfil src={Perfil} alt={"Imagem-perfil"} />
           </LinkPerfil>
-          <ContainerSubMenu >
-            <LinkMenu >EDITAR PERFIL</LinkMenu>
-            <LinkMenu >CONFIGURAÇÕES</LinkMenu>
-            <LinkMenu >
+          <ContainerSubMenu $active={showSubMenu ? "true" : undefined}>
+            <LinkMenu onClick={() => navigate("/perfil")}>EDITAR PERFIL</LinkMenu>
+            <LinkMenu $desenvolvimento>CONFIGURAÇÕES</LinkMenu>
+            <LinkMenu $lastLinkPerfil onClick={handleLogout}>
               SAIR
             </LinkMenu>
           </ContainerSubMenu>
