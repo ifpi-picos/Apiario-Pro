@@ -34,16 +34,40 @@ const ModalColmeia = ({ isOpen, closeModalColmeia, onAddColmeia }) => {
     });
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-
-    if (formState.tipo_colmeia && formState.quantidade && formState.estado) {
-      onAddColmeia(formState);
-      closeModalColmeia();
-    } else {
+  
+    if (!formState.tipo_colmeia || !formState.quantidade || !formState.estado) {
       alert("Preencha todos os campos corretamente.");
+      return;
+    }
+  
+    const usuarioId = localStorage.getItem("usuarioId"); // Obtém o ID do usuário logado
+  
+    if (!usuarioId) {
+      alert("Erro: Usuário não autenticado.");
+      return;
+    }
+  
+    try {
+      const response = await axios.post("https://projeto-full-stack-apiariopro.onrender.com/colmeias/cadastrar", {
+        tipo: formState.tipo_colmeia,
+        quantidade: parseInt(formState.quantidade, 10),
+        estado: formState.estado,
+        usuarioId: usuarioId, // Usa o ID salvo no localStorage
+      });
+  
+      if (response.status === 201) {
+        alert("Colmeia cadastrada com sucesso!");
+        onAddColmeia(response.data);
+        closeModalColmeia();
+      }
+    } catch (error) {
+      console.error("Erro ao cadastrar colmeia:", error);
+      alert("Erro ao cadastrar colmeia. Tente novamente.");
     }
   };
+  
 
   if (!isOpen) return null;
 

@@ -2,18 +2,14 @@ import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import Perfil from "../../assets/perfil.png";
 import {
-  ContainerHeader,
-  ContainerLogo,
+  ContainerHeader,  
   ContainerButtons,
-  InputPesquisa,
   ContainerButtonsModal,
-  ButtonAdicionar,
   ButtonAviso,
   ButtonDesempenho,
   ContainerPerfil,
   LinkMenu,
   Pnome,
-  Link,
   ContainerImgPerfil,
   LinkPerfil,
   ImagePerfil,
@@ -28,7 +24,7 @@ import { useAuth } from "../../contexts/AuthContext";
 function Header() {
   const navigate = useNavigate();
   const {logout, isActive, setIsActive } = useAuth(); // Pegando os dados do contexto
-  const [showModalDesempenho, setShowModalDesempenho] = useState(false);
+
   const [showSubMenu, setShowSubMenu] = useState(false);
 
   const toggleSidebar = () => {
