@@ -4,7 +4,7 @@ import axios from "axios";
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [userName, setUserName] = useState("");
+  const [nome, setNome] = useState(""); // Alterado para 'nome' ao invés de 'userName'
   const [token, setToken] = useState("");
   const [sideBarIsActive, setSideBarIsActive] = useState(false);
   const [isActive, setIsActive] = useState(false);
@@ -22,50 +22,24 @@ export const AuthProvider = ({ children }) => {
   // Carregar token e nome do usuário do localStorage no carregamento inicial
   useEffect(() => {
     const storedUsuario = localStorage.getItem("usuario");
-    
     if (storedUsuario) {
-      const { token, userName } = JSON.parse(storedUsuario);
-      setToken(token);
-      setUserName(userName);
+      const usuario = JSON.parse(storedUsuario);
+      setNome(usuario.nome); // Carrega o nome do usuário no estado
     }
-  }, []);
+  }, []); // Apenas uma vez no carregamento do componente
 
-  // Função para realizar o logout
+  const login = (usuario) => {
+    setNome(usuario.nome); // Atualiza o nome no contexto
+    localStorage.setItem("usuario", JSON.stringify(usuario)); // Salva o usuário no localStorage
+  };
+
   const logout = () => {
-    localStorage.removeItem("usuario"); // Remove a chave "usuario" que contém o token e o userName
+    localStorage.removeItem("usuario"); // Remove a chave "usuario" que contém o token e o nome
     setToken("");      // Atualiza o estado do token para vazio
-    setUserName("");   // Atualiza o estado do nome do usuário para vazio
+    setNome("");       // Atualiza o estado do nome do usuário para vazio
   };
-
-  useEffect(() => {
-    // Armazena um único item "usuario" com token e userName juntos
-    if (token && userName) {
-      localStorage.setItem("usuario", JSON.stringify({ token, userName }));
-    }
-  }, [token, userName]);
-
   // Buscar tarefas do servidor
-  const fetchTarefas = async () => {
-    try {
-      const token = localStorage.getItem("token");
-
-      const response = await axios.get(
-        "https://lifetidy.onrender.com/tarefas/buscarTarefas",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setTarefas(response.data);
-    } catch (error) {
-      console.error("Erro ao buscar tarefas:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchTarefas();
-  }, []);
+  
 
   // Função para adicionar colmeia
   const handleAddColmeia = ({ tipo_colmeia, quantidade, estado }) => {
@@ -84,16 +58,17 @@ export const AuthProvider = ({ children }) => {
   return (
     <AuthContext.Provider
       value={{
-        userName,
-        setUserName,
+        nome, // Agora passando o 'nome' em vez de 'userName'
+        setNome, // Caso queira atualizar o nome
         token,
+        login,
         setToken,
         logout,
         sideBarIsActive,
         setSideBarIsActive,
         tarefas,
         setTarefas,
-        fetchTarefas,
+        
         isActive,
         setIsActive,
         searchTerm,

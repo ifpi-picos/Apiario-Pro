@@ -184,3 +184,36 @@ export const LinkCadastreSe = styled.a`
     text-decoration: underline;
   }
 `;
+
+export const CustomLoader = styled.div`
+  width: 32px;
+  height: 32px;
+  --c: radial-gradient(farthest-side, #5f98b4 92%, #0000);
+  background: var(--c) 50% 0, var(--c) 50% 100%, var(--c) 100% 50%,
+    var(--c) 0 50%;
+  background-size: 6px 6px;
+  background-repeat: no-repeat;
+  animation: s8 0.5s linear infinite;
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    margin: 3px;
+    background: repeating-conic-gradient(#0000 0 35deg, #5f98b4 0 90deg);
+    -webkit-mask: radial-gradient(
+      farthest-side,
+      #0000 calc(100% - 1px),
+      #000 0
+    );
+    mask: radial-gradient(farthest-side, #0000 calc(100% - 1px), #000 0);
+    border-radius: 50%;
+  }
+
+  @keyframes s8 {
+    100% {
+      transform: rotate(0.5turn);
+    }
+  }
+`;

@@ -2,14 +2,18 @@ import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import Perfil from "../../assets/perfil.png";
 import {
-  ContainerHeader,  
+  ContainerHeader,
+  ContainerLogo,
   ContainerButtons,
+  InputPesquisa,
   ContainerButtonsModal,
+  ButtonAdicionar,
   ButtonAviso,
   ButtonDesempenho,
   ContainerPerfil,
   LinkMenu,
   Pnome,
+  Link,
   ContainerImgPerfil,
   LinkPerfil,
   ImagePerfil,
@@ -19,18 +23,18 @@ import {
 } from "./styles";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import SideBar from "../MenuLateral/index";
-import { useAuth } from "../../contexts/AuthContext"; 
+import { useAuth } from "../../contexts/AuthContext"; // Importando o useAuth para acessar o contexto
 
 function Header() {
   const navigate = useNavigate();
-  const {logout, isActive, setIsActive } = useAuth(); // Pegando os dados do contexto
-
+  const { logout, nome, isActive, setIsActive } = useAuth(); // Pegando 'nome' do contexto
+  
+  const [showModalDesempenho, setShowModalDesempenho] = useState(false);
   const [showSubMenu, setShowSubMenu] = useState(false);
 
   const toggleSidebar = () => {
     setIsActive(!isActive);
   };
-  
 
   const toggleSubMenu = () => {
     setShowSubMenu(!showSubMenu);
@@ -41,23 +45,24 @@ function Header() {
     logout();
     navigate("/login"); // Redireciona para a tela de login
   };
+  console.log("Nome do usuário:", nome);
+
   return (
     <ContainerHeader>
-       <MenuButton onClick={toggleSidebar}>
-            <StyledIcon icon={faBars} />
-          </MenuButton>
-     <SideBar/>
+      <MenuButton onClick={toggleSidebar}>
+        <StyledIcon icon={faBars} />
+      </MenuButton>
+      <SideBar />
       <ContainerButtons>
-       
         <ContainerButtonsModal>
           <ButtonDesempenho onClick={() => navigate("/Gestao")}></ButtonDesempenho>
           <ButtonAviso></ButtonAviso>
         </ContainerButtonsModal>
       </ContainerButtons>
       <ContainerPerfil>
-      <Pnome>Daniel Reis</Pnome>
+        <Pnome> {nome || "Visitante"}</Pnome> {/* Exibe o nome do usuário */}
         <ContainerImgPerfil>
-        <LinkPerfil onClick={toggleSubMenu}>
+          <LinkPerfil onClick={toggleSubMenu}>
             <ImagePerfil src={Perfil} alt={"Imagem-perfil"} />
           </LinkPerfil>
           <ContainerSubMenu $active={showSubMenu ? "true" : undefined}>
@@ -69,7 +74,6 @@ function Header() {
           </ContainerSubMenu>
         </ContainerImgPerfil>
       </ContainerPerfil>
-      
     </ContainerHeader>
   );
 };

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useAuth } from "../../contexts/AuthContext"; // Importando o contexto
 import {
   AppBody,
   Header,
@@ -21,11 +22,11 @@ import {
   ContainerTextBorda,
   PCadastreSe,
   LinkCadastreSe,
- 
 } from './styles'; // Supondo que você tenha seus estilos em um arquivo separado
 
 function Login() {
   const navigate = useNavigate();
+  const { login } = useAuth(); // Obtendo a função login do contexto para atualizar o nome
   const [formData, setFormData] = useState({
     email: "",
     senha: "",
@@ -47,8 +48,10 @@ function Login() {
       const response = await axios.post("https://projeto-full-stack-apiariopro.onrender.com/usuarios/login", formData);
       console.log("Usuário logado:", response.data);
 
-      // Aqui você pode armazenar os dados do usuário no localStorage ou contexto global
-      localStorage.setItem("usuario", JSON.stringify(response.data));
+      // Atualizando o nome do usuário no contexto e localStorage
+      login(response.data.usuario); // Atualiza o nome do usuário no contexto global
+      localStorage.setItem("usuario", JSON.stringify(response.data.usuario));
+      localStorage.setItem("token", response.data.token);
 
       navigate("/home"); // Redireciona para outra página após o login
     } catch (error) {
