@@ -37,36 +37,54 @@ const ModalColmeia = ({ isOpen, closeModalColmeia, onAddColmeia }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
   
-    if (!formState.tipo_colmeia || !formState.quantidade || !formState.estado) {
+    if (!formState.tipo_colmeia.trim() || !formState.quantidade.trim() || !formState.estado.trim()) {
       alert("Preencha todos os campos corretamente.");
       return;
     }
   
-    const usuarioId = localStorage.getItem("usuarioId"); // Obtém o ID do usuário logado
+    const token = localStorage.getItem("token");
+    const usuario = JSON.parse(localStorage.getItem("usuario"));
+    const usuarioId = usuario?.id;
   
-    if (!usuarioId) {
+    if (!token || !usuarioId) {
       alert("Erro: Usuário não autenticado.");
       return;
     }
   
     try {
-      const response = await axios.post("https://projeto-full-stack-apiariopro.onrender.com/colmeias/cadastrar", {
-        tipo: formState.tipo_colmeia,
-        quantidade: parseInt(formState.quantidade, 10),
-        estado: formState.estado,
-        usuarioId: usuarioId, // Usa o ID salvo no localStorage
-      });
+      const response = await axios.post(
+        "https://projeto-full-stack-apiariopro.onrender.com/colmeias/cadastrar",
+        {
+          tipo: formState.tipo_colmeia,
+          quantidade: parseInt(formState.quantidade, 10),
+          estado: formState.estado,
+          usuarioId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
   
       if (response.status === 201) {
         alert("Colmeia cadastrada com sucesso!");
-        onAddColmeia(response.data);
+        
+        // Atualizando o contexto após o sucesso no cadastro
+        onAddColmeia({
+          tipo_colmeia: formState.tipo_colmeia,
+          quantidade: formState.quantidade,
+          estado: formState.estado,
+        });
         closeModalColmeia();
       }
     } catch (error) {
-      console.error("Erro ao cadastrar colmeia:", error);
+      console.error("Erro ao cadastrar colmeia:", error.response?.data || error.message);
       alert("Erro ao cadastrar colmeia. Tente novamente.");
     }
   };
+  
   
 
   if (!isOpen) return null;

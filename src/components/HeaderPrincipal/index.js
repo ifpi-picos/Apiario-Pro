@@ -45,7 +45,7 @@ function Header() {
     logout();
     navigate("/login"); // Redireciona para a tela de login
   };
-  console.log("Nome do usuário:", nome);
+  
 
   return (
     <ContainerHeader>
