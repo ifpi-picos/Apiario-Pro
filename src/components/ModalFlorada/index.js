@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { faClose } from "@fortawesome/free-solid-svg-icons";
 import {
@@ -20,17 +20,12 @@ import {
   ContainerButton,
 } from "./styled";
 
-const ModalFlorada = ({ isOpen, closeModalFlorada, onAddFlorada }) => {
+const ModalFlorada = ({ isOpen, closeModalFlorada, onAddFlorada, token }) => {
   const [formState, setFormState] = useState({
     nome: "",
     data_inicio: "",
     data_fim: "",
   });
-const [floradas, setFloradas] = useState([]);
-useEffect(() => {
-    const dadosSalvos = JSON.parse(localStorage.getItem("floradas")) || [];
-    setFloradas(dadosSalvos);
-  }, []);
 
   const handleChange = (event) => {
     setFormState({
@@ -38,31 +33,54 @@ useEffect(() => {
       [event.target.name]: event.target.value,
     });
   };
-  const salvarFlorada= (novaFlorada) => {
-    const novasFloradas = [...floradas, novaFlorada];
-    setFloradas(novasFloradas);
-    localStorage.setItem("floradas", JSON.stringify(novasFloradas));
-  };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const { nome,  data_inicio, data_fim } = formState;
-
+    const { nome, data_inicio, data_fim } = formState;
+    const token = localStorage.getItem("token");
+    const usuario = JSON.parse(localStorage.getItem("usuario"));
+    const usuarioId = usuario?.id;
+  
+    if (!token || !usuarioId) {
+      alert("Erro: Usuário não autenticado.");
+      return;
+    }
+  
     if (nome && data_inicio && data_fim) {
-      salvarFlorada(formState);
-      setFormState({ nome: "", data_inicio: "", data_fim: ""});
-      closeModalFlorada(); // Fechar a modal
-
-      // Forçar o recarregamento da página
-      window.location.reload();
+      try {
+        const response = await axios.post(
+          "https://projeto-full-stack-apiariopro.onrender.com/floradas/cadastrar",
+          {
+            nome,
+            data_inicio,
+            data_fim,
+            usuarioId,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        
+        // Após adicionar a florada no back-end, chama o onAddFlorada para atualizar a lista local
+        onAddFlorada(response.data); 
+        setFormState({ nome: "", data_inicio: "", data_fim: "" });
+        closeModalFlorada(); // Fechar a modal
+      } catch (error) {
+        alert("Erro ao cadastrar a florada.");
+        console.error(error);
+      }
     } else {
       alert("Preencha todos os campos corretamente.");
     }
   };
+
   const handleClose = () => {
-    setFormState({nome: "", data_inicio: "", data_fim: ""});
+    setFormState({ nome: "", data_inicio: "", data_fim: "" });
     closeModalFlorada();
   };
+
   if (!isOpen) return null;
 
   return (
@@ -72,68 +90,81 @@ useEffect(() => {
           <ContainerH2Tarefa>
             <H2AdicionarTarefa>ADICIONAR FLORADA</H2AdicionarTarefa>
             <ContainerButtonExit>
-              <StyledIcon icon={faClose}onClick={handleClose}  />
+              <StyledIcon icon={faClose} onClick={handleClose} />
             </ContainerButtonExit>
           </ContainerH2Tarefa>
           <FormDetalhesTarefas onSubmit={handleSubmit}>
-            
-          <ContainerDescricaoTarefa>
-  <H4InfomacoesInputs>NOME</H4InfomacoesInputs>
-  <InputSelect
-    type="text"
-    name="nome"
-    value={formState.nome}  // Corrigido: de 'quantidade' para 'nome'
-    onChange={handleChange}
-  />
-</ContainerDescricaoTarefa>
+            <ContainerDescricaoTarefa>
+              <H4InfomacoesInputs>NOME</H4InfomacoesInputs>
+              <InputSelect
+                type="text"
+                name="nome"
+                value={formState.nome}
+                onChange={handleChange}
+              />
+            </ContainerDescricaoTarefa>
 
-<ContainerDescricaoTarefa>
-  <H4InfomacoesInputs>DATA DE INÍCIO</H4InfomacoesInputs>
-  <select
-    name="data_inicio"
-    value={formState.dataInicio}
-    onChange={handleChange}
-    style={{ width: "50%", padding: "8px", fontSize: "16px", borderRadius: "4px", border: "1px solid #ccc" }}
-  >
-    <option value="">Selecione o mês</option>
-    <option value="Janeiro">Janeiro</option>
-    <option value="Fevereiro">Fevereiro</option>
-    <option value="Março">Março</option>
-    <option value="Abril">Abril</option>
-    <option value="Maio">Maio</option>
-    <option value="Junho">Junho</option>
-    <option value="Julho">Julho</option>
-    <option value="Agosto">Agosto</option>
-    <option value="Setembro">Setembro</option>
-    <option value="Outubro">Outubro</option>
-    <option value="Novembro">Novembro</option>
-    <option value="Dezembro">Dezembro</option>
-  </select>
-</ContainerDescricaoTarefa>
+            <ContainerDescricaoTarefa>
+              <H4InfomacoesInputs>DATA DE INÍCIO</H4InfomacoesInputs>
+              <select
+                name="data_inicio"
+                value={formState.data_inicio}
+                onChange={handleChange}
+                style={{
+                  width: "50%",
+                  padding: "8px",
+                  fontSize: "16px",
+                  borderRadius: "4px",
+                  border: "1px solid #ccc",
+                }}
+              >
+                <option value="">Selecione o mês</option>
+                <option value="Janeiro">Janeiro</option>
+                <option value="Fevereiro">Fevereiro</option>
+                <option value="Março">Março</option>
+                <option value="Abril">Abril</option>
+                <option value="Maio">Maio</option>
+                <option value="Junho">Junho</option>
+                <option value="Julho">Julho</option>
+                <option value="Agosto">Agosto</option>
+                <option value="Setembro">Setembro</option>
+                <option value="Outubro">Outubro</option>
+                <option value="Novembro">Novembro</option>
+                <option value="Dezembro">Dezembro</option>
+              </select>
+            </ContainerDescricaoTarefa>
 
-<ContainerDescricaoTarefa>
-  <H4InfomacoesInputs>DATA DE FIM</H4InfomacoesInputs>
-  <select
-    name="data_fim"
-    value={formState.dataFim}
-    onChange={handleChange}
-    style={{ width: "50%", padding: "8px", fontSize: "16px", borderRadius: "4px", border: "1px solid #ccc", margin:"auto" }}
-  >
-    <option value="">Selecione o mês</option>
-    <option value="Janeiro">Janeiro</option>
-    <option value="Fevereiro">Fevereiro</option>
-    <option value="Março">Março</option>
-    <option value="Abril">Abril</option>
-    <option value="Maio">Maio</option>
-    <option value="Junho">Junho</option>
-    <option value="Julho">Julho</option>
-    <option value="Agosto">Agosto</option>
-    <option value="Setembro">Setembro</option>
-    <option value="Outubro">Outubro</option>
-    <option value="Novembro">Novembro</option>
-    <option value="Dezembro">Dezembro</option>
-  </select>
-</ContainerDescricaoTarefa>
+            <ContainerDescricaoTarefa>
+              <H4InfomacoesInputs>DATA DE FIM</H4InfomacoesInputs>
+              <select
+                name="data_fim"
+                value={formState.data_fim}
+                onChange={handleChange}
+                style={{
+                  width: "50%",
+                  padding: "8px",
+                  fontSize: "16px",
+                  borderRadius: "4px",
+                  border: "1px solid #ccc",
+                  margin: "auto",
+                }}
+              >
+                <option value="">Selecione o mês</option>
+                <option value="Janeiro">Janeiro</option>
+                <option value="Fevereiro">Fevereiro</option>
+                <option value="Março">Março</option>
+                <option value="Abril">Abril</option>
+                <option value="Maio">Maio</option>
+                <option value="Junho">Junho</option>
+                <option value="Julho">Julho</option>
+                <option value="Agosto">Agosto</option>
+                <option value="Setembro">Setembro</option>
+                <option value="Outubro">Outubro</option>
+                <option value="Novembro">Novembro</option>
+                <option value="Dezembro">Dezembro</option>
+              </select>
+            </ContainerDescricaoTarefa>
+
             <ContainerButton>
               <DivButtonNovaTarefa>
                 <ButtonCriarTarefa type="submit">ADICIONAR</ButtonCriarTarefa>

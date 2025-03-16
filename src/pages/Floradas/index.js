@@ -1,8 +1,8 @@
-import React, { useState, useEffect} from 'react';
-
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Header from "../../components/HeaderPrincipal/index.js";
 import Modal from "../../components/ModalFlorada/index.js";
-
+import { useAuth } from "../../contexts/AuthContext";
 import {
   AppBody,
   Text,
@@ -22,96 +22,103 @@ import {
   StyledIcon,
   ContainerEditar,
   StyledIcon2
-} from './styles'; 
+} from './styles'; // Os seus componentes styled
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 
 function Floradas() {
   const [showModal, setShowModal] = useState(false);
   const [floradas, setFloradas] = useState([]); // Estado para armazenar as floradas
+  const { token } = useAuth(); // Acessar o token do contexto
 
- useEffect(() => {
-        const floradasSalvas = localStorage.getItem("floradas");
-        if (floradasSalvas) {
-            setFloradas(JSON.parse(floradasSalvas));
-        }
-    }, []);
-    const handleAddFlorada= async (novaFlorada) => {
-    
+  // Carregar as floradas do back-end assim que o token estiver disponível
+  useEffect(() => {
+    if (token) {
+      axios
+      .get(`https://projeto-full-stack-apiariopro.onrender.com/floradas`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          setFloradas(response.data);
+        })
+        .catch((error) => {
+          console.error("Erro ao buscar floradas:", error);
+        });
+    }
+  }, [token]); // Executa a busca sempre que o token mudar
 
-      // Atualizar o estado diretamente com o novo apiário
-      const novasFloradas = [...floradas, novaFlorada];
-      setFloradas(novasFloradas);
-
-      // Salvar no localStorage
-      localStorage.setItem("floradas", JSON.stringify(novasFloradas));
+  const handleAddFlorada = (novaFlorada) => {
+    setFloradas((prevFloradas) => [...prevFloradas, novaFlorada]);
   };
+
   const toggleModal = () => {
     setShowModal(!showModal);
   };
-  const handleDeleteFlorada = (index) => {
-    // Perguntar ao usuário se tem certeza
+
+  const handleDeleteFlorada = (id) => {
     const confirmacao = window.confirm("Tem certeza que deseja excluir esta florada?");
-    
     if (confirmacao) {
-        // Cria um novo array sem o apiário excluído
-        const novasFloradas = floradas.filter((_, i) => i !== index);
-
-        // Atualiza o estado local
-        setFloradas(novasFloradas);
-
-        // Atualiza o localStorage com os novos dados
-        localStorage.setItem("floradas", JSON.stringify(novasFloradas));
-
-        // Recarrega a página para refletir as mudanças no estado e no localStorage
-        window.location.reload();
+      axios
+      .delete(`https://projeto-full-stack-apiariopro.onrender.com/floradas/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then(() => {
+          setFloradas(floradas.filter((florada) => florada.id !== id));
+        })
+        .catch((error) => {
+          console.error("Erro ao excluir a florada:", error);
+        });
     }
-};
-  
+  };
+
   return (
     <AppBody>
-      <Header/>
+      <Header />
       <Main>
         <ContainerPrincipal>
           <Text>Floradas</Text>
           <Container>
             <BotaoContainer>
-              {floradas.map((florada, index) => ( // Renderiza as floradas adicionadas
-                <ContainerFlorada key={index}>
+              {floradas.map((florada) => (
+                <ContainerFlorada key={florada.id}>
                   <ContainerInform>
-                    
                     <Informacoes>
-                    <Florada>{florada.nome}</Florada>
-                    <InfoItem>
-                      <span style={{ fontWeight: 'bold', fontSize: '15px' }}>Inicio:</span> {florada.data_inicio}
-                    </InfoItem>
-                    <InfoItem>
-                      <span style={{ fontWeight: 'bold', fontSize: '15px' }}>Fim:</span> {florada.data_fim}
-                    </InfoItem>
-                      
+                      <Florada>{florada.nome}</Florada>
+                      <InfoItem>
+                        <span style={{ fontWeight: 'bold', fontSize: '15px' }}>Inicio:</span> {florada.data_inicio}
+                      </InfoItem>
+                      <InfoItem>
+                        <span style={{ fontWeight: 'bold', fontSize: '15px' }}>Fim:</span> {florada.data_fim}
+                      </InfoItem>
                     </Informacoes>
                     <ContainerEditar>
-      <StyledIcon2 icon={faChevronRight}/>
-      </ContainerEditar>
+                      <StyledIcon2 icon={faChevronRight} />
+                    </ContainerEditar>
                   </ContainerInform>
-                  
+
                   <AcoesContainer>
-                 
-                    <AcaoBotao onClick={() => handleDeleteFlorada(index)}>
+                    <AcaoBotao onClick={() => handleDeleteFlorada(florada.id)}>
                       <FontAwesomeIcon icon={faTrash} />
                     </AcaoBotao>
-                   
                   </AcoesContainer>
                 </ContainerFlorada>
               ))}
+
               <ContainerAdicionar>
-                 <StyledIcon  onClick={toggleModal} /> 
+                <StyledIcon onClick={toggleModal} />
               </ContainerAdicionar>
             </BotaoContainer>
+
             <Modal
               isOpen={showModal}
               closeModalFlorada={toggleModal}
-              onAddFlorada={handleAddFlorada} // Passa a função para adicionar florada
+              onAddFlorada={handleAddFlorada}
+              token={token} // Passando o token para o Modal, caso precise para validação ou criação
             />
           </Container>
         </ContainerPrincipal>
