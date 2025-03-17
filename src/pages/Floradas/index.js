@@ -69,10 +69,11 @@ function Floradas() {
       const confirmacao = window.confirm("Tem certeza que deseja excluir esta florada?");
       if (confirmacao) {
         console.log(`Excluindo florada com id: ${id}`);
-  
+        const storedToken = token || localStorage.getItem('token'); // Verifica se o token está no contexto ou no localStorage
+        if (!storedToken) return; // Se não tiver token, não faz a requisição
         const response = await axios.delete(`https://projeto-full-stack-apiariopro.onrender.com/floradas/${id}`, {
           headers: {
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${storedToken}`
           }
         });
   

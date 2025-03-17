@@ -103,13 +103,12 @@ export const BotaoContainer = styled.div`
   gap: 20px; /* Espaçamento entre os botões */
   padding: 20px; /* Espaçamento interno opcional */
   max-width: 1250px; /* Define uma largura máxima, se necessário */
-  margin: 0 auto; /* Centraliza o contêiner na página */
 
 
 
 
 `;
-export const ContainerFlorada = styled.button`
+export const ContainerFlorada = styled.div`
   width: 300px;
   height: auto;
   background-color: #ffeed8;
@@ -126,6 +125,10 @@ export const ContainerFlorada = styled.button`
 
   &:hover {
     background-color: rgb(240, 197, 140);
+  }
+  }
+      @media (max-width: 500px) {
+   width: 100%;
   }
 `;
 

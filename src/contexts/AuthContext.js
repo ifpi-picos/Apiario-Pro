@@ -58,6 +58,12 @@ export const AuthProvider = ({ children }) => {
     // Remover os dados do usuário do contexto
     setNome("");
     setToken("");
+    
+      // Remover token e floradas do localStorage ao fazer logout
+    
+      localStorage.removeItem('floradas');  // Apaga as floradas do localStorage
+      // Redireciona ou faz outras ações de logout
+    
 
     // Limpar os dados do usuário e das colmeias no localStorage
     localStorage.removeItem("usuario");

@@ -80,6 +80,9 @@ export const ContainerFlorada = styled.div`
   &:hover {
     background-color:rgb(240, 197, 140);
   }
+      @media (max-width: 418px) {
+   width: 100%;
+  }
 `;
 
 export const Florada = styled.p`
