@@ -154,8 +154,8 @@ export const ButtonAviso = styled.button`
     width: 30px;
   }
   @media (max-width: 568px) {
-    height: 25px;
-    width: 25px;
+    height: 30px;
+    width: 30px;
   }
 `;
 export const ButtonDesempenho = styled.button`
@@ -181,8 +181,8 @@ background-image: url(${Rendimento});
     width: 30px;
   }
   @media (max-width: 568px) {
-    height: 25px;
-    width: 25px;
+    height: 30px;
+    width: 30px;
   }
 `;
 export const ContainerPerfil = styled.div`
@@ -207,7 +207,7 @@ export const Pnome = styled.p`
     text-align: center;
   }
   @media (max-width: 568px) {
-    font-size: 11px;
+    font-size: 12px;
     min-width: 0;
     text-align: center;
   }
