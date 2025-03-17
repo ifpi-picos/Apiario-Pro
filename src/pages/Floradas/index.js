@@ -34,25 +34,25 @@ function Floradas() {
 
   // Carregar as floradas do back-end ou do localStorage assim que o token estiver disponível
   useEffect(() => {
-    // Função para buscar as floradas do usuário
     const fetchFloradas = async () => {
       try {
-        const token = localStorage.getItem('token'); // ou wherever você armazena o token
+        const storedToken = token || localStorage.getItem('token'); // Verifica se o token está no contexto ou no localStorage
+        if (!storedToken) return; // Se não tiver token, não faz a requisição
+
         const response = await axios.get('https://projeto-full-stack-apiariopro.onrender.com/floradas', {
           headers: {
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${storedToken}`
           }
         });
+
         setFloradas(response.data); // Atualiza o estado com as floradas
       } catch (error) {
         console.error("Erro ao buscar floradas:", error);
-      } 
+      }
     };
 
-    fetchFloradas(); // Chama a função quando o componente carregar
-  }, []); // [] significa que isso acontece apenas na primeira renderização (sem dependências)
- // Executa sempre que o token mudar
-
+    fetchFloradas(); // Chama a função quando o token estiver disponível
+  }, [token]); 
   // Função para adicionar uma florada
   const handleAddFlorada = (novaFlorada) => {
     setFloradas((prevFloradas) => {
@@ -65,23 +65,28 @@ function Floradas() {
 
   // Função para excluir uma florada
   const handleDeleteFlorada = async (id) => {
-  try {
-    const confirmacao = window.confirm("Tem certeza que deseja excluir esta florada?");
-    if (confirmacao) {
-      console.log(`Excluindo florada com id: ${id}`);
-
-      const response = await axios.delete(`https://projeto-full-stack-apiariopro.onrender.com/floradas/${id}`);
-      
-      console.log('Resposta da exclusão:', response.data); // Verifique a resposta aqui
-
-      const updatedFloradas = floradas.filter(florada => florada.id !== id);
-      setFloradas(updatedFloradas);
-      localStorage.setItem("floradas", JSON.stringify(updatedFloradas)); // Atualiza o localStorage
+    try {
+      const confirmacao = window.confirm("Tem certeza que deseja excluir esta florada?");
+      if (confirmacao) {
+        console.log(`Excluindo florada com id: ${id}`);
+  
+        const response = await axios.delete(`https://projeto-full-stack-apiariopro.onrender.com/floradas/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+  
+        console.log('Resposta da exclusão:', response.data); // Verifique a resposta aqui
+  
+        // Atualiza o estado e o localStorage
+        setFloradas(floradas.filter(florada => florada.id !== id));
+        localStorage.setItem("floradas", JSON.stringify(floradas.filter(florada => florada.id !== id))); // Atualiza o localStorage
+      }
+    } catch (erro) {
+      console.error("Erro ao excluir a florada:", erro);
     }
-  } catch (erro) {
-    console.error("Erro ao excluir a florada:", erro);
-  }
-};
+  };
+  
   
   // Abrir/fechar a modal
   const toggleModal = () => {
