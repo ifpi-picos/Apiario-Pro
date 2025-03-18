@@ -56,7 +56,7 @@ export const BotaoContainer = styled.div`
   gap: 20px; /* Espaçamento entre os botões */
   padding: 20px; /* Espaçamento interno opcional */
   max-width: 1250px; /* Define uma largura máxima, se necessário */
-  margin: 0 auto; /* Centraliza o contêiner na página */
+  
 
 
 

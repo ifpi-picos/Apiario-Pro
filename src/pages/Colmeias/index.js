@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate, useLocation } from "react-router-dom";
 import Header from "../../components/HeaderPrincipal/index.js";
 import Modal from "../../components/ModalColmeia/index.js";
@@ -29,6 +30,7 @@ import {
 
 const Colmeias = () => {
   const [showModal, setShowModal] = useState(false);
+  const { usuarioId } = useAuth();
   const [colmeias, setColmeias] = useState(() => {
     const savedData = localStorage.getItem("colmeias");
     return savedData
@@ -39,18 +41,44 @@ const Colmeias = () => {
           NUCLEO: { vazia: 0, em_campo: 0 },
         };
   });
+
   const totalEmCampo =
-  colmeias.NINHO.em_campo +
-  colmeias.MELGUEIRA.em_campo +
-  colmeias.NUCLEO.em_campo;
-  
+    colmeias?.NINHO?.em_campo + colmeias?.MELGUEIRA?.em_campo + colmeias?.NUCLEO?.em_campo;
+
   const totalVazia =
-  colmeias.NINHO.vazia +
-  colmeias.MELGUEIRA.vazia +
-  colmeias.NUCLEO.vazia;
+    colmeias?.NINHO?.vazia + colmeias?.MELGUEIRA?.vazia + colmeias?.NUCLEO?.vazia;
+
   useEffect(() => {
-    localStorage.setItem("colmeias", JSON.stringify(colmeias));
-  }, [colmeias]);
+    if (!usuarioId) return; // Evita erros se o usuário não estiver autenticado
+
+    const carregarColmeias = async () => {
+      try {
+        const response = await fetch(`https://projeto-full-stack-apiariopro.onrender.com/colmeias/${usuarioId}`);
+        const data = await response.json();
+        
+        console.log("Resposta da API:", data); // Verifique o formato da resposta
+    
+        // Verifique se os dados possuem as propriedades em_campo e vazia
+        if (data && data.em_campo && data.vazia) {
+          // Reorganize os dados para o formato esperado
+          const reorganizedData = {
+            MELGUEIRA: { em_campo: data.em_campo.MELGUEIRA, vazia: data.vazia.MELGUEIRA },
+            NINHO: { em_campo: data.em_campo.NINHO, vazia: data.vazia.NINHO },
+            NUCLEO: { em_campo: data.em_campo.NUCLEO, vazia: data.vazia.NUCLEO }
+          };
+    
+          setColmeias(reorganizedData);
+        } else {
+          console.error("Estrutura dos dados da API inválida:", data);
+        }
+      } catch (error) {
+        console.error("Erro ao carregar colmeias:", error);
+      }
+    };
+    
+
+    carregarColmeias();
+  }, [usuarioId]);
 
   const toggleModal = () => {
     setShowModal(!showModal);
@@ -69,7 +97,6 @@ const Colmeias = () => {
       return newColmeias;
     });
   };
-  
 
   return (
     <AppBody>
@@ -82,31 +109,30 @@ const Colmeias = () => {
             <TextImg>
               <Text>Em campo</Text> 
               <Icone src={Campo} alt={"campo"}/>
-              </TextImg>
-              <Total>Colméias: {totalEmCampo}</Total>
-            </ContainerText>
+            </TextImg>
+            <Total>Colméias: {totalEmCampo}</Total>
+          </ContainerText>
           <ContainerDiv1>
-           
             <Container>
               <BotaoContainer>
                 <ContainerRow>
                   <ContainerInform>
                     <Informacoes>
                       <SectionColmeias>Ninhos</SectionColmeias>
-                      <InfoItem>{colmeias.NINHO.em_campo}</InfoItem>
+                      <InfoItem>{colmeias?.NINHO?.em_campo || 0}</InfoItem>
                     </Informacoes>
                   </ContainerInform>
                   <ContainerInform>
                     <Informacoes>
                       <SectionColmeias>Melgueiras</SectionColmeias>
-                      <InfoItem>{colmeias.MELGUEIRA.em_campo}</InfoItem>
+                      <InfoItem>{colmeias?.MELGUEIRA?.em_campo || 0}</InfoItem>
                     </Informacoes>
                   </ContainerInform>
                 </ContainerRow>
                 <ContainerInform>
                   <Informacoes>
                     <SectionColmeias>Núcleos</SectionColmeias>
-                    <InfoItem>{colmeias.NUCLEO.em_campo}</InfoItem>
+                    <InfoItem>{colmeias?.NUCLEO?.em_campo || 0}</InfoItem>
                   </Informacoes>
                 </ContainerInform>
               </BotaoContainer>
@@ -114,12 +140,12 @@ const Colmeias = () => {
             <ContainerDivider />
           </ContainerDiv1>
 
-          {/* Seção "Galpao" */}
+          {/* Seção "Galpão" */}
           <ContainerDiv2>
             <ContainerText>
-            <TextImg>
-              <Text>Galpão</Text>
-              <Icone src={Deposito} alt={"deposito"}/>
+              <TextImg>
+                <Text>Galpão</Text>
+                <Icone src={Deposito} alt={"deposito"}/>
               </TextImg>
               <Total>Colméias: {totalVazia}</Total>
             </ContainerText>
@@ -128,20 +154,20 @@ const Colmeias = () => {
                 <ContainerInform>
                   <Informacoes>
                     <SectionColmeias>Ninhos</SectionColmeias>
-                    <InfoItem>{colmeias.NINHO.vazia}</InfoItem>
+                    <InfoItem>{colmeias?.NINHO?.vazia || 0}</InfoItem>
                   </Informacoes>
                 </ContainerInform>
                 <ContainerInform>
                   <Informacoes>
                     <SectionColmeias>Melgueiras</SectionColmeias>
-                    <InfoItem>{colmeias.MELGUEIRA.vazia}</InfoItem>
+                    <InfoItem>{colmeias?.MELGUEIRA?.vazia || 0}</InfoItem>
                   </Informacoes>
                 </ContainerInform>
               </ContainerRow>
               <ContainerInform>
                 <Informacoes>
                   <SectionColmeias>Núcleos</SectionColmeias>
-                  <InfoItem>{colmeias.NUCLEO.vazia}</InfoItem>
+                  <InfoItem>{colmeias?.NUCLEO?.vazia || 0}</InfoItem>
                 </Informacoes>
               </ContainerInform>
             </BotaoContainer>
@@ -149,11 +175,9 @@ const Colmeias = () => {
 
           {/* Botão para adicionar colmeias */}
           <ContainerAdicionar>
-          <StyledIcon  onClick={toggleModal} /> 
-              
-          
+            <StyledIcon onClick={toggleModal} />
           </ContainerAdicionar>
-        
+
           {/* Modal para adicionar novas colmeias */}
           <Modal
             isOpen={showModal}

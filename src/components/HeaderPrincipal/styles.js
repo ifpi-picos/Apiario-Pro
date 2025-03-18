@@ -208,7 +208,6 @@ export const Pnome = styled.p`
   }
   @media (max-width: 568px) {
     font-size: 12px;
-    min-width: 0;
     text-align: center;
   }
 `;
