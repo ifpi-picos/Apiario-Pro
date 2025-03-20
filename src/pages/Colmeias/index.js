@@ -42,11 +42,12 @@ const Colmeias = () => {
         };
   });
 
-  const totalEmCampo =
-    colmeias?.NINHO?.em_campo + colmeias?.MELGUEIRA?.em_campo + colmeias?.NUCLEO?.em_campo;
-
-  const totalVazia =
-    colmeias?.NINHO?.vazia + colmeias?.MELGUEIRA?.vazia + colmeias?.NUCLEO?.vazia;
+  const [totalEmCampo, setTotalEmCampo] = useState(
+    colmeias?.NINHO?.em_campo + colmeias?.MELGUEIRA?.em_campo + colmeias?.NUCLEO?.em_campo
+  );
+  const [totalVazia, setTotalVazia] = useState(
+    colmeias?.NINHO?.vazia + colmeias?.MELGUEIRA?.vazia + colmeias?.NUCLEO?.vazia
+  );
 
   useEffect(() => {
     if (!usuarioId) return; // Evita erros se o usuário não estiver autenticado
@@ -55,9 +56,9 @@ const Colmeias = () => {
       try {
         const response = await fetch(`https://projeto-full-stack-apiariopro.onrender.com/colmeias/${usuarioId}`);
         const data = await response.json();
-        
+
         console.log("Resposta da API:", data); // Verifique o formato da resposta
-    
+
         // Verifique se os dados possuem as propriedades em_campo e vazia
         if (data && data.em_campo && data.vazia) {
           // Reorganize os dados para o formato esperado
@@ -66,8 +67,14 @@ const Colmeias = () => {
             NINHO: { em_campo: data.em_campo.NINHO, vazia: data.vazia.NINHO },
             NUCLEO: { em_campo: data.em_campo.NUCLEO, vazia: data.vazia.NUCLEO }
           };
-    
+
           setColmeias(reorganizedData);
+          setTotalEmCampo(
+            reorganizedData?.NINHO?.em_campo + reorganizedData?.MELGUEIRA?.em_campo + reorganizedData?.NUCLEO?.em_campo
+          );
+          setTotalVazia(
+            reorganizedData?.NINHO?.vazia + reorganizedData?.MELGUEIRA?.vazia + reorganizedData?.NUCLEO?.vazia
+          );
         } else {
           console.error("Estrutura dos dados da API inválida:", data);
         }
@@ -75,7 +82,6 @@ const Colmeias = () => {
         console.error("Erro ao carregar colmeias:", error);
       }
     };
-    
 
     carregarColmeias();
   }, [usuarioId]);
@@ -90,10 +96,23 @@ const Colmeias = () => {
         ...prevColmeias,
         [tipo_colmeia]: {
           ...prevColmeias[tipo_colmeia],
-          [estado.toLowerCase()]: parseInt(quantidade, 10),
+          [estado.toLowerCase()]: prevColmeias[tipo_colmeia][estado.toLowerCase()] + parseInt(quantidade, 10),
         },
       };
+
+      // Salvando as novas colmeias no localStorage
       localStorage.setItem("colmeias", JSON.stringify(newColmeias));
+
+      // Atualizando as somas
+      const totalEmCampoNovo =
+        newColmeias?.NINHO?.em_campo + newColmeias?.MELGUEIRA?.em_campo + newColmeias?.NUCLEO?.em_campo;
+      const totalVaziaNovo =
+        newColmeias?.NINHO?.vazia + newColmeias?.MELGUEIRA?.vazia + newColmeias?.NUCLEO?.vazia;
+
+      // Atualizando os totais
+      setTotalEmCampo(totalEmCampoNovo);
+      setTotalVazia(totalVaziaNovo);
+
       return newColmeias;
     });
   };
@@ -107,8 +126,8 @@ const Colmeias = () => {
           {/* Seção "Em Campo" */}
           <ContainerText>
             <TextImg>
-              <Text>Em campo</Text> 
-              <Icone src={Campo} alt={"campo"}/>
+              <Text>Em campo</Text>
+              <Icone src={Campo} alt={"campo"} />
             </TextImg>
             <Total>Colméias: {totalEmCampo}</Total>
           </ContainerText>
@@ -145,7 +164,7 @@ const Colmeias = () => {
             <ContainerText>
               <TextImg>
                 <Text>Galpão</Text>
-                <Icone src={Deposito} alt={"deposito"}/>
+                <Icone src={Deposito} alt={"deposito"} />
               </TextImg>
               <Total>Colméias: {totalVazia}</Total>
             </ContainerText>

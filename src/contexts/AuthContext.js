@@ -76,14 +76,15 @@ export const AuthProvider = ({ children }) => {
   // Adicionar colmeia
   const handleAddColmeia = ({ tipo_colmeia, quantidade, estado }) => {
     setColmeias((prevColmeias) => {
-      const novoEstado = estado.toLowerCase(); // "em_campo" ou "vazia"
-      return {
+      const newColmeias = {
         ...prevColmeias,
         [tipo_colmeia]: {
           ...prevColmeias[tipo_colmeia],
-          [novoEstado]: prevColmeias[tipo_colmeia][novoEstado] + parseInt(quantidade, 10),
+          [estado.toLowerCase()]: parseInt(quantidade, 10), // Substitui o valor da quantidade
         },
       };
+      localStorage.setItem("colmeias", JSON.stringify(newColmeias));
+      return newColmeias;
     });
   };
 
