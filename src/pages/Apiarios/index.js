@@ -32,24 +32,26 @@ function Apiarios() {
   useEffect(() => {
     const fetchApiarios = async () => {
       try {
-        const storedToken = token || localStorage.getItem('token'); // Verifica se o token está no contexto ou no localStorage
-        if (!storedToken) return; // Se não tiver token, não faz a requisição
-
+        const storedToken = token || localStorage.getItem('token'); 
+        if (!storedToken) return; 
+  
         const response = await axios.get('https://projeto-full-stack-apiariopro.onrender.com/apiarios', {
           headers: {
             Authorization: `Bearer ${storedToken}`
           }
         });
-
+  
+        console.log('Resposta da API:', response.data);  // Verifique a estrutura dos dados aqui
+  
         setApiarios(response.data); // Atualiza o estado com os apiários recebidos
       } catch (error) {
         console.error("Erro ao buscar apiários:", error);
       }
     };
-
-    fetchApiarios(); // Chama a função quando o token estiver disponível
+  
+    fetchApiarios();
   }, [token]);
-
+  
   // Função para adicionar um novo apiário
   const handleAddApiario = (novoApiario) => {
     setApiarios((prevApiarios) => {
@@ -84,6 +86,25 @@ function Apiarios() {
       console.error("Erro ao excluir o apiário:", erro);
     }
   };
+  const [floradas, setFloradas] = useState([]);
+  useEffect(() => {
+    const fetchFloradas = async () => {
+      try {
+        const storedToken = token || localStorage.getItem('token'); 
+        if (!storedToken) return; 
+  
+        const response = await axios.get('https://projeto-full-stack-apiariopro.onrender.com/floradas', {
+          headers: { Authorization: `Bearer ${storedToken}` }
+        });
+  
+        setFloradas(response.data); // Armazena as floradas na state
+      } catch (error) {
+        console.error("Erro ao buscar floradas:", error);
+      }
+    };
+  
+    fetchFloradas();
+  }, [token]);
   
 
   return (
@@ -103,9 +124,10 @@ function Apiarios() {
                       {apiario.regiao}
                     </InfoItem>
                     <InfoItem>
-                      <span style={{ fontWeight: 'bold', fontSize: '14px' }}>Florada: </span>
-                      {apiario.florada}
-                    </InfoItem>
+  <span style={{ fontWeight: 'bold', fontSize: '14px' }}>Florada: </span>
+  {floradas.find(f => f.id === parseInt(apiario.florada))?.nome || "Desconhecida"}
+</InfoItem>
+
                     <InfoItem>
                       <span style={{ fontWeight: 'bold', fontSize: '14px' }}>Colmeias: </span>
                       {apiario.colmeias}
