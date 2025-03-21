@@ -1,42 +1,32 @@
-import React, { useState, useEffect } from "react";
-import { faClose } from "@fortawesome/free-solid-svg-icons";
-import Compressor from "compressorjs";
+import React, { useState } from 'react';
+import axios from 'axios';
+import { faClose } from '@fortawesome/free-solid-svg-icons';
 import {
   Dialog,
-  ContainerAdicionarTarefa,
-  ContainerH2Tarefa,
+  ContainerAdicionarApiario,
+  ContainerH2Apiario,
   StyledIcon,
-  H2AdicionarTarefa,
+  H2AdicionarApiario,
   InputSelect,
   ContainerButtonExit,
-  FormDetalhesTarefas,
-  ContainerDescricaoTarefa,
+  FormDetalhesApiario,
+  ContainerCategoria,
   H4InfomacoesInputs,
-  ContainerButton,
-  DivButtonNovaTarefa,
-  ButtonCriarTarefa,
+  ContainerDescricaoApiario,
+  DivButtonNovaApiario,
+  ButtonCriarApiario,
   ModalBackground,
-  FileInputLabel,
-  HiddenFileInput,
-} from "./styles";
+  ContainerButton,
+} from './styles';
 
-const ModalApiario = ({ isOpen, closeModalApiario, onAddApiario }) => {
+const ModalApiario = ({ isOpen, closeModalApiario, onAddApiario, token }) => {
   const [formState, setFormState] = useState({
-    regiao: "",
-    florada: "",
-    colmeias: "",
-    imagem: null,
+    regiao: '',
+    florada: '',
+    colmeias: '',
+    imagem: '',
   });
 
-  const [apiarios, setApiarios] = useState([]);
-
-  // Carregar dados salvos no localStorage ao abrir o site
-  useEffect(() => {
-    const dadosSalvos = JSON.parse(localStorage.getItem("apiarios")) || [];
-    setApiarios(dadosSalvos);
-  }, []);
-
-  // Atualizar os campos do formulário
   const handleChange = (event) => {
     setFormState({
       ...formState,
@@ -44,51 +34,49 @@ const ModalApiario = ({ isOpen, closeModalApiario, onAddApiario }) => {
     });
   };
 
-  // Converter a imagem para Base64 antes de salvar
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
-  
-    new Compressor(file, {
-      quality: 0.6, // Reduz a qualidade para 60%
-      success(result) {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          setFormState({ ...formState, imagem: reader.result });
-        };
-        reader.readAsDataURL(result);
-      },
-    });
-  };
-  
-
-  // Salvar apiário no localStorage
-  const salvarApiario = (novoApiario) => {
-    const novosApiarios = [...apiarios, novoApiario];
-    setApiarios(novosApiarios);
-    localStorage.setItem("apiarios", JSON.stringify(novosApiarios));
-  };
-
-  // Manipular o envio do formulário
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const { regiao, florada, colmeias, imagem } = formState;
 
-    if (regiao && florada && colmeias) {
-      salvarApiario(formState);
-      setFormState({ regiao: "", florada: "", colmeias: "", imagem: null });
-      closeModalApiario(); // Fechar a modal
+    if (!regiao || !florada || !colmeias) {
+      alert('Preencha todos os campos obrigatórios.');
+      return;
+    }
 
-      // Forçar o recarregamento da página
-      window.location.reload();
-    } else {
-      alert("Preencha todos os campos corretamente.");
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      alert('Erro: Usuário não autenticado.');
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        'https://projeto-full-stack-apiariopro.onrender.com/apiarios/cadastrar',
+        {
+          regiao,
+          florada,
+          colmeias,
+          imagem,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      // Após o cadastro do apiário, chama o onAddApiario para atualizar a lista local
+      onAddApiario(response.data);
+      setFormState({ regiao: '', florada: '', colmeias: '', imagem: '' });
+      closeModalApiario(); // Fecha a modal após a criação
+    } catch (error) {
+      alert('Erro ao cadastrar apiário.');
+      console.error(error);
     }
   };
 
-  // Fechar a modal e limpar os campos
   const handleClose = () => {
-    setFormState({ regiao: "", florada: "", colmeias: "", imagem: null });
+    setFormState({ regiao: '', florada: '', colmeias: '', imagem: '' });
     closeModalApiario();
   };
 
@@ -97,15 +85,15 @@ const ModalApiario = ({ isOpen, closeModalApiario, onAddApiario }) => {
   return (
     <ModalBackground>
       <Dialog open={isOpen}>
-        <ContainerAdicionarTarefa>
-          <ContainerH2Tarefa>
-            <H2AdicionarTarefa>ADICIONAR APIÁRIO</H2AdicionarTarefa>
+        <ContainerAdicionarApiario>
+          <ContainerH2Apiario>
+            <H2AdicionarApiario>ADICIONAR APIÁRIO</H2AdicionarApiario>
             <ContainerButtonExit>
               <StyledIcon icon={faClose} onClick={handleClose} />
             </ContainerButtonExit>
-          </ContainerH2Tarefa>
-          <FormDetalhesTarefas onSubmit={handleSubmit}>
-            <ContainerDescricaoTarefa>
+          </ContainerH2Apiario>
+          <FormDetalhesApiario onSubmit={handleSubmit}>
+            <ContainerDescricaoApiario>
               <H4InfomacoesInputs>REGIÃO</H4InfomacoesInputs>
               <InputSelect
                 type="text"
@@ -113,63 +101,50 @@ const ModalApiario = ({ isOpen, closeModalApiario, onAddApiario }) => {
                 value={formState.regiao}
                 onChange={handleChange}
               />
-            </ContainerDescricaoTarefa>
+            </ContainerDescricaoApiario>
 
-            <ContainerDescricaoTarefa>
+            <ContainerDescricaoApiario>
               <H4InfomacoesInputs>FLORADA</H4InfomacoesInputs>
-              <select
+              <InputSelect
+                type="text"
                 name="florada"
                 value={formState.florada}
                 onChange={handleChange}
-                style={{
-                  width: "60%",
-                  padding: "8px",
-                  fontSize: "16px",
-                  borderRadius: "4px",
-                  border: "1px solid #ccc",
-                }}
-              >
-                <option value="">Selecione a florada</option>
-                <option value="Angico">Angico</option>
-                <option value="Marmaleiro">Marmaleiro</option>
-                <option value="Florada Silvestre">Florada Silvestre</option>
-              </select>
-            </ContainerDescricaoTarefa>
+              />
+            </ContainerDescricaoApiario>
 
-            <ContainerDescricaoTarefa>
-              <H4InfomacoesInputs>COLMÉIAS</H4InfomacoesInputs>
+            <ContainerDescricaoApiario>
+              <H4InfomacoesInputs>COLMEIAS</H4InfomacoesInputs>
               <InputSelect
                 type="number"
                 name="colmeias"
                 value={formState.colmeias}
                 onChange={handleChange}
-                min="1"
               />
-            </ContainerDescricaoTarefa>
+            </ContainerDescricaoApiario>
 
-            <ContainerDescricaoTarefa>
-              <H4InfomacoesInputs>Imagem</H4InfomacoesInputs>
-              <FileInputLabel htmlFor="file-upload">Selecionar Imagem</FileInputLabel>
-              <HiddenFileInput
-                type="file"
-                accept="image/*"
-                id="file-upload"
-                onChange={handleImageChange}
+            <ContainerDescricaoApiario>
+              <H4InfomacoesInputs>IMAGEM</H4InfomacoesInputs>
+              <InputSelect
+                type="text"
+                name="imagem"
+                value={formState.imagem}
+                onChange={handleChange}
               />
-            </ContainerDescricaoTarefa>
+            </ContainerDescricaoApiario>
 
             <ContainerButton>
-              <DivButtonNovaTarefa>
-                <ButtonCriarTarefa type="submit">ADICIONAR</ButtonCriarTarefa>
-              </DivButtonNovaTarefa>
-              <DivButtonNovaTarefa>
-                <ButtonCriarTarefa type="button" onClick={handleClose}>
+              <DivButtonNovaApiario>
+                <ButtonCriarApiario type="submit">ADICIONAR</ButtonCriarApiario>
+              </DivButtonNovaApiario>
+              <DivButtonNovaApiario>
+                <ButtonCriarApiario type="button" onClick={handleClose}>
                   CANCELAR
-                </ButtonCriarTarefa>
-              </DivButtonNovaTarefa>
+                </ButtonCriarApiario>
+              </DivButtonNovaApiario>
             </ContainerButton>
-          </FormDetalhesTarefas>
-        </ContainerAdicionarTarefa>
+          </FormDetalhesApiario>
+        </ContainerAdicionarApiario>
       </Dialog>
     </ModalBackground>
   );

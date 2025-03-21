@@ -29,10 +29,10 @@ export const ModalBackground = styled.div`
   z-index: 1000;
 `;
 
-export const ContainerAdicionarTarefa = styled.div`
+export const ContainerAdicionarApiario = styled.div`
 `;
 
-export const ContainerH2Tarefa = styled.div`
+export const ContainerH2Apiario= styled.div`
 background-color: #ffc400;
   border-top-left-radius: 15px;
   border-top-right-radius: 15px;
@@ -43,7 +43,7 @@ background-color: #ffc400;
   justify-content: space-between;
 `;
 
-export const H2AdicionarTarefa = styled.h2`
+export const H2AdicionarApiario = styled.h2`
   margin: 0 0.5em;
   font-size: 20px;
   
@@ -59,7 +59,7 @@ export const StyledIcon = styled(FontAwesomeIcon)`
   font-size: 30px;
   cursor: pointer;
 `;
-export const FormDetalhesTarefas = styled.form`
+export const FormDetalhesApiario = styled.form`
   
   background-color: #fff;
   padding-bottom: 2em;
@@ -156,21 +156,21 @@ export const ContainerConclusao = styled.div`
   flex-wrap: wrap;
 `;
 
-export const ContainerDescricaoTarefa = styled.div`
+export const ContainerDescricaoApiario = styled.div`
   padding: 1em 0 0.7em 1em;
   display: flex;
   align-items: center;
 
 `;
 
-export const DivButtonNovaTarefa = styled.div`
+export const DivButtonNovaApiario = styled.div`
   justify-content: center;
   display: flex;
   margin-top: 2em;
     width:100%
 `;
 
-export const ButtonCriarTarefa = styled.button`
+export const ButtonCriarApiario = styled.button`
   height: 2.5em;
   width: 100%;
   border: none;
