@@ -31,7 +31,18 @@ export const ModalBackground = styled.div`
 
 export const ContainerAdicionarApiario = styled.div`
 `;
+export const ContainerInput = styled.input`
+  width: 60%;
+  padding: 4px;
+ 
+  border-radius: 4px;
+  
 
+  background-color: #fff;
+  cursor: pointer;
+
+  // Pode adicionar mais estilos aqui se necessário
+`;
 export const ContainerH2Apiario= styled.div`
 background-color: #ffc400;
   border-top-left-radius: 15px;
@@ -105,7 +116,7 @@ export const InputSelect = styled.input`
   height: 1.8em;
   margin-right: 3px;
   width: 90%;
-  max-width: 13.5em;
+  max-width: 14.5em;
   &::placeholder {
     font-weight: bold;
      font-size: 14px;

@@ -20,25 +20,32 @@ const Relatorio = () => {
     const savedColmeias = localStorage.getItem("colmeias");
     if (savedColmeias) {
       const colmeias = JSON.parse(savedColmeias);
-      const totalEmCampo = colmeias.NINHO.em_campo + colmeias.MELGUEIRA.em_campo + colmeias.NUCLEO.em_campo;
-      const totalVazia = colmeias.NINHO.vazia + colmeias.MELGUEIRA.vazia + colmeias.NUCLEO.vazia;
+  
+      // Garante que as propriedades existam antes de acessá-las
+      const ninho = colmeias.NINHO || { em_campo: 0, vazia: 0 };
+      const melgueira = colmeias.MELGUEIRA || { em_campo: 0, vazia: 0 };
+      const nucleo = colmeias.NUCLEO || { em_campo: 0, vazia: 0 };
+  
+      const totalEmCampo = ninho.em_campo + melgueira.em_campo + nucleo.em_campo;
+      const totalVazia = ninho.vazia + melgueira.vazia + nucleo.vazia;
+  
       setTotalColmeias(totalEmCampo + totalVazia);
-      setTotalEmCampo(totalEmCampo)
+      setTotalEmCampo(totalEmCampo);
     }
-    
+  
     const savedApiarios = localStorage.getItem("apiarios");
     if (savedApiarios) {
       setTotalApiarios(JSON.parse(savedApiarios).length);
     }
-
+  
     const savedMel = localStorage.getItem("dadosProducao");
-if (savedMel) {
-  const dados = JSON.parse(savedMel);
-  const total = dados.reduce((acc, item) => acc + Number(item.quantidade_florada || 0), 0);
-  setTotalMel(total);
-}
-
+    if (savedMel) {
+      const dados = JSON.parse(savedMel);
+      const total = dados.reduce((acc, item) => acc + Number(item.quantidade_florada || 0), 0);
+      setTotalMel(total);
+    }
   }, []);
+  
   
 
   return (

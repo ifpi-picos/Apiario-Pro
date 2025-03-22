@@ -16,6 +16,7 @@ import {
   ButtonCriarApiario,
   ModalBackground,
   ContainerButton,
+  ContainerInput,
 } from "./styles";
 
 const ModalApiario = ({ isOpen, closeModalApiario, onAddApiario, token }) => {
@@ -191,7 +192,7 @@ const ModalApiario = ({ isOpen, closeModalApiario, onAddApiario, token }) => {
 
             <ContainerDescricaoApiario>
               <H4InfomacoesInputs>IMAGEM</H4InfomacoesInputs>
-              <input type="file" accept="image/*" onChange={handleImageChange} />
+              <ContainerInput type="file" accept="image/*" onChange={handleImageChange} />
             </ContainerDescricaoApiario>
 
             {/* 🔹 Exibe a imagem carregada, se existir */}
