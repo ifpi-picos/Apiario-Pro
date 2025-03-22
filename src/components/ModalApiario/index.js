@@ -119,7 +119,7 @@ const ModalApiario = ({ isOpen, closeModalApiario, onAddApiario, token }) => {
 
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("upload_preset", "ml_default");
+    formData.append("upload_preset", "apiario_upload");
 
     formData.append("cloud_name", "dpjg8bkba");
 
@@ -128,12 +128,12 @@ const ModalApiario = ({ isOpen, closeModalApiario, onAddApiario, token }) => {
         "https://api.cloudinary.com/v1_1/dpjg8bkba/image/upload",
         formData
       );
-
+    
       const imageUrl = response.data.secure_url;
       setFormState({ ...formState, imagem: imageUrl });
     } catch (error) {
       console.error("Erro ao fazer upload da imagem:", error);
-      alert("Erro ao enviar a imagem.");
+      alert(`Erro ao enviar a imagem: ${error.response ? error.response.data.error.message : error.message}`);
     }
   };
 
