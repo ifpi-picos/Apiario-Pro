@@ -143,9 +143,9 @@ const Colmeias = () => {
     });
   };
   
-  const totalEmCampo = Object.values(colmeias).reduce((acc, tipo) => acc + (tipo.em_campo || 0), 0);
-  const totalVazias = Object.values(colmeias).reduce((acc, tipo) => acc + (tipo.vazia || 0), 0);
-  
+const totalEmCampo = Object.values(colmeias).reduce((acc, tipo) => acc + (tipo.em_campo || 0), 0);
+const totalVazias = Object.values(colmeias).reduce((acc, tipo) => acc + (tipo.vazia || 0), 0);
+
   
   return (
     <AppBody>
