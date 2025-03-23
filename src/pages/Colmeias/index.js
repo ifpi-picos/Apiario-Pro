@@ -143,6 +143,8 @@ const Colmeias = () => {
     });
   };
   
+  const totalEmCampo = Object.values(colmeias).reduce((acc, tipo) => acc + (tipo.em_campo || 0), 0);
+  const totalVazias = Object.values(colmeias).reduce((acc, tipo) => acc + (tipo.vazia || 0), 0);
   
   
   return (
@@ -156,6 +158,7 @@ const Colmeias = () => {
               <Text>Em campo</Text>
               <Icone src={Campo} alt={"campo"} />
             </TextImg>
+            <Total>Colméias: {totalEmCampo}</Total>
           </ContainerText>
           <ContainerDiv1>
             <Container>
@@ -209,6 +212,7 @@ const Colmeias = () => {
       <Text>Galpão</Text>
       <Icone src={Deposito} alt={"deposito"} />
     </TextImg>
+    <Total>Colméias: {totalVazias}</Total>
   </ContainerText>
   
   <BotaoContainer>
