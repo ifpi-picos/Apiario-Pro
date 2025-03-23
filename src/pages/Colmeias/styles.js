@@ -3,11 +3,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Adicionar from "../../assets/adicionar.png";
 import { IoIosAddCircleOutline } from "react-icons/io";
 export const AppBody = styled.div`
-  margin: 0;
+   margin: 0;
   padding: 0;
   box-sizing: border-box;
-
   height: 100vh;
+  padding-top: 4em; /* Adiciona espaço para o header */
 `;
 
 export const Main = styled.div`

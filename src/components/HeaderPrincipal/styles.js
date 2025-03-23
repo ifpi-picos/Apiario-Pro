@@ -33,6 +33,9 @@ export const ContainerHeader = styled.div`
   background-color: #ffc400;
   align-items: center;
   justify-content: space-between;
+  position:fixed;
+  top:0;
+ 
 `;
 export const ContainerLogo = styled.div`
   max-width: 150px;
