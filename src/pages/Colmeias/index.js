@@ -31,6 +31,9 @@ import {
 const Colmeias = () => {
   const [showModal, setShowModal] = useState(false);
   const { usuarioId } = useAuth();
+  const [editando, setEditando] = useState(null);
+  const [novoValor, setNovoValor] = useState("");
+
   const [colmeias, setColmeias] = useState(() => {
     const savedData = localStorage.getItem("colmeias");
     return savedData
@@ -42,26 +45,17 @@ const Colmeias = () => {
         };
   });
 
-  const [totalEmCampo, setTotalEmCampo] = useState(
-    colmeias?.NINHO?.em_campo + colmeias?.MELGUEIRA?.em_campo + colmeias?.NUCLEO?.em_campo
-  );
-  const [totalVazia, setTotalVazia] = useState(
-    colmeias?.NINHO?.vazia + colmeias?.MELGUEIRA?.vazia + colmeias?.NUCLEO?.vazia
-  );
-
   useEffect(() => {
-    if (!usuarioId) return; // Evita erros se o usuário não estiver autenticado
+    if (!usuarioId) return;
 
     const carregarColmeias = async () => {
       try {
-        const response = await fetch(`https://projeto-full-stack-apiariopro.onrender.com/colmeias/${usuarioId}`);
+        const response = await fetch(
+          `https://projeto-full-stack-apiariopro.onrender.com/colmeias/${usuarioId}`
+        );
         const data = await response.json();
 
-        console.log("Resposta da API:", data); // Verifique o formato da resposta
-
-        // Verifique se os dados possuem as propriedades em_campo e vazia
         if (data && data.em_campo && data.vazia) {
-          // Reorganize os dados para o formato esperado
           const reorganizedData = {
             MELGUEIRA: { em_campo: data.em_campo.MELGUEIRA, vazia: data.vazia.MELGUEIRA },
             NINHO: { em_campo: data.em_campo.NINHO, vazia: data.vazia.NINHO },
@@ -69,12 +63,6 @@ const Colmeias = () => {
           };
 
           setColmeias(reorganizedData);
-          setTotalEmCampo(
-            reorganizedData?.NINHO?.em_campo + reorganizedData?.MELGUEIRA?.em_campo + reorganizedData?.NUCLEO?.em_campo
-          );
-          setTotalVazia(
-            reorganizedData?.NINHO?.vazia + reorganizedData?.MELGUEIRA?.vazia + reorganizedData?.NUCLEO?.vazia
-          );
         } else {
           console.error("Estrutura dos dados da API inválida:", data);
         }
@@ -90,68 +78,124 @@ const Colmeias = () => {
     setShowModal(!showModal);
   };
 
-  const handleAddColmeia = ({ tipo_colmeia, quantidade, estado }) => {
-    setColmeias((prevColmeias) => {
-      const newColmeias = {
-        ...prevColmeias,
-        [tipo_colmeia]: {
-          ...prevColmeias[tipo_colmeia],
-          [estado.toLowerCase()]: prevColmeias[tipo_colmeia][estado.toLowerCase()] + parseInt(quantidade, 10),
-        },
-      };
-
-      // Salvando as novas colmeias no localStorage
-      localStorage.setItem("colmeias", JSON.stringify(newColmeias));
-
-      // Atualizando as somas
-      const totalEmCampoNovo =
-        newColmeias?.NINHO?.em_campo + newColmeias?.MELGUEIRA?.em_campo + newColmeias?.NUCLEO?.em_campo;
-      const totalVaziaNovo =
-        newColmeias?.NINHO?.vazia + newColmeias?.MELGUEIRA?.vazia + newColmeias?.NUCLEO?.vazia;
-
-      // Atualizando os totais
-      setTotalEmCampo(totalEmCampoNovo);
-      setTotalVazia(totalVaziaNovo);
-
-      return newColmeias;
-    });
+  const handleEditClick = (tipo, estado) => {
+    setEditando({ tipo, estado });
+    setNovoValor(colmeias[tipo][estado]); // Define o valor atual no input
   };
 
+  const handleChange = (e) => {
+    setNovoValor(e.target.value.replace(/\D/, "")); // Aceita apenas números
+  };
+
+  const handleBlurOrEnter = async () => {
+    if (!editando) return;
+  
+    const { tipo, estado } = editando;
+    const quantidade = parseInt(novoValor, 10) || 0;
+  
+    try {
+      // Atualizar o estado local
+      setColmeias((prev) => ({
+        ...prev,
+        [tipo]: { ...prev[tipo], [estado]: quantidade },
+      }));
+  
+      // Atualizar o banco de dados
+      await fetch(`https://projeto-full-stack-apiariopro.onrender.com/colmeias/atualizar/${usuarioId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ tipo, estado, quantidade }),
+      });
+  
+      // Salvar os dados atualizados no localStorage após a atualização
+      localStorage.setItem(
+        "colmeias",
+        JSON.stringify({ ...colmeias, [tipo]: { ...colmeias[tipo], [estado]: quantidade } })
+      );
+    } catch (error) {
+      console.error("Erro ao salvar a quantidade no banco:", error);
+    }
+  
+    setEditando(null);
+  };
+  
+  const onAddColmeia = (colmeia) => {
+    setColmeias((prevColmeias) => {
+      const tipo = colmeia.tipo_colmeia;
+      const estado = colmeia.estado.toLowerCase();
+      const quantidadeNova = parseInt(colmeia.quantidade, 10); // Garantir que seja um número
+  
+      // Se já existir colmeia do mesmo tipo e estado, somamos as quantidades
+      const quantidadeAtual = prevColmeias[tipo]?.[estado] || 0;
+  
+      const updatedColmeias = {
+        ...prevColmeias,
+        [tipo]: {
+          ...prevColmeias[tipo],
+          [estado]: quantidadeAtual + quantidadeNova, // Somando as quantidades
+        },
+      };
+  
+      // Salvar os dados atualizados no localStorage
+      localStorage.setItem("colmeias", JSON.stringify(updatedColmeias));
+  
+      return updatedColmeias;
+    });
+  };
+  
+  
+  
   return (
     <AppBody>
       <Header />
 
       <Main>
         <ContainerPrincipal>
-          {/* Seção "Em Campo" */}
           <ContainerText>
             <TextImg>
               <Text>Em campo</Text>
               <Icone src={Campo} alt={"campo"} />
             </TextImg>
-            <Total>Colméias: {totalEmCampo}</Total>
           </ContainerText>
           <ContainerDiv1>
             <Container>
               <BotaoContainer>
                 <ContainerRow>
-                  <ContainerInform>
-                    <Informacoes>
-                      <SectionColmeias>Ninhos</SectionColmeias>
-                      <InfoItem>{colmeias?.NINHO?.em_campo || 0}</InfoItem>
-                    </Informacoes>
-                  </ContainerInform>
-                  <ContainerInform>
-                    <Informacoes>
-                      <SectionColmeias>Melgueiras</SectionColmeias>
-                      <InfoItem>{colmeias?.MELGUEIRA?.em_campo || 0}</InfoItem>
-                    </Informacoes>
-                  </ContainerInform>
+                  {["NINHO", "MELGUEIRA"].map((tipo) => (
+                    <ContainerInform key={tipo}>
+                      <Informacoes onClick={() => handleEditClick(tipo, "em_campo")}>
+                        <SectionColmeias>{tipo}</SectionColmeias>
+                        {editando?.tipo === tipo && editando?.estado === "em_campo" ? (
+                          <input
+                            type="text"
+                            value={novoValor}
+                            onChange={handleChange}
+                            onBlur={handleBlurOrEnter}
+                            onKeyDown={(e) => e.key === "Enter" && handleBlurOrEnter()}
+                            autoFocus
+                          />
+                        ) : (
+                          <InfoItem>{colmeias[tipo].em_campo || 0}</InfoItem>
+                        )}
+                      </Informacoes>
+                    </ContainerInform>
+                  ))}
                 </ContainerRow>
                 <ContainerInform>
-                  <Informacoes>
-                    <SectionColmeias>Núcleos</SectionColmeias>
-                    <InfoItem>{colmeias?.NUCLEO?.em_campo || 0}</InfoItem>
+                  <Informacoes onClick={() => handleEditClick("NUCLEO", "em_campo")}>
+                    <SectionColmeias>NÚCLEO</SectionColmeias>
+                    {editando?.tipo === "NUCLEO" && editando?.estado === "em_campo" ? (
+                      <input
+                        type="text"
+                        value={novoValor}
+                        onChange={handleChange}
+                        onBlur={handleBlurOrEnter}
+                        onKeyDown={(e) => e.key === "Enter" && handleBlurOrEnter()}
+                        autoFocus
+                      />
+                    ) : (
+                      <InfoItem>{colmeias.NUCLEO.em_campo || 0}</InfoItem>
+                    )}
                   </Informacoes>
                 </ContainerInform>
               </BotaoContainer>
@@ -159,50 +203,67 @@ const Colmeias = () => {
             <ContainerDivider />
           </ContainerDiv1>
 
-          {/* Seção "Galpão" */}
           <ContainerDiv2>
-            <ContainerText>
-              <TextImg>
-                <Text>Galpão</Text>
-                <Icone src={Deposito} alt={"deposito"} />
-              </TextImg>
-              <Total>Colméias: {totalVazia}</Total>
-            </ContainerText>
-            <BotaoContainer>
-              <ContainerRow>
-                <ContainerInform>
-                  <Informacoes>
-                    <SectionColmeias>Ninhos</SectionColmeias>
-                    <InfoItem>{colmeias?.NINHO?.vazia || 0}</InfoItem>
-                  </Informacoes>
-                </ContainerInform>
-                <ContainerInform>
-                  <Informacoes>
-                    <SectionColmeias>Melgueiras</SectionColmeias>
-                    <InfoItem>{colmeias?.MELGUEIRA?.vazia || 0}</InfoItem>
-                  </Informacoes>
-                </ContainerInform>
-              </ContainerRow>
-              <ContainerInform>
-                <Informacoes>
-                  <SectionColmeias>Núcleos</SectionColmeias>
-                  <InfoItem>{colmeias?.NUCLEO?.vazia || 0}</InfoItem>
-                </Informacoes>
-              </ContainerInform>
-            </BotaoContainer>
-          </ContainerDiv2>
+  <ContainerText>
+    <TextImg>
+      <Text>Galpão</Text>
+      <Icone src={Deposito} alt={"deposito"} />
+    </TextImg>
+  </ContainerText>
+  
+  <BotaoContainer>
+    {/* Primeira linha com NINHO e MELGUEIRA */}
+    <ContainerRow>
+      {["NINHO", "MELGUEIRA"].map((tipo) => (
+        <ContainerInform key={tipo}>
+          <Informacoes onClick={() => handleEditClick(tipo, "vazia")}>
+            <SectionColmeias>{tipo}</SectionColmeias>
+            {editando?.tipo === tipo && editando?.estado === "vazia" ? (
+              <input
+                type="text"
+                value={novoValor}
+                onChange={handleChange}
+                onBlur={handleBlurOrEnter}
+                onKeyDown={(e) => e.key === "Enter" && handleBlurOrEnter()}
+                autoFocus
+              />
+            ) : (
+              <InfoItem>{colmeias[tipo].vazia || 0}</InfoItem>
+            )}
+          </Informacoes>
+        </ContainerInform>
+      ))}
+    </ContainerRow>
 
-          {/* Botão para adicionar colmeias */}
+    {/* NUCLEO fora do ContainerRow, abaixo das outras colmeias */}
+    <ContainerInform>
+      <Informacoes onClick={() => handleEditClick("NUCLEO", "vazia")}>
+        <SectionColmeias>NUCLEO</SectionColmeias>
+        {editando?.tipo === "NUCLEO" && editando?.estado === "vazia" ? (
+          <input
+            type="text"
+            value={novoValor}
+            onChange={handleChange}
+            onBlur={handleBlurOrEnter}
+            onKeyDown={(e) => e.key === "Enter" && handleBlurOrEnter()}
+            autoFocus
+          />
+        ) : (
+          <InfoItem>{colmeias.NUCLEO.vazia || 0}</InfoItem>
+        )}
+      </Informacoes>
+    </ContainerInform>
+  </BotaoContainer>
+</ContainerDiv2>
+
+
           <ContainerAdicionar>
             <StyledIcon onClick={toggleModal} />
           </ContainerAdicionar>
 
-          {/* Modal para adicionar novas colmeias */}
-          <Modal
-            isOpen={showModal}
-            closeModalColmeia={toggleModal}
-            onAddColmeia={handleAddColmeia}
-          />
+          <Modal   isOpen={showModal} 
+  closeModalColmeia={toggleModal} 
+  onAddColmeia={onAddColmeia}  />
         </ContainerPrincipal>
       </Main>
     </AppBody>
