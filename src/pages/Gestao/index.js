@@ -73,12 +73,12 @@ const Gestao = () => {
   }, [anoSelecionado, token]);
 
   const resetarGraficos = async () => {
-    const confirmacao = window.confirm("Você tem certeza que deseja excluir os dados de produção?");
+      const confirmacao = window.confirm("Você tem certeza que deseja excluir os dados de produção?");
   
-    if (!confirmacao) {
-      // Se o usuário clicar em "Cancelar", não faz nada
-      return;
-    }
+  if (!confirmacao) {
+    // Se o usuário clicar em "Cancelar", não faz nada
+    return;
+  }
     try {
       const storedToken = token || localStorage.getItem("token");
       if (!storedToken) {
@@ -91,6 +91,7 @@ const Gestao = () => {
       });
   
       setDadosProducao([]); // Limpa o estado após sucesso
+      handleProducaoAdicionada();
       alert(response.data.mensagem || "Dados de produção apagados com sucesso!");
     } catch (error) {
       if (error.response) {
