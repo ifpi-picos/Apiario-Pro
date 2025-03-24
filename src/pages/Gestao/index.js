@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Pie, Bar } from "react-chartjs-2";
 import Header from "../../components/HeaderPrincipal/index.js";
 import ModalProducao from "../../components/ModalProducao/index.js";
+import { useAuth } from "../../contexts/AuthContext";
 import {
   Chart as ChartJS,
   ArcElement,
@@ -12,7 +13,7 @@ import {
   BarElement,
   Title,
 } from "chart.js";
-import axios from "axios"; // Importando axios para comunicação com a API
+import axios from "axios";
 import {
   AppBody,
   Main,
@@ -36,57 +37,39 @@ ChartJS.register(
   Title
 );
 
-const API_URL = "https://projeto-full-stack-apiariopro.onrender.com/gestao"; // URL base do backend
+const API_URL = "https://projeto-full-stack-apiariopro.onrender.com/gestao";
 
 const Gestao = () => {
   const [showModal, setShowModal] = useState(false);
-  const [dadosProducao, setDadosProducao] = useState({});
+  const [dadosProducao, setDadosProducao] = useState([]);
   const [anoSelecionado, setAnoSelecionado] = useState(new Date().getFullYear());
+  const { token } = useAuth();
 
-  // Buscar dados do backend ao carregar ou trocar o ano selecionado
   useEffect(() => {
-    const buscarDadosProducao = async () => {
+    const fetchProducao = async () => {
       try {
-        const response = await axios.get(`${API_URL}/${anoSelecionado}`);
-        setDadosProducao({ [anoSelecionado]: response.data });
+        const storedToken = token || localStorage.getItem("token");
+        if (!storedToken) return;
+
+        const response = await axios.get(`${API_URL}/${anoSelecionado}`, {
+          headers: { Authorization: `Bearer ${storedToken}` },
+        });
+      
+        setDadosProducao(response.data || []);
       } catch (error) {
-        console.error("Erro ao buscar dados de produção:", error);
+        console.error("Erro ao buscar produção:", error);
       }
     };
 
-    buscarDadosProducao();
-  }, [anoSelecionado]);
-
-  const toggleModal = () => {
-    setShowModal(!showModal);
-  };
-
-  const adicionarProducao = async (novaProducao) => {
-    try {
-      const response = await axios.post(API_URL, {
-        ano: anoSelecionado,
-        ...novaProducao,
-      });
-
-      // Atualiza a produção localmente com os novos dados
-      setDadosProducao((prevState) => ({
-        ...prevState,
-        [anoSelecionado]: [...(prevState[anoSelecionado] || []), response.data],
-      }));
-    } catch (error) {
-      console.error("Erro ao adicionar produção:", error);
-    }
-  };
-
+    fetchProducao();
+  }, [anoSelecionado, token]);
   const resetarGraficos = async () => {
     try {
-      // Deletar os dados do ano selecionado no banco de dados
       await axios.delete(`${API_URL}/deletar/${anoSelecionado}`);
-  
-      // Limpar os dados localmente
-      setDadosProducao((prevState) => ({ ...prevState, [anoSelecionado]: [] }));
       
-      // Mensagem de sucesso
+      // Define o estado como um array vazio após resetar
+      setDadosProducao([]);
+  
       alert("Dados de produção apagados com sucesso!");
     } catch (error) {
       console.error("Erro ao resetar os gráficos e dados:", error);
@@ -94,15 +77,7 @@ const Gestao = () => {
     }
   };
   
-
-  const anosDisponiveis = () => {
-    const anosSalvos = Object.keys(dadosProducao).map(Number);
-    const anoAtual = new Date().getFullYear();
-    return [...new Set([...anosSalvos, anoAtual])].sort((a, b) => a - b);
-  };
-
-  // Processamento dos dados para os gráficos
-  const dadosFlorada = (dadosProducao[anoSelecionado] || []).reduce((acc, item) => {
+  const dadosFlorada = dadosProducao.reduce((acc, item) => {
     acc[item.florada] = (acc[item.florada] || 0) + Number(item.quantidade_florada);
     return acc;
   }, {});
@@ -129,7 +104,9 @@ const Gestao = () => {
     ],
   };
 
-  const dadosMensais = (dadosProducao[anoSelecionado] || []).reduce((acc, item) => {
+
+
+  const dadosMensais = dadosProducao.reduce((acc, item) => {
     acc[item.mes] = (acc[item.mes] || 0) + Number(item.quantidade_mes);
     return acc;
   }, {});
@@ -152,29 +129,15 @@ const Gestao = () => {
     ],
   };
 
-  const barOptions = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: "top",
-      },
-      title: {
-        display: true,
-        text: "Produção de Mel por Mês",
-      },
-    },
-  };
-
   return (
     <AppBody>
       <Header />
       <Main>
         <DivPrincipal>
           <ContainerH2>
-            <h2 style={{ textAlign: "center" }}>Gestão de Produção de Mel - Análise de Gráficos</h2>
+            <h2 style={{ textAlign: "center" }}>Gestão de Produção de Mel</h2>
             <BotaoAno>
               <select
-                name="ano"
                 value={anoSelecionado}
                 onChange={(e) => setAnoSelecionado(Number(e.target.value))}
                 style={{
@@ -185,9 +148,7 @@ const Gestao = () => {
                   border: "1px solid #ccc",
                 }}
               >
-                {anosDisponiveis().map(ano => (
-                  <option key={ano} value={ano}>{ano}</option>
-                ))}
+                <option value={anoSelecionado}>{anoSelecionado}</option>
               </select>
             </BotaoAno>
           </ContainerH2>
@@ -198,32 +159,28 @@ const Gestao = () => {
             </DivStyle1>
             <DivStyle2>
               <h3>Produção Mensal de Mel</h3>
-              <Bar data={barData} options={barOptions} />
+              <Bar data={barData} />
             </DivStyle2>
             <button
-              onClick={resetarGraficos}
-              style={{
-                padding: "10px 20px",
-                fontSize: "16px",
-                backgroundColor: "#FF5733",
-                color: "#fff",
-                border: "none",
-                borderRadius: "5px",
-                cursor: "pointer",
-                marginTop: "20px",
-              }}
-            >
-              Resetar Gráficos
-            </button>
+            onClick={resetarGraficos}
+            style={{
+              padding: "10px 20px",
+              fontSize: "16px",
+              backgroundColor: "#FF5733",
+              color: "#fff",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+              marginTop: "20px",
+            }}
+          >
+            Resetar Gráficos
+          </button>
           </DivGraf>
           <ContainerAdicionar>
-            <StyledIcon onClick={toggleModal} />
+            <StyledIcon onClick={() => setShowModal(true)} />
           </ContainerAdicionar>
-          <ModalProducao
-            isOpen={showModal}
-            closeModalProducao={() => setShowModal(false)}
-            onAddProducao={adicionarProducao}
-          />
+          <ModalProducao isOpen={showModal} closeModalProducao={() => setShowModal(false)} />
         </DivPrincipal>
       </Main>
     </AppBody>
