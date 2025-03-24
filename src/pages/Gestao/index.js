@@ -12,6 +12,7 @@ import {
   BarElement,
   Title,
 } from "chart.js";
+import axios from "axios"; // Importando axios para comunicação com a API
 import {
   AppBody,
   Main,
@@ -35,42 +36,78 @@ ChartJS.register(
   Title
 );
 
+const API_URL = "https://projeto-full-stack-apiariopro.onrender.com/gestao"; // URL base do backend
+
 const Gestao = () => {
   const [showModal, setShowModal] = useState(false);
-  const [dadosProducao, setDadosProducao] = useState(() => {
-    // Tentar carregar os dados do localStorage na inicialização
-    const dadosSalvos = localStorage.getItem("dadosProducao");
-    return dadosSalvos ? JSON.parse(dadosSalvos) : [];
-  });
+  const [dadosProducao, setDadosProducao] = useState({});
+  const [anoSelecionado, setAnoSelecionado] = useState(new Date().getFullYear());
 
-  // Atualizar o localStorage sempre que os dados mudarem
+  // Buscar dados do backend ao carregar ou trocar o ano selecionado
   useEffect(() => {
-    if (dadosProducao.length > 0) {
-      localStorage.setItem("dadosProducao", JSON.stringify(dadosProducao));
-    }
-  }, [dadosProducao]);
+    const buscarDadosProducao = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/${anoSelecionado}`);
+        setDadosProducao({ [anoSelecionado]: response.data });
+      } catch (error) {
+        console.error("Erro ao buscar dados de produção:", error);
+      }
+    };
 
-  const resetarGraficos = () => {
-    setDadosProducao([]);
-    localStorage.removeItem("dadosProducao"); // Remover do localStorage
-  };
+    buscarDadosProducao();
+  }, [anoSelecionado]);
 
   const toggleModal = () => {
     setShowModal(!showModal);
   };
 
-  const adicionarProducao = (novaProducao) => {
-    setDadosProducao((prevState) => [...prevState, novaProducao]);
+  const adicionarProducao = async (novaProducao) => {
+    try {
+      const response = await axios.post(API_URL, {
+        ano: anoSelecionado,
+        ...novaProducao,
+      });
+
+      // Atualiza a produção localmente com os novos dados
+      setDadosProducao((prevState) => ({
+        ...prevState,
+        [anoSelecionado]: [...(prevState[anoSelecionado] || []), response.data],
+      }));
+    } catch (error) {
+      console.error("Erro ao adicionar produção:", error);
+    }
   };
 
-  // Agrupar produção por florada
-  const dadosFlorada = dadosProducao.reduce((acc, item) => {
+  const resetarGraficos = async () => {
+    try {
+      // Deletar os dados do ano selecionado no banco de dados
+      await axios.delete(`${API_URL}/deletar/${anoSelecionado}`);
+  
+      // Limpar os dados localmente
+      setDadosProducao((prevState) => ({ ...prevState, [anoSelecionado]: [] }));
+      
+      // Mensagem de sucesso
+      alert("Dados de produção apagados com sucesso!");
+    } catch (error) {
+      console.error("Erro ao resetar os gráficos e dados:", error);
+      alert("Erro ao resetar os gráficos e dados.");
+    }
+  };
+  
+
+  const anosDisponiveis = () => {
+    const anosSalvos = Object.keys(dadosProducao).map(Number);
+    const anoAtual = new Date().getFullYear();
+    return [...new Set([...anosSalvos, anoAtual])].sort((a, b) => a - b);
+  };
+
+  // Processamento dos dados para os gráficos
+  const dadosFlorada = (dadosProducao[anoSelecionado] || []).reduce((acc, item) => {
     acc[item.florada] = (acc[item.florada] || 0) + Number(item.quantidade_florada);
     return acc;
   }, {});
 
-  // Preparar dados para o gráfico de pizza
-  const pieData = dadosProducao.length > 0 ? {
+  const pieData = Object.keys(dadosFlorada).length > 0 ? {
     labels: Object.keys(dadosFlorada),
     datasets: [
       {
@@ -92,8 +129,7 @@ const Gestao = () => {
     ],
   };
 
-  // Agrupar produção por mês
-  const dadosMensais = dadosProducao.reduce((acc, item) => {
+  const dadosMensais = (dadosProducao[anoSelecionado] || []).reduce((acc, item) => {
     acc[item.mes] = (acc[item.mes] || 0) + Number(item.quantidade_mes);
     return acc;
   }, {});
@@ -103,7 +139,6 @@ const Gestao = () => {
     "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
   ];
 
-  // Preparar dados para o gráfico de barras
   const barData = {
     labels: meses,
     datasets: [
@@ -140,6 +175,8 @@ const Gestao = () => {
             <BotaoAno>
               <select
                 name="ano"
+                value={anoSelecionado}
+                onChange={(e) => setAnoSelecionado(Number(e.target.value))}
                 style={{
                   width: "100%",
                   padding: "8px",
@@ -148,10 +185,9 @@ const Gestao = () => {
                   border: "1px solid #ccc",
                 }}
               >
-                <option value="">Selecione o ano</option>
-                <option value="2025">2025</option>
-                <option value="2026">2026</option>
-                <option value="2027">2027</option>
+                {anosDisponiveis().map(ano => (
+                  <option key={ano} value={ano}>{ano}</option>
+                ))}
               </select>
             </BotaoAno>
           </ContainerH2>

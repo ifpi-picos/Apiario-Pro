@@ -65,6 +65,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("usuario");
     localStorage.removeItem("token");
     localStorage.removeItem("colmeias");
+    localStorage.removeItem("dadosProducao");
 
     setColmeias({
       MELGUEIRA: { vazia: 0, em_campo: 0 },

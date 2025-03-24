@@ -159,7 +159,7 @@ const ModalApiario = ({ isOpen, closeModalApiario, onAddApiario, token }) => {
           <FormDetalhesApiario onSubmit={handleSubmit}>
             <ContainerDescricaoApiario>
               <H4InfomacoesInputs>REGIÃO</H4InfomacoesInputs>
-              <InputSelect type="text" name="regiao" value={formState.regiao} onChange={handleChange} />
+              <InputSelect type="text" name="regiao" value={formState.regiao} onChange={handleChange} maxLength={20}/>
             </ContainerDescricaoApiario>
 
             <ContainerDescricaoApiario>
@@ -187,7 +187,12 @@ const ModalApiario = ({ isOpen, closeModalApiario, onAddApiario, token }) => {
 
             <ContainerDescricaoApiario>
               <H4InfomacoesInputs>COLMEIAS</H4InfomacoesInputs>
-              <InputSelect type="number" name="colmeias" value={formState.colmeias} onChange={handleChange} />
+              <InputSelect type="number" name="colmeias" value={formState.colmeias}  onChange={(e) => {
+                  const value = e.target.value;
+                  if (value.length <= 6) {
+                    handleChange(e);
+                  }
+                }}/>
             </ContainerDescricaoApiario>
 
             <ContainerDescricaoApiario>

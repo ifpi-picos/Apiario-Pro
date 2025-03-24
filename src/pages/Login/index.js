@@ -1,14 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useAuth } from "../../contexts/AuthContext"; // Importando o contexto
+import { useAuth } from "../../contexts/AuthContext"; 
+import { FaSpinner } from "react-icons/fa"; // Ícone de loading
 import {
   AppBody,
-  Header,
-  H2,
-  H1,
   Main,
-  P1,
+  ContainerPrincipal,
+  ContainerTitulo,
   ContainerInputs,
   Container,
   EmailIcone,
@@ -17,45 +16,40 @@ import {
   Form,
   Button,
   ContainerButton,
-  ContainerTitulo,
-  ContainerPrincipal,
   ContainerTextBorda,
   PCadastreSe,
   LinkCadastreSe,
-} from './styles'; // Supondo que você tenha seus estilos em um arquivo separado
+  H1,
+} from "./styles"; 
 
 function Login() {
   const navigate = useNavigate();
-  const { login } = useAuth(); // Obtendo a função login do contexto para atualizar o nome
-  const [formData, setFormData] = useState({
-    email: "",
-    senha: "",
-  });
-  const [erro, setErro] = useState(""); // Estado para exibir erros
+  const { login } = useAuth(); 
+  const [formData, setFormData] = useState({ email: "", senha: "" });
+  const [erro, setErro] = useState(""); 
+  const [isLoading, setIsLoading] = useState(false); // Estado de carregamento
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErro(""); // Reseta o erro antes da tentativa
+    setErro("");
+    setIsLoading(true); // Ativa o loading
 
     try {
       const response = await axios.post("https://projeto-full-stack-apiariopro.onrender.com/usuarios/login", formData);
-      console.log("Usuário logado:", response.data);
 
-      // Atualizando o nome do usuário no contexto e localStorage
-      login(response.data.usuario); // Atualiza o nome do usuário no contexto global
+      login(response.data.usuario); 
       localStorage.setItem("usuario", JSON.stringify(response.data.usuario));
       localStorage.setItem("token", response.data.token);
 
-      navigate("/home"); // Redireciona para outra página após o login
+      navigate("/home"); 
     } catch (error) {
       setErro(error.response?.data?.erro || "Erro ao fazer login!");
+    } finally {
+      setIsLoading(false); // Desativa o loading
     }
   };
 
@@ -63,7 +57,7 @@ function Login() {
     <AppBody>
       <Main>
         <ContainerPrincipal>
-          <Form onSubmit={handleSubmit}> {/* Adicionando onSubmit no formulário */}
+          <Form onSubmit={handleSubmit}>
             <ContainerTitulo>
               <H1>Apiário Pro</H1>
             </ContainerTitulo>
@@ -93,9 +87,11 @@ function Login() {
                 />
               </Container>
             </ContainerInputs>
-            {erro && <p style={{ color: "red" }}>{erro}</p>} {/* Exibe erro, se houver */}
+            {erro && <p style={{ color: "red" }}>{erro}</p>}
             <ContainerButton>
-              <Button type="submit">ENTRAR</Button>
+              <Button type="submit" disabled={isLoading}>
+                {isLoading ? <FaSpinner className="spinner" /> : "ENTRAR"}
+              </Button>
             </ContainerButton>
             <ContainerTextBorda>
               <PCadastreSe>NÃO TEM CADASTRO?</PCadastreSe>

@@ -101,6 +101,7 @@ const ModalFlorada = ({ isOpen, closeModalFlorada, onAddFlorada, token }) => {
                 name="nome"
                 value={formState.nome}
                 onChange={handleChange}
+                maxLength={20}
               />
             </ContainerDescricaoTarefa>
 
