@@ -50,33 +50,75 @@ const Gestao = () => {
       try {
         const storedToken = token || localStorage.getItem("token");
         if (!storedToken) return;
-
+  
         const response = await axios.get(`${API_URL}/${anoSelecionado}`, {
           headers: { Authorization: `Bearer ${storedToken}` },
         });
-      
         setDadosProducao(response.data || []);
       } catch (error) {
-        console.error("Erro ao buscar produção:", error);
+        if (error.response) {
+          console.error("Erro ao buscar produção:", error.response.status, error.response.data);
+          alert("Erro ao buscar produções para este ano.");
+        } else if (error.request) {
+          console.error("Erro na requisição:", error.request);
+          alert("Erro ao conectar com o servidor.");
+        } else {
+          console.error("Erro desconhecido:", error.message);
+          alert("Erro desconhecido.");
+        }
       }
     };
-
+  
     fetchProducao();
   }, [anoSelecionado, token]);
+
   const resetarGraficos = async () => {
-    try {
-      await axios.delete(`${API_URL}/deletar/${anoSelecionado}`);
-      
-      // Define o estado como um array vazio após resetar
-      setDadosProducao([]);
+    const confirmacao = window.confirm("Você tem certeza que deseja excluir os dados de produção?");
   
-      alert("Dados de produção apagados com sucesso!");
+    if (!confirmacao) {
+      // Se o usuário clicar em "Cancelar", não faz nada
+      return;
+    }
+    try {
+      const storedToken = token || localStorage.getItem("token");
+      if (!storedToken) {
+        alert("Erro: Usuário não autenticado.");
+        return;
+      }
+  
+      const response = await axios.delete(`${API_URL}/${anoSelecionado}`, {
+        headers: { Authorization: `Bearer ${storedToken}` },
+      });
+  
+      setDadosProducao([]); // Limpa o estado após sucesso
+      alert(response.data.mensagem || "Dados de produção apagados com sucesso!");
     } catch (error) {
-      console.error("Erro ao resetar os gráficos e dados:", error);
-      alert("Erro ao resetar os gráficos e dados.");
+      if (error.response) {
+        console.error("Erro ao deletar produção:", error.response.status, error.response.data);
+        alert(error.response.data.mensagem || "Erro ao resetar os gráficos e dados.");
+      } else {
+        console.error("Erro desconhecido:", error);
+        alert("Erro ao conectar com o servidor.");
+      }
+    }
+  };
+  const handleProducaoAdicionada = async () => {
+    try {
+      const storedToken = token || localStorage.getItem("token");
+      if (!storedToken) return;
+  
+      const response = await axios.get(`${API_URL}/${anoSelecionado}`, {
+        headers: { Authorization: `Bearer ${storedToken}` },
+      });
+  
+      setDadosProducao(response.data || []);
+    } catch (error) {
+      console.error("Erro ao buscar produção após cadastro:", error);
     }
   };
   
+
+  // Preparando os dados para o gráfico de Pie
   const dadosFlorada = dadosProducao.reduce((acc, item) => {
     acc[item.florada] = (acc[item.florada] || 0) + Number(item.quantidade_florada);
     return acc;
@@ -104,15 +146,14 @@ const Gestao = () => {
     ],
   };
 
-
-
+  // Preparando os dados para o gráfico de Bar
   const dadosMensais = dadosProducao.reduce((acc, item) => {
     acc[item.mes] = (acc[item.mes] || 0) + Number(item.quantidade_mes);
     return acc;
   }, {});
 
   const meses = [
-    "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", 
+    "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
     "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
   ];
 
@@ -162,25 +203,25 @@ const Gestao = () => {
               <Bar data={barData} />
             </DivStyle2>
             <button
-            onClick={resetarGraficos}
-            style={{
-              padding: "10px 20px",
-              fontSize: "16px",
-              backgroundColor: "#FF5733",
-              color: "#fff",
-              border: "none",
-              borderRadius: "5px",
-              cursor: "pointer",
-              marginTop: "20px",
-            }}
-          >
-            Resetar Gráficos
-          </button>
+              onClick={resetarGraficos}
+              style={{
+                padding: "10px 20px",
+                fontSize: "16px",
+                backgroundColor: "#FF5733",
+                color: "#fff",
+                border: "none",
+                borderRadius: "5px",
+                cursor: "pointer",
+                marginTop: "20px",
+              }}
+            >
+              Resetar Gráficos
+            </button>
           </DivGraf>
           <ContainerAdicionar>
             <StyledIcon onClick={() => setShowModal(true)} />
           </ContainerAdicionar>
-          <ModalProducao isOpen={showModal} closeModalProducao={() => setShowModal(false)} />
+          <ModalProducao isOpen={showModal} closeModalProducao={() => setShowModal(false)}  onProducaoAdicionada={handleProducaoAdicionada} />
         </DivPrincipal>
       </Main>
     </AppBody>

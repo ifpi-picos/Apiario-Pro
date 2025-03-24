@@ -21,7 +21,7 @@ import {
   H4InfomacoesInputs2,
 } from "./styles";
 
-const ModalProducao = ({ isOpen, closeModalProducao, onAddProducao }) => {
+const ModalProducao = ({ isOpen, closeModalProducao,  onProducaoAdicionada }) => {
     const initialFormState = {
       quantidade_florada: "",
       florada: "",
@@ -54,17 +54,32 @@ const ModalProducao = ({ isOpen, closeModalProducao, onAddProducao }) => {
       closeModalProducao();
     };
   
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
       event.preventDefault();
-  
+    
       if (formState.quantidade_florada && formState.florada && formState.quantidade_mes && formState.mes) {
-        onAddProducao(formState);
-        resetForm();
-        closeModalProducao();
+        try {
+          const token = localStorage.getItem("token"); // Pegue o token armazenado
+    
+          await axios.post(
+            "https://projeto-full-stack-apiariopro.onrender.com/gestao/cadastrar",
+            { ...formState, ano: new Date().getFullYear() }, // Adiciona o ano atual
+            { headers: { Authorization: `Bearer ${token}` } }
+          );
+    
+          alert("Produção cadastrada com sucesso!");
+          resetForm();
+          onProducaoAdicionada(); 
+          closeModalProducao();
+        } catch (error) {
+          console.error("Erro ao cadastrar produção:", error.response?.data?.mensagem || error.message);
+          alert(error.response?.data?.mensagem || "Erro ao cadastrar produção.");
+        }
       } else {
         alert("Preencha todos os campos corretamente.");
       }
     };
+    
   
     if (!isOpen) return null;
   
