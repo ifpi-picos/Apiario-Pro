@@ -167,7 +167,7 @@ const totalVazias = Object.values(colmeias).reduce((acc, tipo) => acc + (tipo.va
                   {["NINHO", "MELGUEIRA"].map((tipo) => (
                     <ContainerInform key={tipo}>
                       <Informacoes onClick={() => handleEditClick(tipo, "em_campo")}>
-                        <SectionColmeias>{tipo}</SectionColmeias>
+                      <SectionColmeias>{tipo === "NINHO" ? "NINHOS" : "MELGUEIRAS"}</SectionColmeias>
                         {editando?.tipo === tipo && editando?.estado === "em_campo" ? (
                           <input
                             type="text"
@@ -176,6 +176,10 @@ const totalVazias = Object.values(colmeias).reduce((acc, tipo) => acc + (tipo.va
                             onBlur={handleBlurOrEnter}
                             onKeyDown={(e) => e.key === "Enter" && handleBlurOrEnter()}
                             autoFocus
+                            style={{ width: '50px',
+                              height:'30px',
+                              fontSize:'22px'
+                             }}
                           />
                         ) : (
                           <InfoItem>{colmeias[tipo].em_campo || 0}</InfoItem>
@@ -195,6 +199,10 @@ const totalVazias = Object.values(colmeias).reduce((acc, tipo) => acc + (tipo.va
                         onBlur={handleBlurOrEnter}
                         onKeyDown={(e) => e.key === "Enter" && handleBlurOrEnter()}
                         autoFocus
+                        style={{ width: '50px',
+                          height:'30px',
+                          fontSize:'22px'
+                         }}
                       />
                     ) : (
                       <InfoItem>{colmeias.NUCLEO.em_campo || 0}</InfoItem>
@@ -221,7 +229,7 @@ const totalVazias = Object.values(colmeias).reduce((acc, tipo) => acc + (tipo.va
       {["NINHO", "MELGUEIRA"].map((tipo) => (
         <ContainerInform key={tipo}>
           <Informacoes onClick={() => handleEditClick(tipo, "vazia")}>
-            <SectionColmeias>{tipo}</SectionColmeias>
+          <SectionColmeias>{tipo === "NINHO" ? "NINHOS" : "MELGUEIRAS"}</SectionColmeias>
             {editando?.tipo === tipo && editando?.estado === "vazia" ? (
               <input
                 type="text"
@@ -230,6 +238,10 @@ const totalVazias = Object.values(colmeias).reduce((acc, tipo) => acc + (tipo.va
                 onBlur={handleBlurOrEnter}
                 onKeyDown={(e) => e.key === "Enter" && handleBlurOrEnter()}
                 autoFocus
+                style={{ width: '50px',
+                  height:'30px',
+                  fontSize:'22px'
+                 }}
               />
             ) : (
               <InfoItem>{colmeias[tipo].vazia || 0}</InfoItem>
@@ -251,6 +263,10 @@ const totalVazias = Object.values(colmeias).reduce((acc, tipo) => acc + (tipo.va
             onBlur={handleBlurOrEnter}
             onKeyDown={(e) => e.key === "Enter" && handleBlurOrEnter()}
             autoFocus
+            style={{ width: '50px',
+              height:'30px',
+              fontSize:'22px'
+             }}
           />
         ) : (
           <InfoItem>{colmeias.NUCLEO.vazia || 0}</InfoItem>
