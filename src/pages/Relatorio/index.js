@@ -1,72 +1,105 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react"; 
+import axios from "axios";
 import Header from "../../components/HeaderPrincipal/index.js";
-import { 
-  AppBody, 
-  Main, 
-  ReportContainer, 
-  ReportItem, 
-  ReportTitle, 
-  ReportValue 
-} from "./styles";
+import { AppBody, Main, ReportContainer, ReportItem, ReportTitle, ReportValue } from "./styles";
+import { useAuth } from "../../contexts/AuthContext.js";
 
 const Relatorio = () => {
-  const [totalApiarios, setTotalApiarios] = useState(0);
-  const [totalColmeias, setTotalColmeias] = useState(0);
-  const [totalMel, setTotalMel] = useState(0);
-  const [totalEmCampo, setTotalEmCampo] = useState(0); // Novo estado
-  const [usuarioId, setUsuarioId] = useState(null); // Estado para armazenar o ID do usuário
-  useEffect(() => {
-    // Obtendo o usuarioId do localStorage ou outro método de autenticação
-    const storedUsuarioId = localStorage.getItem('usuarioId');
-    if (storedUsuarioId) {
-      setUsuarioId(storedUsuarioId);
-    } else {
-      console.error("Usuário não encontrado. O usuarioId não está presente no localStorage.");
-      // Aqui você pode redirecionar o usuário para a tela de login, por exemplo:
-      // window.location.href = '/login';
-    }
-  }, []);
+  const [totalMel, setTotalMel] = useState(0);  // Total de mel produzido
+  const [totalColmeias, setTotalColmeias] = useState(0);  // Total de colmeias
+  const [totalApiarios, setTotalApiarios] = useState(0); // Total de apiários
+  const [anoSelecionado, setAnoSelecionado] = useState(new Date().getFullYear());
+  const { token, usuarioId } = useAuth();  // Recuperando do contexto
+  const API_URL = "https://projeto-full-stack-apiariopro.onrender.com/gestao";
+  const COLMEIAS_URL = "https://projeto-full-stack-apiariopro.onrender.com/colmeias";
+  const APIARIOS_URL = "https://projeto-full-stack-apiariopro.onrender.com/apiarios";
 
-  useEffect(() => {
-    if (!usuarioId) return; // Evita fazer a requisição se o usuarioId não estiver disponível
-
-    // Requisição para obter os dados de colmeias do banco de dados
-    const fetchData = async () => {
-      try {
-        const colmeiasResponse = await fetch(`https://projeto-full-stack-apiariopro.onrender.com/colmeias/${usuarioId}`);
-        const colmeiasData = await colmeiasResponse.json();
-        
-        const apiariosResponse = await fetch("/apiarios"); // Endpoint para apiários
-        const apiariosData = await apiariosResponse.json();
-
-        const melResponse = await fetch("/mel"); // Endpoint para produção de mel
-        const melData = await melResponse.json();
-
-        // Processando os dados de colmeias
-        const ninho = colmeiasData.NINHO || { em_campo: 0, vazia: 0 };
-        const melgueira = colmeiasData.MELGUEIRA || { em_campo: 0, vazia: 0 };
-        const nucleo = colmeiasData.NUCLEO || { em_campo: 0, vazia: 0 };
-
-        const totalEmCampo = ninho.em_campo + melgueira.em_campo + nucleo.em_campo;
-        const totalVazia = ninho.vazia + melgueira.vazia + nucleo.vazia;
-
-        setTotalColmeias(totalEmCampo + totalVazia);
-        setTotalEmCampo(totalEmCampo);
-
-        // Atualizando os estados com os dados de apiários
-        setTotalApiarios(apiariosData.length);
-
-        // Calculando o total de mel
-        const totalMel = melData.reduce((acc, item) => acc + Number(item.quantidade_florada || 0), 0);
-        setTotalMel(totalMel);
-        
-      } catch (error) {
-        console.error("Erro ao buscar os dados do banco: ", error);
+  // Função para buscar os dados de produção de mel
+  const fetchMelData = async () => {
+    try {
+      if (!token) {
+        console.error("Token não encontrado.");
+        return;
       }
-    };
 
-    fetchData();
-  }, [usuarioId]);
+      const responseMel = await axios.get(`${API_URL}/${anoSelecionado}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const melData = responseMel.data;
+      const total = melData.reduce((acc, item) => acc + Number(item.quantidade_florada || 0), 0);
+      setTotalMel(total);  // Somando todas as produções de mel para o ano selecionado
+
+    } catch (error) {
+      console.error("Erro ao buscar dados de mel:", error);
+      alert("Erro ao buscar produções de mel para este ano.");
+    }
+  };
+
+  // Função para buscar os dados das colmeias
+  const fetchColmeiasData = async () => {
+    try {
+      if (!token || !usuarioId) {
+        console.error("Token ou usuarioId não disponíveis.");
+        return;
+      }
+
+      const responseColmeias = await axios.get(`${COLMEIAS_URL}/${usuarioId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const colmeiasData = responseColmeias.data;
+
+      if (colmeiasData && colmeiasData.em_campo && colmeiasData.vazia) {
+        const totalEmCampo = Object.values(colmeiasData.em_campo).reduce(
+          (acc, tipo) => acc + (tipo || 0), 
+          0
+        );
+        const totalVazias = Object.values(colmeiasData.vazia).reduce(
+          (acc, tipo) => acc + (tipo || 0), 
+          0
+        );
+
+        const totalColmeias = totalEmCampo + totalVazias;
+        setTotalColmeias(totalColmeias);  // Atualizar o total de colmeias
+      } else {
+        console.error("Estrutura dos dados das colmeias inválida:", colmeiasData);
+      }
+
+    } catch (error) {
+      console.error("Erro ao buscar dados de colmeias:", error);
+      alert("Erro ao buscar colmeias para este ano.");
+    }
+  };
+
+  // Função para buscar os dados de apiários
+  const fetchApiariosData = async () => {
+    try {
+      if (!token) {
+        console.error("Token não encontrado.");
+        return;
+      }
+
+      const responseApiarios = await axios.get(`${APIARIOS_URL}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      setTotalApiarios(responseApiarios.data.length);  // O total de apiários pode ser o tamanho da resposta (um array de apiários)
+
+    } catch (error) {
+      console.error("Erro ao buscar dados de apiários:", error);
+      alert("Erro ao buscar apiários para este ano.");
+    }
+  };
+
+  // useEffect para buscar os dados assim que o componente for montado ou o ano selecionado for alterado
+  useEffect(() => {
+    if (token && usuarioId) {
+      fetchMelData();
+      fetchColmeiasData();
+      fetchApiariosData();
+    }
+  }, [token, usuarioId, anoSelecionado]);  // Atualiza os dados sempre que o token ou usuarioId mudar
 
   return (
     <AppBody>
@@ -74,18 +107,16 @@ const Relatorio = () => {
       <Main>
         <ReportContainer>
           <ReportItem>
-            <ReportTitle>Total de Apiários</ReportTitle>
-            <ReportValue>{totalApiarios}</ReportValue>
+            <ReportTitle>Total de produção de mel (kg)</ReportTitle>
+            <ReportValue>{totalMel.toFixed(2)}</ReportValue>
           </ReportItem>
-          
           <ReportItem>
-            <ReportTitle>Total de colméias</ReportTitle>
+            <ReportTitle>Total de colmeias</ReportTitle>
             <ReportValue>{totalColmeias}</ReportValue>
           </ReportItem>
-
           <ReportItem>
-            <ReportTitle>Total produção de mel(kg): </ReportTitle>
-            <ReportValue>{totalMel.toFixed(2)}</ReportValue>
+            <ReportTitle>Total de apiários</ReportTitle>
+            <ReportValue>{totalApiarios}</ReportValue>
           </ReportItem>
         </ReportContainer>
       </Main>
