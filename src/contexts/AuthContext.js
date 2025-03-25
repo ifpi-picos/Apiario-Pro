@@ -1,33 +1,11 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
 
-// Função para recuperar dados do localStorage
-const getFromLocalStorage = (key) => {
-  const data = localStorage.getItem(key);
-  
-  if (!data) return null;
-
-  try {
-    return JSON.parse(data); // Tenta fazer parse de dados JSON
-  } catch (e) {
-    return data; // Se falhar, retorna o valor como string (exemplo: token JWT)
-  }
-};
-
-// Função para salvar dados no localStorage
-const saveToLocalStorage = (key, value) => {
-  if (typeof value === "object") {
-    localStorage.setItem(key, JSON.stringify(value)); // Salva objetos como JSON
-  } else {
-    localStorage.setItem(key, value); // Salva como string (como um token JWT)
-  }
-};
-
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [nome, setNome] = useState(""); // Nome do usuário
-  const [token, setToken] = useState(""); // Token JWT
+  const [token, setToken] = useState("");
   const [usuarioId, setUsuarioId] = useState(null); // ID do usuário
   const [sideBarIsActive, setSideBarIsActive] = useState(false);
   const [isActive, setIsActive] = useState(false);
@@ -39,45 +17,98 @@ export const AuthProvider = ({ children }) => {
     NUCLEO: { vazia: 0, em_campo: 0 },
   });
 
-  // Carregar usuário do localStorage ao iniciar
-  useEffect(() => {
-    const storedUsuario = getFromLocalStorage("usuario");
-    const storedToken = getFromLocalStorage("token");
+  // Dados de produção
+  const [totalMel, setTotalMel] = useState(0);  
+  const [totalColmeias, setTotalColmeias] = useState(0);  
+  const [totalApiarios, setTotalApiarios] = useState(0); 
 
-    if (storedUsuario && storedToken) {
-      setNome(storedUsuario.nome);
-      setToken(storedToken);
-      setUsuarioId(storedUsuario.id); // Armazena o ID do usuário
+  const API_URL = "https://projeto-full-stack-apiariopro.onrender.com/gestao";
+  const COLMEIAS_URL = "https://projeto-full-stack-apiariopro.onrender.com/colmeias";
+  const APIARIOS_URL = "https://projeto-full-stack-apiariopro.onrender.com/apiarios";
 
-      buscarColmeias(storedUsuario.id);
-    }
-  }, []);
-
-  // Buscar colmeias do usuário
-  const buscarColmeias = async (usuarioId) => {
-    if (!usuarioId) return; // Evita chamadas desnecessárias
-
+  const fetchMelData = async () => {
     try {
-      const response = await axios.get(`https://projeto-full-stack-apiariopro.onrender.com/colmeias/${usuarioId}`);
-      setColmeias(response.data); // Atualiza colmeias no estado
+      if (!token) return;
+
+      const responseMel = await axios.get(`${API_URL}/mel/${usuarioId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const melData = responseMel.data;
+      const total = melData.reduce((acc, item) => acc + Number(item.quantidade_florada || 0), 0);
+      setTotalMel(total);  
     } catch (error) {
-      console.error("Erro ao buscar colmeias:", error);
+      console.error("Erro ao buscar dados de mel:", error);
     }
   };
 
-  // Login do usuário
+  const fetchColmeiasData = async () => {
+    try {
+      if (!token || !usuarioId) return;
+
+      const responseColmeias = await axios.get(`${COLMEIAS_URL}/${usuarioId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const colmeiasData = responseColmeias.data;
+      const totalEmCampo = Object.values(colmeiasData.em_campo || {}).reduce(
+        (acc, tipo) => acc + (tipo || 0),
+        0
+      );
+      const totalVazias = Object.values(colmeiasData.vazia || {}).reduce(
+        (acc, tipo) => acc + (tipo || 0),
+        0
+      );
+      setTotalColmeias(totalEmCampo + totalVazias);  
+      setColmeias(colmeiasData); 
+    } catch (error) {
+      console.error("Erro ao buscar dados de colmeias:", error);
+    }
+  };
+
+  const fetchApiariosData = async () => {
+    try {
+      if (!token) return;
+
+      const responseApiarios = await axios.get(`${APIARIOS_URL}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      setTotalApiarios(responseApiarios.data.length);  
+    } catch (error) {
+      console.error("Erro ao buscar dados de apiários:", error);
+    }
+  };
+
+  useEffect(() => {
+    const storedUsuario = localStorage.getItem("usuario");
+    const storedToken = localStorage.getItem("token");
+
+    if (storedUsuario && storedToken) {
+      const usuario = JSON.parse(storedUsuario);
+      setNome(usuario.nome);
+      setToken(storedToken);
+      setUsuarioId(usuario.id); // Armazena o ID do usuário
+
+      fetchMelData();
+      fetchColmeiasData();
+      fetchApiariosData();
+    }
+  }, []);
+
   const login = (usuario) => {
     setNome(usuario.nome);
     setToken(usuario.token);
     setUsuarioId(usuario.id); // Armazena o ID no estado global
 
-    saveToLocalStorage("usuario", usuario); // Armazena o usuário como JSON
-    saveToLocalStorage("token", usuario.token); // Armazena o token como string
+    localStorage.setItem("usuario", JSON.stringify(usuario));
+    localStorage.setItem("token", usuario.token);
 
-    buscarColmeias(usuario.id);
+    fetchMelData();
+    fetchColmeiasData();
+    fetchApiariosData();
   };
 
-  // Logout do usuário
   const logout = () => {
     setNome("");
     setToken("");
@@ -85,9 +116,6 @@ export const AuthProvider = ({ children }) => {
 
     localStorage.removeItem("usuario");
     localStorage.removeItem("token");
-    localStorage.removeItem("colmeias");
-    localStorage.removeItem("dadosProducao");
-
     setColmeias({
       MELGUEIRA: { vazia: 0, em_campo: 0 },
       NINHO: { vazia: 0, em_campo: 0 },
@@ -95,17 +123,17 @@ export const AuthProvider = ({ children }) => {
     });
   };
 
-  // Adicionar colmeia
+  // Função de adicionar colmeia
   const handleAddColmeia = ({ tipo_colmeia, quantidade, estado }) => {
     setColmeias((prevColmeias) => {
       const newColmeias = {
         ...prevColmeias,
         [tipo_colmeia]: {
           ...prevColmeias[tipo_colmeia],
-          [estado.toLowerCase()]: parseInt(quantidade, 10), // Substitui o valor da quantidade
+          [estado.toLowerCase()]: prevColmeias[tipo_colmeia][estado.toLowerCase()] + parseInt(quantidade, 10), // Atualiza a quantidade
         },
       };
-      saveToLocalStorage("colmeias", newColmeias); // Atualiza as colmeias no localStorage
+      localStorage.setItem("colmeias", JSON.stringify(newColmeias));
       return newColmeias;
     });
   };
@@ -114,18 +142,19 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         nome,
-        setNome,
         token,
-        usuarioId, // Agora pode ser acessado em qualquer lugar
+        usuarioId,
         login,
-        setToken,
         logout,
         sideBarIsActive,
         setSideBarIsActive,
         isActive,
         setIsActive,
         colmeias,
-        handleAddColmeia,
+        totalMel,
+        totalColmeias,
+        totalApiarios,
+        handleAddColmeia, // Agora a função está corretamente definida
       }}
     >
       {children}
