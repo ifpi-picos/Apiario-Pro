@@ -186,7 +186,7 @@ const totalVazias = Object.values(colmeias).reduce((acc, tipo) => acc + (tipo.va
                 </ContainerRow>
                 <ContainerInform>
                   <Informacoes onClick={() => handleEditClick("NUCLEO", "em_campo")}>
-                    <SectionColmeias>NÚCLEO</SectionColmeias>
+                    <SectionColmeias>NÚCLEOS</SectionColmeias>
                     {editando?.tipo === "NUCLEO" && editando?.estado === "em_campo" ? (
                       <input
                         type="text"
