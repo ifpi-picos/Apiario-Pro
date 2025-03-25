@@ -20,6 +20,7 @@ import {
   PCadastreSe,
   LinkCadastreSe,
   H1,
+  CustomLoader,
 } from "./styles"; 
 
 function Login() {
@@ -89,8 +90,9 @@ function Login() {
             </ContainerInputs>
             {erro && <p style={{ color: "red" }}>{erro}</p>}
             <ContainerButton>
-              <Button type="submit" disabled={isLoading}>
-                {isLoading ? <FaSpinner className="spinner" /> : "ENTRAR"}
+            {isLoading && <CustomLoader />}
+            <Button type="submit" disabled={isLoading}>
+                ENTRAR
               </Button>
             </ContainerButton>
             <ContainerTextBorda>

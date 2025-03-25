@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import EmailIcon from "../../assets/email.png";
 import senhaIcon from "../../assets/senha.png";
+import abelhaIcon from "../../assets/logo1.png"; 
+
 export const AppBody = styled.div`
   margin: 0;
   padding: 0;
@@ -142,7 +144,7 @@ margin:5px;
 border-radius:15px;
 border:none;
 height:38px;
-width:100%;
+ width: 150px;
 font-weight: 700;
 background-color:#3c3b3b; /* Cor de fundo escura com 50% de opacidade */
   color: #ffffff; 
@@ -153,10 +155,11 @@ background-color:#3c3b3b; /* Cor de fundo escura com 50% de opacidade */
 
 `;
 export const ContainerButton = styled.div`
-display: flex;
-flex-direction: column;
-margin:10px;
-width:150px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
 `;
 export const ContainerTextBorda = styled.div`
   border-top: 1px solid #3c3b3b4d;
@@ -186,34 +189,26 @@ export const LinkCadastreSe = styled.a`
 `;
 
 export const CustomLoader = styled.div`
-  width: 32px;
-  height: 32px;
-  --c: radial-gradient(farthest-side, #5f98b4 92%, #0000);
-  background: var(--c) 50% 0, var(--c) 50% 100%, var(--c) 100% 50%,
-    var(--c) 0 50%;
-  background-size: 6px 6px;
-  background-repeat: no-repeat;
-  animation: s8 0.5s linear infinite;
+  width: 40px; /* Tamanho do contêiner */
+  height: 40px; /* Tamanho do contêiner */
   position: relative;
+  margin-top: 5px;
 
-  &::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    margin: 3px;
-    background: repeating-conic-gradient(#0000 0 35deg, #5f98b4 0 90deg);
-    -webkit-mask: radial-gradient(
-      farthest-side,
-      #0000 calc(100% - 1px),
-      #000 0
-    );
-    mask: radial-gradient(farthest-side, #0000 calc(100% - 1px), #000 0);
-    border-radius: 50%;
-  }
+  /* Usando a imagem da abelha */
+  background-image: url(${abelhaIcon});
+  background-size: 180%; /* Ajuste para o tamanho da imagem */
+  background-repeat: no-repeat;
+  background-position: center;
 
-  @keyframes s8 {
-    100% {
-      transform: rotate(0.5turn);
+  /* Animação de piscamento (fade-in e fade-out) */
+  animation: blink 1s ease-in-out infinite;
+
+  @keyframes blink {
+    0%, 100% {
+      opacity: 0; /* Invisível no início e no final */
+    }
+    50% {
+      opacity: 1; /* Visível no meio do ciclo */
     }
   }
 `;
