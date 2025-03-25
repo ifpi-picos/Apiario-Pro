@@ -107,16 +107,16 @@ const Relatorio = () => {
       <Main>
         <ReportContainer>
           <ReportItem>
-            <ReportTitle>Total de produção de mel (kg)</ReportTitle>
-            <ReportValue>{totalMel.toFixed(2)}</ReportValue>
+          <ReportTitle>Total de apiários</ReportTitle>
+          <ReportValue>{totalApiarios}</ReportValue>
           </ReportItem>
           <ReportItem>
             <ReportTitle>Total de colmeias</ReportTitle>
             <ReportValue>{totalColmeias}</ReportValue>
           </ReportItem>
           <ReportItem>
-            <ReportTitle>Total de apiários</ReportTitle>
-            <ReportValue>{totalApiarios}</ReportValue>
+            <ReportTitle>Total de produção de mel (kg)</ReportTitle>
+            <ReportValue>{totalMel.toFixed(2)}</ReportValue>
           </ReportItem>
         </ReportContainer>
       </Main>
