@@ -164,7 +164,7 @@ const totalVazias = Object.values(colmeias).reduce((acc, tipo) => acc + (tipo.va
             <Container>
               <BotaoContainer>
                 <ContainerRow>
-                  {["NINHOS", "MELGUEIRAS"].map((tipo) => (
+                  {["NINHO", "MELGUEIRA"].map((tipo) => (
                     <ContainerInform key={tipo}>
                       <Informacoes onClick={() => handleEditClick(tipo, "em_campo")}>
                         <SectionColmeias>{tipo}</SectionColmeias>
@@ -218,7 +218,7 @@ const totalVazias = Object.values(colmeias).reduce((acc, tipo) => acc + (tipo.va
   <BotaoContainer>
     {/* Primeira linha com NINHO e MELGUEIRA */}
     <ContainerRow>
-      {["NINHOS", "MELGUEIRAS"].map((tipo) => (
+      {["NINHO", "MELGUEIRA"].map((tipo) => (
         <ContainerInform key={tipo}>
           <Informacoes onClick={() => handleEditClick(tipo, "vazia")}>
             <SectionColmeias>{tipo}</SectionColmeias>
@@ -242,7 +242,7 @@ const totalVazias = Object.values(colmeias).reduce((acc, tipo) => acc + (tipo.va
     {/* NUCLEO fora do ContainerRow, abaixo das outras colmeias */}
     <ContainerInform>
       <Informacoes onClick={() => handleEditClick("NUCLEO", "vazia")}>
-        <SectionColmeias>NÚCLEOS</SectionColmeias>
+        <SectionColmeias>NUCLEO</SectionColmeias>
         {editando?.tipo === "NUCLEO" && editando?.estado === "vazia" ? (
           <input
             type="text"
