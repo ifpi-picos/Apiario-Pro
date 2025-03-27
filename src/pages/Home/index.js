@@ -111,7 +111,7 @@ const Home = () => {
           </Container>
         </ContainerPrincipal>
       </Main>
-      <Footer></Footer>
+      
     </AppBody>
   );
 };

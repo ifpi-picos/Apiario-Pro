@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"; 
 import axios from "axios";
 import Header from "../../components/HeaderPrincipal/index.js";
-import { AppBody, Main, ReportContainer, ReportItem, ReportTitle, ReportValue } from "./styles";
+import { AppBody, Main, ReportContainer, ReportItem, ReportTitle, ReportValue,Text } from "./styles";
 import { useAuth } from "../../contexts/AuthContext.js";
 
 const Relatorio = () => {
@@ -97,8 +97,11 @@ const Relatorio = () => {
   return (
     <AppBody>
       <Header />
+      <Text>Relatório</Text>
       <Main>
+      
         <ReportContainer>
+                  
           <ReportItem>
             <ReportTitle>Total de apiários</ReportTitle>
             <ReportValue>{totalApiarios}</ReportValue>

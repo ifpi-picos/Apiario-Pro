@@ -13,6 +13,14 @@ export const AppBody = styled.div`
   min-height: 100vh;
   background-color: #f4f4f4;
 `;
+export const Text = styled.p`
+display: flex;
+font-weight: bold;
+  justify-content: center;
+
+
+
+`;
 
 export const Main = styled.main`
   width:88%;

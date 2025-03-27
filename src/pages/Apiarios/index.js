@@ -155,7 +155,7 @@ function Apiarios() {
           />
         </ContainerPrincipal>
       </Main>
-      <Footer />
+ 
     </AppBody>
   );
 }
