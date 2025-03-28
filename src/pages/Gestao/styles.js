@@ -20,6 +20,12 @@ align-items:center;
 export const Main = styled.div`
 
 `;
+export const DivPrincipal = styled.div`
+padding: 20px;
+display: flex;
+ flex-direction: column;
+
+`;
 export const DivGraf = styled.div`
 display: flex;
 justify-content: center;
@@ -37,12 +43,7 @@ gap:100px;
   }
 
 `;
-export const DivPrincipal = styled.div`
-padding: 20px;
-display: flex;
- flex-direction: column;
 
-`;
 export const DivStyle1 = styled.div`
 width: 25%;
  marginLeft: 60px;

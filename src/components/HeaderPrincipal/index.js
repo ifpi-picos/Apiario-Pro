@@ -3,17 +3,17 @@ import React, { useState } from "react";
 import Perfil from "../../assets/perfil.png";
 import {
   ContainerHeader,
-  ContainerLogo,
+ 
   ContainerButtons,
-  InputPesquisa,
+  
   ContainerButtonsModal,
-  ButtonAdicionar,
+
   ButtonAviso,
   ButtonDesempenho,
   ContainerPerfil,
   LinkMenu,
   Pnome,
-  Link,
+
   ContainerImgPerfil,
   LinkPerfil,
   ImagePerfil,
@@ -60,7 +60,7 @@ function Header() {
         </ContainerButtonsModal>
       </ContainerButtons>
       <ContainerPerfil>
-        <Pnome> {nome || "Visitante"}</Pnome> {/* Exibe o nome do usuário */}
+      <Pnome>{nome ? nome.split(" ").slice(0, 2).join(" ") : "Visitante"}</Pnome>
         <ContainerImgPerfil>
           <LinkPerfil onClick={toggleSubMenu}>
             <ImagePerfil src={Perfil} alt={"Imagem-perfil"} />
