@@ -141,7 +141,7 @@ function Floradas() {
           </Container>
         </ContainerPrincipal>
       </Main>
-      <Footer></Footer>
+    
     </AppBody>
   );
 }
