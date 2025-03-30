@@ -6,7 +6,7 @@ export const AppBody = styled.div`
    margin: 0;
   padding: 0;
   box-sizing: border-box;
-  height: 115vh;
+  height: 100vh;
   padding-top: 4em; /* Adiciona espaço para o header */
 `;
 
