@@ -23,9 +23,8 @@ import {
   CustomLoader,
 } from "./styles"; 
 
-function Login() {
+function RecuperarSenha() {
   const navigate = useNavigate();
-  const { login } = useAuth(); 
   const [formData, setFormData] = useState({ email: "", senha: "" });
   const [erro, setErro] = useState(""); 
   const [isLoading, setIsLoading] = useState(false); // Estado de carregamento
@@ -48,19 +47,11 @@ function Login() {
 
       navigate("/home"); 
     } catch (error) {
-    const mensagem = error.response?.data?.message;
-
-    if (mensagem?.toLowerCase().includes("senha")) {
-      setErro("Senha incorreta");
-    } else if (mensagem?.toLowerCase().includes("usuário")) {
-      setErro("E-mail não encontrado");
-    } else {
-      setErro("Erro ao fazer login!");
+      setErro(error.response?.data?.erro || "Erro ao fazer login!");
+    } finally {
+      setIsLoading(false); // Desativa o loading
     }
-  } finally {
-    setIsLoading(false);
-  }
-};
+  };
 
   return (
     <AppBody>
@@ -116,4 +107,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default RecuperarSenha;
