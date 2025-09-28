@@ -27,6 +27,8 @@ import {
   ContainerAdicionar,
 } from "./styles";
 
+// ...importações permanecem iguais...
+
 ChartJS.register(
   ArcElement,
   Tooltip,
@@ -50,80 +52,60 @@ const Gestao = () => {
       try {
         const storedToken = token || localStorage.getItem("token");
         if (!storedToken) return;
-  
         const response = await axios.get(`${API_URL}/${anoSelecionado}`, {
           headers: { Authorization: `Bearer ${storedToken}` },
         });
         setDadosProducao(response.data || []);
       } catch (error) {
-        if (error.response) {
-          console.error("Erro ao buscar produção:", error.response.status, error.response.data);
-          alert("Erro ao buscar produções para este ano.");
-        } else if (error.request) {
-          console.error("Erro na requisição:", error.request);
-          alert("Erro ao conectar com o servidor.");
-        } else {
-          console.error("Erro desconhecido:", error.message);
-          alert("Erro desconhecido.");
-        }
+        console.error("Erro ao buscar produção:", error);
+        alert("Erro ao buscar produções para este ano.");
       }
     };
-  
     fetchProducao();
   }, [anoSelecionado, token]);
 
   const resetarGraficos = async () => {
-      const confirmacao = window.confirm("Você tem certeza que deseja excluir os dados de produção?");
-  
-  if (!confirmacao) {
-    // Se o usuário clicar em "Cancelar", não faz nada
-    return;
-  }
+    if (!window.confirm("Você tem certeza que deseja excluir os dados de produção?")) return;
     try {
       const storedToken = token || localStorage.getItem("token");
-      if (!storedToken) {
-        alert("Erro: Usuário não autenticado.");
-        return;
-      }
-  
+      if (!storedToken) return alert("Erro: Usuário não autenticado.");
       const response = await axios.delete(`${API_URL}/${anoSelecionado}`, {
         headers: { Authorization: `Bearer ${storedToken}` },
       });
-  
-      setDadosProducao([]); // Limpa o estado após sucesso
+      setDadosProducao([]);
       handleProducaoAdicionada();
       alert(response.data.mensagem || "Dados de produção apagados com sucesso!");
     } catch (error) {
-      if (error.response) {
-        console.error("Erro ao deletar produção:", error.response.status, error.response.data);
-        alert(error.response.data.mensagem || "Erro ao resetar os gráficos e dados.");
-      } else {
-        console.error("Erro desconhecido:", error);
-        alert("Erro ao conectar com o servidor.");
-      }
+      console.error(error);
+      alert("Erro ao resetar os gráficos e dados.");
     }
   };
+
   const handleProducaoAdicionada = async () => {
     try {
       const storedToken = token || localStorage.getItem("token");
       if (!storedToken) return;
-  
       const response = await axios.get(`${API_URL}/${anoSelecionado}`, {
         headers: { Authorization: `Bearer ${storedToken}` },
       });
-  
       setDadosProducao(response.data || []);
     } catch (error) {
       console.error("Erro ao buscar produção após cadastro:", error);
     }
   };
-  
 
-  // Preparando os dados para o gráfico de Pie
+  const meses = [
+    "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+    "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+  ];
+
+  // -------------------- PIE --------------------
   const dadosFlorada = dadosProducao.reduce((acc, item) => {
     acc[item.florada] = (acc[item.florada] || 0) + Number(item.quantidade_florada);
     return acc;
   }, {});
+
+  const pieColors = ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF", "#32CD32"];
 
   const pieData = Object.keys(dadosFlorada).length > 0 ? {
     labels: Object.keys(dadosFlorada),
@@ -131,8 +113,8 @@ const Gestao = () => {
       {
         label: "Produção por florada (Kg)",
         data: Object.values(dadosFlorada),
-        backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF", "#32CD32"],
-        hoverBackgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF", "#32CD32"],
+        backgroundColor: pieColors.slice(0, Object.keys(dadosFlorada).length),
+        hoverBackgroundColor: pieColors.slice(0, Object.keys(dadosFlorada).length),
       },
     ],
   } : {
@@ -147,28 +129,36 @@ const Gestao = () => {
     ],
   };
 
-  // Preparando os dados para o gráfico de Bar
-  const dadosMensais = dadosProducao.reduce((acc, item) => {
-    acc[item.mes] = (acc[item.mes] || 0) + Number(item.quantidade_mes);
-    return acc;
-  }, {});
+  // -------------------- BAR --------------------
+  // Organiza os dados por mês e florada
+  const dadosMensaisPorFlorada = {};
+  dadosProducao.forEach(item => {
+    if (!dadosMensaisPorFlorada[item.florada]) {
+      dadosMensaisPorFlorada[item.florada] = {};
+    }
+    dadosMensaisPorFlorada[item.florada][item.mes] =
+      (dadosMensaisPorFlorada[item.florada][item.mes] || 0) + Number(item.quantidade_florada);
+  });
 
-  const meses = [
-    "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-    "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
-  ];
+  // Cria datasets para o bar, usando as cores do pie na mesma ordem
+  const barDatasets = Object.keys(dadosMensaisPorFlorada).map((florada, index) => ({
+    label: florada,
+    data: meses.map(mes => dadosMensaisPorFlorada[florada][mes] || 0),
+    backgroundColor: pieColors[index % pieColors.length],
+  }));
 
   const barData = {
     labels: meses,
-    datasets: [
-      {
-        label: "Produção de Mel (kg)",
-        data: meses.map(mes => dadosMensais[mes] || 0),
-        backgroundColor: "rgba(75, 192, 192, 0.6)",
-        borderColor: "rgba(75, 192, 192, 1)",
-        borderWidth: 1,
-      },
-    ],
+    datasets: barDatasets,
+  };
+
+  const barOptions = {
+    responsive: true,
+    plugins: { legend: { position: "top" } },
+    scales: {
+      x: { stacked: true },
+      y: { stacked: true, beginAtZero: true },
+    },
   };
 
   return (
@@ -182,13 +172,7 @@ const Gestao = () => {
               <select
                 value={anoSelecionado}
                 onChange={(e) => setAnoSelecionado(Number(e.target.value))}
-                style={{
-                  width: "100%",
-                  padding: "8px",
-                  fontSize: "16px",
-                  borderRadius: "4px",
-                  border: "1px solid #ccc",
-                }}
+                style={{ width: "100%", padding: "8px", fontSize: "16px", borderRadius: "4px", border: "1px solid #ccc" }}
               >
                 <option value={anoSelecionado}>{anoSelecionado}</option>
               </select>
@@ -201,7 +185,7 @@ const Gestao = () => {
             </DivStyle1>
             <DivStyle2>
               <h3>Produção Mensal de Mel</h3>
-              <Bar data={barData} />
+              <Bar data={barData} options={barOptions} />
             </DivStyle2>
             <button
               onClick={resetarGraficos}
@@ -222,7 +206,11 @@ const Gestao = () => {
           <ContainerAdicionar>
             <StyledIcon onClick={() => setShowModal(true)} />
           </ContainerAdicionar>
-          <ModalProducao isOpen={showModal} closeModalProducao={() => setShowModal(false)}  onProducaoAdicionada={handleProducaoAdicionada} />
+          <ModalProducao
+            isOpen={showModal}
+            closeModalProducao={() => setShowModal(false)}
+            onProducaoAdicionada={handleProducaoAdicionada}
+          />
         </DivPrincipal>
       </Main>
     </AppBody>
@@ -230,3 +218,4 @@ const Gestao = () => {
 };
 
 export default Gestao;
+

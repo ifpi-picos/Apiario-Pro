@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 
@@ -10,21 +10,19 @@ const userLocationIcon = new L.Icon({
   iconAnchor: [10, 25],
   popupAnchor: [0, -10],
 });
+const clickedMarkerIcon = new L.Icon({
+  iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
+  
+  iconSize: [20, 30],
+  iconAnchor: [10, 25],
+  popupAnchor: [0, -10],
+  
+});
 
 // Função para salvar a localização (simulação ou API)
 const saveLocation = async (lat, lng) => {
   try {
-    // Simulação de gravação, por exemplo, enviando para uma API ou armazenando no localStorage
     console.log(`Localização gravada: Latitude ${lat}, Longitude ${lng}`);
-    
-    // Exemplo de requisição para API
-    // const response = await fetch("/api/salvar-localizacao", {
-    //   method: "POST",
-    //   body: JSON.stringify({ latitude: lat, longitude: lng }),
-    //   headers: { "Content-Type": "application/json" },
-    // });
-
-    // Simulando o armazenamento local
     localStorage.setItem("savedLocation", JSON.stringify({ latitude: lat, longitude: lng }));
     alert("Localização salva com sucesso!");
   } catch (error) {
@@ -37,22 +35,32 @@ const SetViewOnLocation = ({ position }) => {
   const map = useMap();
   useEffect(() => {
     if (position) {
-      map.setView(position, 13); // Centraliza o mapa na posição do usuário
+      map.setView(position, 13);
     }
   }, [position, map]);
   return null;
 };
 
+// Novo componente que escuta os cliques no mapa
+const ClickHandler = ({ onMapClick }) => {
+  useMapEvents({
+    click(e) {
+      onMapClick(e.latlng);
+    },
+  });
+  return null;
+};
+
 const Mapa = () => {
   const [userPosition, setUserPosition] = useState(null);
-  const [markerPosition, setMarkerPosition] = useState(null);
+const [clickedMarkers, setClickedMarkers] = useState([]);
 
   useEffect(() => {
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          setUserPosition([latitude, longitude]); // Define a posição do usuário
+          setUserPosition([latitude, longitude]);
         },
         (error) => {
           console.error("Erro ao obter localização:", error);
@@ -61,44 +69,53 @@ const Mapa = () => {
     }
   }, []);
 
-  const handleClick = (event) => {
-    const { lat, lng } = event.latlng;
-    setMarkerPosition([lat, lng]); // Define a posição do marcador no clique
-    saveLocation(lat, lng); // Salva a localização quando clicado
-  };
+ const handleMapClick = ({ lat, lng }) => {
+  // Adiciona o novo marcador ao array de todos os cliques
+  setClickedMarkers([...clickedMarkers, { lat, lng }]);
+  saveLocation(lat, lng);
+};
 
   return (
     <MapContainer
-      center={[-5.09, -42.80]} // Posição inicial antes da localização ser carregada
+      center={[-5.09, -42.80]}
       zoom={10}
       style={{ width: "100%", height: "500px" }}
-      onClick={handleClick}
     >
-      <TileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-      />
-
-      {/* Centraliza o mapa na localização do usuário quando disponível */}
+<TileLayer
+  url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+  attribution="Tiles &copy; <a href='https://www.esri.com/'>ESRI</a>"
+/>
       {userPosition && <SetViewOnLocation position={userPosition} />}
 
-      {/* Adiciona o marcador da posição do usuário */}
       {userPosition && (
         <Marker position={userPosition} icon={userLocationIcon}>
           <Popup>Você está aqui!</Popup>
         </Marker>
       )}
 
-      {/* Adiciona o marcador do local clicado */}
-      {markerPosition && (
-        <Marker position={markerPosition}>
-          <Popup>
-            Local selecionado:<br />
-            Latitude: {markerPosition[0].toFixed(5)}<br />
-            Longitude: {markerPosition[1].toFixed(5)}
-          </Popup>
-        </Marker>
-      )}
+    {clickedMarkers.map((marker, index) => (
+  <Marker
+    key={index}
+    position={[marker.lat, marker.lng]}
+    icon={clickedMarkerIcon}
+    eventHandlers={{
+      click: () => {
+        // Remove apenas o marcador que foi clicado
+        setClickedMarkers(clickedMarkers.filter((_, i) => i !== index));
+      },
+    }}
+  >
+    <Popup>
+      Local selecionado:<br />
+      Latitude: {marker.lat.toFixed(5)}<br />
+      Longitude: {marker.lng.toFixed(5)}<br />
+      <em>Clique no marcador para removê-lo</em>
+    </Popup>
+  </Marker>
+))}
+
+      {/* Ouvindo os cliques do usuário */}
+      <ClickHandler onMapClick={handleMapClick} />
     </MapContainer>
   );
 };
