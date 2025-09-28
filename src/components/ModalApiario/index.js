@@ -26,6 +26,8 @@ const ModalApiario = ({ isOpen, closeModalApiario, onAddApiario, token }) => {
     nomeFlorada: "",
     colmeias: "",
     imagem: "",
+    latitude: null,
+    longitude: null,
   });
 
   const [floradas, setFloradas] = useState([]);
@@ -52,12 +54,35 @@ const ModalApiario = ({ isOpen, closeModalApiario, onAddApiario, token }) => {
     fetchFloradas();
   }, [token]);
 
+  // 🔹 Capturar coordenadas
+  const handleCaptureCoordinates = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const { latitude, longitude } = pos.coords;
+          setFormState((prev) => ({
+            ...prev,
+            latitude,
+            longitude,
+          }));
+          alert(`Coordenadas capturadas:\nLat: ${latitude}, Lng: ${longitude}`);
+        },
+        (err) => {
+          console.error("Erro ao capturar localização:", err);
+          alert("Não foi possível capturar a localização. Verifique as permissões.");
+        }
+      );
+    } else {
+      alert("Geolocalização não suportada pelo navegador.");
+    }
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const { regiao, florada, nomeFlorada, colmeias, imagem } = formState;
+    const { regiao, florada, nomeFlorada, colmeias, imagem, latitude, longitude } = formState;
 
-    if (!regiao || !florada || !colmeias) {
-      alert("Preencha todos os campos obrigatórios.");
+    if (!regiao || !florada || !colmeias || latitude === null || longitude === null) {
+      alert("Preencha todos os campos obrigatórios e capture a coordenada.");
       return;
     }
 
@@ -76,6 +101,8 @@ const ModalApiario = ({ isOpen, closeModalApiario, onAddApiario, token }) => {
           nomeFlorada,
           colmeias,
           imagem,
+          latitude,
+          longitude,
         },
         {
           headers: {
@@ -85,7 +112,7 @@ const ModalApiario = ({ isOpen, closeModalApiario, onAddApiario, token }) => {
       );
 
       onAddApiario(response.data);
-      setFormState({ regiao: "", florada: "", nomeFlorada: "", colmeias: "", imagem: "" });
+      setFormState({ regiao: "", florada: "", nomeFlorada: "", colmeias: "", imagem: "", latitude: null, longitude: null });
       closeModalApiario();
     } catch (error) {
       alert("Erro ao cadastrar apiário.");
@@ -111,9 +138,7 @@ const ModalApiario = ({ isOpen, closeModalApiario, onAddApiario, token }) => {
       });
     }
   };
-  
 
-  // 🔹 Função para processar a imagem e armazenar em Base64
   const handleImageChange = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
@@ -121,7 +146,6 @@ const ModalApiario = ({ isOpen, closeModalApiario, onAddApiario, token }) => {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("upload_preset", "apiario_upload");
-
     formData.append("cloud_name", "dpjg8bkba");
 
     try {
@@ -129,7 +153,7 @@ const ModalApiario = ({ isOpen, closeModalApiario, onAddApiario, token }) => {
         "https://api.cloudinary.com/v1_1/dpjg8bkba/image/upload",
         formData
       );
-    
+
       const imageUrl = response.data.secure_url;
       setFormState({ ...formState, imagem: imageUrl });
     } catch (error) {
@@ -138,9 +162,8 @@ const ModalApiario = ({ isOpen, closeModalApiario, onAddApiario, token }) => {
     }
   };
 
-
   const handleClose = () => {
-    setFormState({ regiao: "", florada: "", colmeias: "", imagem: "" });
+    setFormState({ regiao: "", florada: "", colmeias: "", imagem: "", latitude: null, longitude: null });
     closeModalApiario();
   };
 
@@ -187,12 +210,17 @@ const ModalApiario = ({ isOpen, closeModalApiario, onAddApiario, token }) => {
 
             <ContainerDescricaoApiario>
               <H4InfomacoesInputs>COLMEIAS</H4InfomacoesInputs>
-              <InputSelect type="number" name="colmeias" value={formState.colmeias}  onChange={(e) => {
+              <InputSelect
+                type="number"
+                name="colmeias"
+                value={formState.colmeias}
+                onChange={(e) => {
                   const value = e.target.value;
                   if (value.length <= 6) {
                     handleChange(e);
                   }
-                }}/>
+                }}
+              />
             </ContainerDescricaoApiario>
 
             <ContainerDescricaoApiario>
@@ -200,7 +228,6 @@ const ModalApiario = ({ isOpen, closeModalApiario, onAddApiario, token }) => {
               <ContainerInput type="file" accept="image/*" onChange={handleImageChange} />
             </ContainerDescricaoApiario>
 
-            {/* 🔹 Exibe a imagem carregada, se existir */}
             {formState.imagem && (
               <ContainerDescricaoApiario>
                 <img
@@ -210,6 +237,19 @@ const ModalApiario = ({ isOpen, closeModalApiario, onAddApiario, token }) => {
                 />
               </ContainerDescricaoApiario>
             )}
+
+            {/* 🔹 Botão de capturar coordenada */}
+            <ContainerDescricaoApiario>
+              <H4InfomacoesInputs>LOCALIZAÇÃO</H4InfomacoesInputs>
+              <button type="button" onClick={handleCaptureCoordinates}>
+                CAPTURAR
+              </button>
+              {formState.latitude && formState.longitude && (
+                <p>
+                  Lat: {formState.latitude}, Lng: {formState.longitude}
+                </p>
+              )}
+            </ContainerDescricaoApiario>
 
             <ContainerButton>
               <DivButtonNovaApiario>
