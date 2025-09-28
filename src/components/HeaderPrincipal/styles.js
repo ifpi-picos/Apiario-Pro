@@ -33,8 +33,9 @@ export const ContainerHeader = styled.div`
   background-color: #ffc400;
   align-items: center;
   justify-content: space-between;
-  position:fixed;
-  top:0;
+  position: fixed;
+  top: 0;
+  z-index: 1000; /* deve ser maior que o mapa */
  
 `;
 export const ContainerLogo = styled.div`

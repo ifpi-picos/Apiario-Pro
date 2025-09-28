@@ -1,27 +1,19 @@
-import React, { useState, useEffect } from "react";
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
-import "leaflet/dist/leaflet.css";
-import L from "leaflet";
+import React, { useEffect, useRef, useState } from "react";
+import mapboxgl from "mapbox-gl";
+import "mapbox-gl/dist/mapbox-gl.css";
+import axios from "axios";
+import { useAuth } from "../../contexts/AuthContext";
+import { MapaContainer } from "./styles";
 
-// Ícone da posição do usuário
-const userLocationIcon = new L.Icon({
-  iconUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
-  iconSize: [20, 30],
-  iconAnchor: [10, 25],
-  popupAnchor: [0, -10],
-});
-
-// Centraliza o mapa na posição do usuário
-const SetViewOnLocation = ({ position }) => {
-  const map = useMap();
-  useEffect(() => {
-    if (position) map.setView(position, 13);
-  }, [position, map]);
-  return null;
-};
+// Configure seu token do Mapbox
+mapboxgl.accessToken = "pk.eyJ1IjoiZGFuaWVscmRjIiwiYSI6ImNtN3dwd212aDA4a3YybXBxYzRscWFjcnEifQ.wf_h7iKJAzYN1Z1FvBVdsQ";
 
 const Mapa = () => {
+  const { token } = useAuth();
+  const mapaRef = useRef(null);
+  const [map, setMap] = useState(null);
   const [userPosition, setUserPosition] = useState(null);
+  const [apiarios, setApiarios] = useState([]);
 
   // Captura a localização do usuário
   useEffect(() => {
@@ -29,33 +21,83 @@ const Mapa = () => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          setUserPosition([latitude, longitude]);
+          setUserPosition([longitude, latitude]); // Mapbox usa [lng, lat]
         },
         (error) => console.error("Erro ao obter localização:", error)
       );
     }
   }, []);
 
-  return (
-    <MapContainer
-      center={[-5.09, -42.80]} // posição inicial padrão
-      zoom={13}
-      style={{ width: "100%", height: "500px" }}
-    >
-      <TileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-      />
+  // Inicializa o mapa
+  useEffect(() => {
+    if (!map && mapaRef.current) {
+      const initializeMap = new mapboxgl.Map({
+        container: mapaRef.current,
+        style: "mapbox://styles/mapbox/satellite-streets-v12",
+        center: [-42.80, -5.09], // centro inicial
+        zoom: 13,
+      });
 
-      {userPosition && <SetViewOnLocation position={userPosition} />}
+      setMap(initializeMap);
+    }
+  }, [map]);
 
-      {userPosition && (
-        <Marker position={userPosition} icon={userLocationIcon}>
-          <Popup>Você está aqui!</Popup>
-        </Marker>
-      )}
-    </MapContainer>
-  );
+  // Adiciona marcador do usuário
+  useEffect(() => {
+    if (map && userPosition) {
+      new mapboxgl.Marker({ color: "blue" })
+        .setLngLat(userPosition)
+        .setPopup(new mapboxgl.Popup().setText("Você está aqui!"))
+        .addTo(map);
+
+      // Centraliza o mapa na posição do usuário
+      map.flyTo({ center: userPosition, zoom: 13 });
+    }
+  }, [map, userPosition]);
+
+  // Carrega os apiários
+  useEffect(() => {
+    const fetchApiarios = async () => {
+      try {
+        const storedToken = token || localStorage.getItem("token");
+        if (!storedToken) return;
+
+        const response = await axios.get(
+          "https://projeto-full-stack-apiariopro.onrender.com/apiarios",
+          {
+            headers: { Authorization: `Bearer ${storedToken}` },
+          }
+        );
+
+        setApiarios(response.data);
+      } catch (error) {
+        console.error("Erro ao buscar apiários:", error);
+      }
+    };
+
+    fetchApiarios();
+  }, [token]);
+
+  // Adiciona marcadores dos apiários
+  useEffect(() => {
+    if (map) {
+      apiarios.forEach((apiario) => {
+        const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(`
+          <strong>Região:</strong> ${apiario.regiao}<br/>
+          <strong>Colmeias:</strong> ${apiario.colmeias}<br/>
+          <strong>Florada:</strong> ${apiario.florada}<br/>
+          <strong>Coordenadas:</strong> Lat: ${apiario.latitude}, Lng: ${apiario.longitude}
+        `);
+
+        new mapboxgl.Marker({ color: "red" })
+          .setLngLat([apiario.longitude, apiario.latitude])
+          .setPopup(popup)
+          .addTo(map);
+      });
+    }
+  }, [map, apiarios]);
+
+  return <MapaContainer ref={mapaRef} style={{ width: "100%", height: "500px" }} />;
 };
 
 export default Mapa;

@@ -141,14 +141,18 @@ function Apiarios() {
                       {apiario.regiao}
                     </InfoItem>
                     <InfoItem>
-  <span style={{ fontWeight: 'bold', fontSize: '14px' }}>Florada: </span>
-  {floradas.find(f => f.id === parseInt(apiario.florada))?.nome || "Desconhecida"}
-</InfoItem>
+                      <span style={{ fontWeight: 'bold', fontSize: '14px' }}>Florada: </span>
+                      {floradas.find(f => f.id === parseInt(apiario.florada))?.nome || "Desconhecida"}
+                    </InfoItem>
 
                     <InfoItem>
                       <span style={{ fontWeight: 'bold', fontSize: '14px' }}>Colmeias: </span>
                       {apiario.colmeias}
                     </InfoItem>
+                    <InfoItem>
+                    <span style={{ fontWeight: 'bold', fontSize: '14px' }}>Coordenadas: </span>
+                    {` ${apiario.latitude},${apiario.longitude}`}
+                  </InfoItem>
                   </Informacoes>
                   <AcoesContainer>
                   <AcaoBotao onClick={() => {
