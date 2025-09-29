@@ -14,6 +14,33 @@ const Mapa = () => {
   const [map, setMap] = useState(null);
   const [userPosition, setUserPosition] = useState(null);
   const [apiarios, setApiarios] = useState([]);
+  const [floradas, setFloradas] = useState([]);
+  const floradasMap = {};
+floradas.forEach(f => {
+  floradasMap[f.id] = f.nome;
+});
+
+useEffect(() => {
+  const fetchFloradas = async () => {
+    try {
+      const storedToken = token || localStorage.getItem("token");
+      if (!storedToken) return;
+
+      const response = await axios.get(
+        "https://projeto-full-stack-apiariopro.onrender.com/floradas",
+        {
+          headers: { Authorization: `Bearer ${storedToken}` },
+        }
+      );
+
+      setFloradas(response.data);
+    } catch (error) {
+      console.error("Erro ao buscar floradas:", error);
+    }
+  };
+
+  fetchFloradas();
+}, [token]);
 
   // Captura a localização do usuário
   useEffect(() => {
@@ -82,10 +109,11 @@ const Mapa = () => {
   useEffect(() => {
     if (map) {
       apiarios.forEach((apiario) => {
+        const nomeFlorada = floradasMap[apiario.florada] || "Desconhecida";
         const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(`
           <strong>Região:</strong> ${apiario.regiao}<br/>
           <strong>Colmeias:</strong> ${apiario.colmeias}<br/>
-          <strong>Florada:</strong> ${apiario.florada}<br/>
+          <strong>Florada:</strong> ${nomeFlorada}<br/>
           <strong>Coordenadas:</strong> Lat: ${apiario.latitude}, Lng: ${apiario.longitude}
         `);
 

@@ -92,7 +92,7 @@ const Home = () => {
             </BotaoContainer>
 
             <BotaoContainer >
-              <Botao $desenvolvimento style={{backgroundColor:"#ffc400"}}>
+              <Botao $desenvolvimento style={{backgroundColor:"#ffc400"}} onClick={() => navigate("/geolocalizacao")}>
                 <StyledIcon style={{color:"red", fontSize:20} } icon={faLocationDot} />
                 <BotaoTexto>Geolocalização</BotaoTexto>
               </Botao>

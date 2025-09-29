@@ -92,12 +92,13 @@ const Sidebar = () => {
 
               <Border />
 
-              <MenuItem $desenvolvimento>
-                <LinkSideBar>
+              <MenuItem $active={location.pathname === "/geolocalizacao"}>
+                <LinkSideBar  onClick={() => navigate("/geolocalizacao")}>
                   <StyledIcon icon={faLocationDot} />
                   Geolocalização
+                   <P>(Em teste)</P>
                 </LinkSideBar>
-                <P>(Desenvolvimento)</P>
+               
               </MenuItem>
             </Menu>
           </SideBar>

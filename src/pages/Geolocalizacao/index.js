@@ -19,7 +19,7 @@ const Geolocalizacao = () => {
       <Main>
         <ContainerPrincipal>
         <ContainerTitulo>
-            <TituloMap>MAPA INTERATIVO</TituloMap>
+            <TituloMap>GEOLOCALIZAÇÃO</TituloMap>
         </ContainerTitulo>
         <MapaContainer> 
             <Mapa />
