@@ -18,6 +18,7 @@ import {
   ButtonCriarTarefa,
   ModalBackground,
   ContainerButton,
+  ButtonCancelar,
 } from "./styled";
 
 const ModalFlorada = ({ isOpen, closeModalFlorada, onAddFlorada, token }) => {
@@ -171,7 +172,7 @@ const ModalFlorada = ({ isOpen, closeModalFlorada, onAddFlorada, token }) => {
                 <ButtonCriarTarefa type="submit">ADICIONAR</ButtonCriarTarefa>
               </DivButtonNovaTarefa>
               <DivButtonNovaTarefa>
-                <ButtonCriarTarefa type="button" onClick={closeModalFlorada}>CANCELAR</ButtonCriarTarefa>
+                <ButtonCancelar type="button" onClick={closeModalFlorada}>CANCELAR</ButtonCancelar>
               </DivButtonNovaTarefa>
             </ContainerButton>
           </FormDetalhesTarefas>

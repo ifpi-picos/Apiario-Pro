@@ -44,11 +44,11 @@ export const Menu = styled.div`
 export const P = styled.p`
     font-size: 10px;
     margin: 0;
-
     text-align: center;
     position: relative;
     bottom: 20px;
     right: 12px;
+    height:12px;
 `
 
 export const MenuItem = styled.div`

@@ -125,7 +125,7 @@ useEffect(() => {
     }
   }, [map, apiarios]);
 
-  return <MapaContainer ref={mapaRef} style={{ width: "100%", height: "500px" }} />;
+  return <MapaContainer ref={mapaRef} style={{ width: "100%", height: "100%" }} />;
 };
 
 export default Mapa;

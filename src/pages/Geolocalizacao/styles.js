@@ -22,8 +22,8 @@ export const ContainerTitulo = styled.div`
 
 text-align:center;
 `;
-export const TituloMap = styled.h2`
-
+export const TituloMap = styled.p`
+font-weight: bold;
 `;
 export const MapaContainer = styled.div`
   width: 100%;  

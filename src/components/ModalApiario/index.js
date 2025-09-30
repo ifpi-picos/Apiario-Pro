@@ -14,9 +14,11 @@ import {
   H4InfomacoesInputs,
   DivButtonNovaApiario,
   ButtonCriarApiario,
+  ButtonCancelar,
   ModalBackground,
   ContainerButton,
   ContainerInput,
+  ButtonCaptura,
 } from "./styles";
 
 const ModalApiario = ({ isOpen, closeModalApiario, onAddApiario, token }) => {
@@ -241,9 +243,9 @@ const ModalApiario = ({ isOpen, closeModalApiario, onAddApiario, token }) => {
             {/* 🔹 Botão de capturar coordenada */}
             <ContainerDescricaoApiario>
               <H4InfomacoesInputs>LOCALIZAÇÃO</H4InfomacoesInputs>
-              <button type="button" onClick={handleCaptureCoordinates}>
+              <ButtonCaptura type="button" onClick={handleCaptureCoordinates}>
                 CAPTURAR
-              </button>
+              </ButtonCaptura>
               {formState.latitude && formState.longitude && (
                 <p>
                   Lat: {formState.latitude}, Lng: {formState.longitude}
@@ -256,9 +258,9 @@ const ModalApiario = ({ isOpen, closeModalApiario, onAddApiario, token }) => {
                 <ButtonCriarApiario type="submit">ADICIONAR</ButtonCriarApiario>
               </DivButtonNovaApiario>
               <DivButtonNovaApiario>
-                <ButtonCriarApiario type="button" onClick={handleClose}>
+                <ButtonCancelar type="button" onClick={handleClose}>
                   CANCELAR
-                </ButtonCriarApiario>
+                </ButtonCancelar>
               </DivButtonNovaApiario>
             </ContainerButton>
           </FormDetalhesApiario>

@@ -17,6 +17,7 @@ import {
   ModalBackground,
   ContainerButton,
   ContainerInput,
+  ButtonCancelar,
 } from "./styles";
 
 const ModalEditarApiario = ({ isOpen, closeModalEditar, apiario, onUpdateApiario, token }) => {
@@ -205,7 +206,7 @@ const ModalEditarApiario = ({ isOpen, closeModalEditar, apiario, onUpdateApiario
                 <ButtonCriarApiario type="submit">ATUALIZAR</ButtonCriarApiario>
               </DivButtonNovaApiario>
               <DivButtonNovaApiario>
-                <ButtonCriarApiario type="button" onClick={handleClose}>CANCELAR</ButtonCriarApiario>
+                <ButtonCancelar type="button" onClick={handleClose}>CANCELAR</ButtonCancelar>
               </DivButtonNovaApiario>
             </ContainerButton>
           </FormDetalhesApiario>

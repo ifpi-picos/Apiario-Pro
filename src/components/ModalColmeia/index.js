@@ -18,6 +18,7 @@ import {
   ButtonCriarTarefa,
   ModalBackground,
   ContainerButton,
+  ButtonCancelar,
 } from "./styles";
 
 const ModalColmeia = ({ isOpen, closeModalColmeia, onAddColmeia }) => {
@@ -147,7 +148,7 @@ const ModalColmeia = ({ isOpen, closeModalColmeia, onAddColmeia }) => {
                 <ButtonCriarTarefa type="submit">ADICIONAR</ButtonCriarTarefa>
               </DivButtonNovaTarefa>
               <DivButtonNovaTarefa>
-                <ButtonCriarTarefa type="button" onClick={closeModalColmeia}>CANCELAR</ButtonCriarTarefa>
+                <ButtonCancelar type="button" onClick={closeModalColmeia}>CANCELAR</ButtonCancelar>
               </DivButtonNovaTarefa>
             </ContainerButton>
           </FormDetalhesTarefas>

@@ -186,8 +186,8 @@ export const ButtonCriarApiario = styled.button`
   width: 100%;
   border: none;
   border-radius: 25px;
-  background-color:#ffc400;
-  ;
+  background-color:#212181;
+  color:white;
   font-size: 16px;
   font-weight: 700;
   cursor: pointer;
@@ -196,7 +196,25 @@ export const ButtonCriarApiario = styled.button`
     margin-left: 20px;
   padding: 10px;
   &:hover {
-    background-color:rgba(182, 146, 26, 0.8);
+    background-color:rgba(26, 42, 182, 0.8);
+  }
+`;
+export const ButtonCancelar = styled.button`
+  height: 2.5em;
+  width: 100%;
+  border: none;
+  border-radius: 25px;
+  background-color:rgba(219, 20, 20, 1);
+  color:white;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 1.5s ease;
+  
+    margin-left: 20px;
+  padding: 10px;
+  &:hover {
+    background-color:rgba(182, 26, 26, 0.8);
   }
 `;
 export const ContainerButton = styled.div`

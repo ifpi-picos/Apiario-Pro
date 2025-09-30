@@ -19,6 +19,7 @@ import {
   ModalBackground,
   ContainerButton,
   H4InfomacoesInputs2,
+  ButtonCancelar,
 } from "./styles";
 
 const ModalProducao = ({ isOpen, closeModalProducao,  onProducaoAdicionada }) => {
@@ -175,7 +176,7 @@ const ModalProducao = ({ isOpen, closeModalProducao,  onProducaoAdicionada }) =>
                   <ButtonCriarTarefa type="submit">ADICIONAR</ButtonCriarTarefa>
                 </DivButtonNovaTarefa>
                 <DivButtonNovaTarefa>
-                  <ButtonCriarTarefa type="button" onClick={handleCloseModal}>CANCELAR</ButtonCriarTarefa>
+                  <ButtonCancelar type="button" onClick={handleCloseModal}>CANCELAR</ButtonCancelar>
                 </DivButtonNovaTarefa>
               </ContainerButton>
             </FormDetalhesTarefas>
